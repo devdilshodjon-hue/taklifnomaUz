@@ -122,42 +122,68 @@ export default function AdminDashboard() {
   const loadStats = async () => {
     try {
       // Get total users
-      const { count: usersCount } = await supabase
+      const { count: usersCount, error: usersError } = await supabase
         .from("profiles")
         .select("*", { count: "exact", head: true });
 
       // Get total invitations
-      const { count: invitationsCount } = await supabase
+      const { count: invitationsCount, error: invitationsError } = await supabase
         .from("invitations")
         .select("*", { count: "exact", head: true });
 
       // Get total subscriptions
-      const { count: subscriptionsCount } = await supabase
+      const { count: subscriptionsCount, error: subscriptionsError } = await supabase
         .from("user_subscriptions")
         .select("*", { count: "exact", head: true });
 
       // Get pending purchase requests
-      const { count: pendingCount } = await supabase
+      const { count: pendingCount, error: pendingError } = await supabase
         .from("purchase_requests")
         .select("*", { count: "exact", head: true })
         .eq("status", "pending");
 
       // Get active subscriptions
-      const { count: activeCount } = await supabase
+      const { count: activeCount, error: activeError } = await supabase
         .from("user_subscriptions")
         .select("*", { count: "exact", head: true })
         .eq("status", "active");
 
-      setStats({
-        totalUsers: usersCount || 0,
-        totalInvitations: invitationsCount || 0,
-        totalSubscriptions: subscriptionsCount || 0,
-        pendingRequests: pendingCount || 0,
-        activeSubscriptions: activeCount || 0,
-        monthlyRevenue: 0, // Calculate from subscriptions if needed
-      });
+      // Check if any major errors indicate missing tables
+      const hasTableErrors = [usersError, invitationsError, subscriptionsError, pendingError, activeError]
+        .some(error => error && error.message.includes("does not exist"));
+
+      if (hasTableErrors) {
+        console.log("Database tables not found, using demo data");
+        // Set demo/default stats
+        setStats({
+          totalUsers: 0,
+          totalInvitations: parseInt(localStorage.getItem("demo_invitation_count") || "0"),
+          totalSubscriptions: 0,
+          pendingRequests: 0,
+          activeSubscriptions: 0,
+          monthlyRevenue: 0,
+        });
+      } else {
+        setStats({
+          totalUsers: usersCount || 0,
+          totalInvitations: invitationsCount || 0,
+          totalSubscriptions: subscriptionsCount || 0,
+          pendingRequests: pendingCount || 0,
+          activeSubscriptions: activeCount || 0,
+          monthlyRevenue: 0, // Calculate from subscriptions if needed
+        });
+      }
     } catch (error) {
       console.error("Error loading stats:", error);
+      // Set demo/fallback stats on error
+      setStats({
+        totalUsers: 0,
+        totalInvitations: parseInt(localStorage.getItem("demo_invitation_count") || "0"),
+        totalSubscriptions: 0,
+        pendingRequests: 0,
+        activeSubscriptions: 0,
+        monthlyRevenue: 0,
+      });
     }
   };
 

@@ -44,9 +44,11 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     metadata JSONB DEFAULT '{}'::jsonb
 );
 
+-- Invitations with enhanced features
 CREATE TABLE IF NOT EXISTS public.invitations (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
     groom_name TEXT NOT NULL,
     bride_name TEXT NOT NULL,
@@ -59,10 +61,37 @@ CREATE TABLE IF NOT EXISTS public.invitations (
     zip_code TEXT,
     custom_message TEXT,
     template_id TEXT NOT NULL DEFAULT 'classic',
+    custom_template_id UUID REFERENCES public.custom_templates(id) ON DELETE SET NULL,
     image_url TEXT,
     rsvp_deadline DATE,
     is_active BOOLEAN DEFAULT TRUE,
-    slug TEXT UNIQUE NOT NULL
+    slug TEXT UNIQUE NOT NULL,
+    view_count INTEGER DEFAULT 0,
+    settings JSONB DEFAULT '{}'::jsonb,
+    metadata JSONB DEFAULT '{}'::jsonb
+);
+
+-- Custom Templates for user-created designs
+CREATE TABLE IF NOT EXISTS public.custom_templates (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    description TEXT,
+    category TEXT DEFAULT 'custom',
+    is_public BOOLEAN DEFAULT FALSE,
+    is_featured BOOLEAN DEFAULT FALSE,
+    config JSONB NOT NULL DEFAULT '{}'::jsonb,
+    colors JSONB DEFAULT '{}'::jsonb,
+    fonts JSONB DEFAULT '{}'::jsonb,
+    layout JSONB DEFAULT '{}'::jsonb,
+    custom_css TEXT,
+    preview_image TEXT,
+    usage_count INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    tags TEXT[] DEFAULT ARRAY[]::TEXT[],
+    metadata JSONB DEFAULT '{}'::jsonb
 );
 
 CREATE TABLE IF NOT EXISTS public.guests (

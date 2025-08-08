@@ -194,18 +194,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }, 5000); // Reduced to 5 seconds
 
-      // First check if we have a valid session
-      const {
-        data: { session },
-        error: sessionError,
-      } = await supabase.auth.getSession();
-
-      if (sessionError || !session) {
-        console.log("Session invalid, signing out...");
-        await supabase.auth.signOut();
+      // Use the current session instead of fetching again
+      const currentSession = await supabase.auth.getSession();
+      if (!currentSession.data.session) {
+        console.log("No session found");
         setProfile(null);
-        setSession(null);
-        setUser(null);
         setLoading(false);
         return;
       }

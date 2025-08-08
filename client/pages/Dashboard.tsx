@@ -47,7 +47,18 @@ interface InvitationStats {
 }
 
 export default function Dashboard() {
-  const { user, profile, signOut } = useAuth();
+  console.log("Dashboard component rendering");
+
+  let authHook;
+  try {
+    authHook = useAuth();
+    console.log("useAuth successful:", { user: !!authHook.user, profile: !!authHook.profile });
+  } catch (error) {
+    console.error("useAuth failed:", error);
+    throw error;
+  }
+
+  const { user, profile, signOut } = authHook;
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [stats, setStats] = useState<Record<string, InvitationStats>>({});
   const [loading, setLoading] = useState(true);

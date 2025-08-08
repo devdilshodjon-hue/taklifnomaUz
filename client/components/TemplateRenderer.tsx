@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Calendar, Clock, Heart, Star, Sparkles, Crown, Flower2, Rose, Diamond } from 'lucide-react';
+import { MapPin, Calendar, Clock, Heart, Star, Sparkles, Crown, Flower2, Diamond, Gem } from 'lucide-react';
 import { getTemplateById, type TemplateData } from '@/lib/templates';
 
 interface InvitationData {

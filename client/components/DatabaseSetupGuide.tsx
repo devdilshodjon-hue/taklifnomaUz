@@ -66,11 +66,143 @@ CREATE TABLE IF NOT EXISTS public.rsvps (
     phone TEXT
 );
 
+-- Admin tables for admin panel
+CREATE TABLE IF NOT EXISTS public.admin_users (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    username TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'admin' CHECK (role IN ('admin', 'manager')),
+    full_name TEXT,
+    email TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
+    last_login TIMESTAMP WITH TIME ZONE
+);
+
+CREATE TABLE IF NOT EXISTS public.purchase_requests (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    plan_type TEXT NOT NULL,
+    full_name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    company_name TEXT,
+    message TEXT,
+    status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'contacted', 'completed', 'rejected')),
+    processed_by UUID REFERENCES public.admin_users(id),
+    processed_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE TABLE IF NOT EXISTS public.user_subscriptions (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+    plan_type TEXT NOT NULL,
+    status TEXT DEFAULT 'active' CHECK (status IN ('active', 'cancelled', 'expired')),
+    started_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    expires_at TIMESTAMP WITH TIME ZONE,
+    price DECIMAL(10,2)
+);
+
+-- Insert default admin user (admin/admin)
+INSERT INTO public.admin_users (username, password_hash, role, full_name, email)
+VALUES ('admin', '$2a$10$defaulthashforadmin', 'admin', 'System Administrator', 'admin@example.com')
+ON CONFLICT (username) DO NOTHING;
+
 -- Row Level Security yoqish
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.invitations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.guests ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.rsvps ENABLE ROW LEVEL SECURITY;`;
+ALTER TABLE public.rsvps ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.purchase_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_subscriptions ENABLE ROW LEVEL SECURITY;
+
+-- RLS policies for profiles
+CREATE POLICY "Users can view own profile" ON public.profiles
+    FOR SELECT USING (auth.uid() = id);
+
+CREATE POLICY "Users can update own profile" ON public.profiles
+    FOR UPDATE USING (auth.uid() = id);
+
+CREATE POLICY "Users can insert own profile" ON public.profiles
+    FOR INSERT WITH CHECK (auth.uid() = id);
+
+-- RLS policies for invitations
+CREATE POLICY "Users can view own invitations" ON public.invitations
+    FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own invitations" ON public.invitations
+    FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own invitations" ON public.invitations
+    FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own invitations" ON public.invitations
+    FOR DELETE USING (auth.uid() = user_id);
+
+-- Allow public read access to invitations for viewing (by slug)
+CREATE POLICY "Public can view active invitations by slug" ON public.invitations
+    FOR SELECT USING (is_active = true);
+
+-- RLS policies for guests
+CREATE POLICY "Users can manage guests of own invitations" ON public.guests
+    FOR ALL USING (
+        EXISTS (
+            SELECT 1 FROM public.invitations
+            WHERE id = guests.invitation_id
+            AND user_id = auth.uid()
+        )
+    );
+
+-- Public access to guests for invitation viewing
+CREATE POLICY "Public can view guests of active invitations" ON public.guests
+    FOR SELECT USING (
+        EXISTS (
+            SELECT 1 FROM public.invitations
+            WHERE id = guests.invitation_id
+            AND is_active = true
+        )
+    );
+
+-- RLS policies for rsvps
+CREATE POLICY "Users can manage rsvps of own invitations" ON public.rsvps
+    FOR ALL USING (
+        EXISTS (
+            SELECT 1 FROM public.invitations
+            WHERE id = rsvps.invitation_id
+            AND user_id = auth.uid()
+        )
+    );
+
+-- Public access to insert rsvps
+CREATE POLICY "Public can insert rsvps" ON public.rsvps
+    FOR INSERT WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM public.invitations
+            WHERE id = invitation_id
+            AND is_active = true
+        )
+    );
+
+-- Admin table policies (only accessible by admin users or service role)
+CREATE POLICY "Admin users can access admin_users" ON public.admin_users
+    FOR ALL TO authenticated USING (true);
+
+CREATE POLICY "Public can read purchase_requests" ON public.purchase_requests
+    FOR SELECT TO anon USING (true);
+
+CREATE POLICY "Public can insert purchase_requests" ON public.purchase_requests
+    FOR INSERT TO anon WITH CHECK (true);
+
+CREATE POLICY "Admin users can access purchase_requests" ON public.purchase_requests
+    FOR ALL TO authenticated USING (true);
+
+CREATE POLICY "Users can view own subscriptions" ON public.user_subscriptions
+    FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Admin users can access user_subscriptions" ON public.user_subscriptions
+    FOR ALL TO authenticated USING (true);`;
 
   const copyToClipboard = async () => {
     try {

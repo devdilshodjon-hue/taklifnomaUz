@@ -254,17 +254,25 @@ export default function CreateInvitation() {
         return;
       }
 
+      console.log("Supabase save successful:", invitation);
+
       // Mehmonlarni qo'shish
       if (guests.length > 0 && invitation) {
+        console.log("Adding guests...");
         const guestData = guests.map((guest) => ({
           invitation_id: invitation.id,
-          name: guest.name,
-          email: guest.email || null,
-          phone: guest.phone || null,
+          name: guest.name.trim(),
+          email: guest.email?.trim() || null,
+          phone: guest.phone?.trim() || null,
           plus_one: false,
         }));
 
-        await supabase.from("guests").insert(guestData);
+        const { error: guestError } = await supabase.from("guests").insert(guestData);
+        if (guestError) {
+          console.error("Guest insertion error:", guestError);
+        } else {
+          console.log("Guests added successfully");
+        }
       }
 
       // Backup uchun localStorage ga ham saqlaymiz
@@ -278,7 +286,12 @@ export default function CreateInvitation() {
         JSON.stringify(backupData),
       );
 
-      navigate(`/invitation/${invitation.id}`);
+      console.log("Navigating to invitation:", invitation.id);
+
+      // Add a small delay to ensure state updates
+      setTimeout(() => {
+        navigate(`/invitation/${invitation.id}`);
+      }, 100);
     } catch (error) {
       console.error("Taklifnoma yaratishda umumiy xatolik:", error);
       console.log("Demo rejimida taklifnoma yaratilmoqda...");

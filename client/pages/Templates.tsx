@@ -106,8 +106,8 @@ export default function Templates() {
         </div>
 
         {/* Templates Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredTemplates.map((template) => (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 animate-slide-up delay-500">
+          {filteredTemplates.map((template, index) => (
             <div
               key={template.id}
               className="group card-modern p-6 hover:shadow-lg transition-all duration-300"

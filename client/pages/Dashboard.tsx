@@ -131,7 +131,7 @@ export default function Dashboard() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-background via-primary/2 to-purple-50/30">
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/2 to-purple-50/30 animate-fade-in">
         {/* Navigation Bar */}
         <nav className="bg-card/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
           <div className="max-w-7xl mx-auto p-4">

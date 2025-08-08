@@ -20,6 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Navigation from "@/components/Navigation";
+import { supabase } from "@/lib/supabase";
 
 export default function Purchase() {
   const [searchParams] = useSearchParams();
@@ -79,11 +80,30 @@ export default function Purchase() {
   const selectedPlan = plans[planId as keyof typeof plans] || plans.premium;
   const Icon = selectedPlan.icon;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Create WhatsApp message
-    const whatsappMessage = `
+
+    try {
+      // Save to database first
+      const { error } = await supabase
+        .from("purchase_requests")
+        .insert({
+          plan_type: planId,
+          full_name: formData.fullName.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          company_name: formData.companyName.trim() || null,
+          message: formData.message.trim() || null,
+          status: "pending",
+        });
+
+      if (error) {
+        console.error("Error saving purchase request:", error);
+        // Continue with WhatsApp even if database save fails
+      }
+
+      // Create WhatsApp message
+      const whatsappMessage = `
 Salom! TaklifNoma platformasidan ${selectedPlan.name} rejasini sotib olishni xohlayman.
 
 📋 Reja ma'lumotlari:
@@ -100,13 +120,40 @@ ${formData.companyName ? `• Kompaniya: ${formData.companyName}` : ""}
 ${formData.message || "Yo'q"}
 
 Iltimos, to'lov jarayoni haqida ma'lumot bering.
-    `.trim();
+      `.trim();
 
-    // Open WhatsApp
-    const whatsappUrl = `https://wa.me/998995340313?text=${encodeURIComponent(whatsappMessage)}`;
-    window.open(whatsappUrl, "_blank");
-    
-    setSubmitted(true);
+      // Open WhatsApp
+      const whatsappUrl = `https://wa.me/998995340313?text=${encodeURIComponent(whatsappMessage)}`;
+      window.open(whatsappUrl, "_blank");
+
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Error in form submission:", error);
+      // Still show WhatsApp and success even if database fails
+      const whatsappMessage = `
+Salom! TaklifNoma platformasidan ${selectedPlan.name} rejasini sotib olishni xohlayman.
+
+📋 Reja ma'lumotlari:
+• Reja: ${selectedPlan.name}
+• Narx: ${selectedPlan.price}
+
+👤 Mening ma'lumotlarim:
+• To'liq ism: ${formData.fullName}
+• Email: ${formData.email}
+• Telefon: ${formData.phone}
+${formData.companyName ? `• Kompaniya: ${formData.companyName}` : ""}
+
+💬 Qo'shimcha ma'lumot:
+${formData.message || "Yo'q"}
+
+Iltimos, to'lov jarayoni haqida ma'lumot bering.
+      `.trim();
+
+      const whatsappUrl = `https://wa.me/998995340313?text=${encodeURIComponent(whatsappMessage)}`;
+      window.open(whatsappUrl, "_blank");
+
+      setSubmitted(true);
+    }
   };
 
   if (submitted) {

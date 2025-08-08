@@ -645,14 +645,18 @@ export default function Settings() {
                           <button
                             key={option.value}
                             onClick={() => setTheme(option.value as any)}
-                            className={`p-4 border-2 rounded-lg transition-all hover:border-primary/50 ${
+                            className={`p-4 border-2 rounded-lg transition-all hover:border-primary/50 hover-lift ${
                               theme === option.value
-                                ? "border-primary bg-primary/5"
-                                : "border-border"
+                                ? "border-primary bg-primary/5 animate-glow"
+                                : "border-border hover:border-primary/30"
                             }`}
                           >
-                            <Icon className="w-6 h-6 mx-auto mb-2" />
-                            <div className="text-sm font-medium">
+                            <Icon className={`w-6 h-6 mx-auto mb-2 transition-transform hover-scale ${
+                              theme === option.value ? "text-primary" : "text-muted-foreground"
+                            }`} />
+                            <div className={`text-sm font-medium ${
+                              theme === option.value ? "text-primary" : "text-foreground"
+                            }`}>
                               {option.label}
                             </div>
                           </button>

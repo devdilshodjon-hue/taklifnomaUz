@@ -44,13 +44,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Test database connection first
     const testDatabaseConnection = async () => {
       try {
-        const { data, error } = await supabase.from("profiles").select("count").limit(1);
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("count")
+          .limit(1);
         if (error) {
           console.warn("Database connection test failed:", {
             error: error,
             message: error?.message,
             hint: error?.hint,
-            details: error?.details
+            details: error?.details,
           });
         } else {
           console.log("Database connection test successful");
@@ -77,7 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event, session?.user?.id);
+      console.log("Auth state changed:", event, session?.user?.id);
       setSession(session);
       setUser(session?.user ?? null);
 
@@ -97,7 +100,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
 
       // First check if we have a valid session
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         setProfile(null);
         setLoading(false);
@@ -113,7 +118,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) {
         if (error.code === "PGRST116" || error.code === "PGRST301") {
           // Profile doesn't exist, create one
-          console.log("Profile not found, creating new profile for user:", userId);
+          console.log(
+            "Profile not found, creating new profile for user:",
+            userId,
+          );
 
           const { data: user } = await supabase.auth.getUser();
           if (user.user) {
@@ -143,7 +151,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 details: createError?.details,
                 hint: createError?.hint,
                 code: createError?.code,
-                profileData: newProfile
+                profileData: newProfile,
               });
 
               // Try to set a minimal profile object for the app to continue working
@@ -153,7 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 first_name: user.user.user_metadata?.first_name || null,
                 last_name: user.user.user_metadata?.last_name || null,
                 avatar_url: user.user.user_metadata?.avatar_url || null,
-                created_at: new Date().toISOString()
+                created_at: new Date().toISOString(),
               });
             }
           } else {
@@ -166,7 +174,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             message: error?.message,
             details: error?.details,
             hint: error?.hint,
-            code: error?.code
+            code: error?.code,
           });
           // For RLS errors or other issues, set profile to null but don't break auth
           setProfile(null);
@@ -178,7 +186,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error("Error in loadProfile:", {
         error: error,
         message: error?.message,
-        stack: error?.stack
+        stack: error?.stack,
       });
       setProfile(null);
     } finally {

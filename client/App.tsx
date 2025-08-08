@@ -43,10 +43,10 @@ function App() {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/create" element={<CreateInvitation />} />
                 <Route path="/templates" element={<Templates />} />
-              <Route path="/template-builder" element={<TemplateBuilder />} />
-              <Route path="/pricing" element={<Pricing />} />
-              <Route path="/features" element={<Features />} />
-              <Route path="/privacy" element={<Privacy />} />
+                <Route path="/template-builder" element={<TemplateBuilder />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/features" element={<Features />} />
+                <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/help" element={<Help />} />

@@ -7,6 +7,7 @@ Create a **professional wedding invitation platform** called "TaklifNoma" (Uzbek
 ### CORE FUNCTIONALITY REQUIREMENTS
 
 A modern, beautiful wedding invitation platform where users can:
+
 - Create digital wedding invitations with professional templates
 - Manage guest lists and track RSVP responses
 - Share invitations via WhatsApp, Telegram, social media and direct links
@@ -17,6 +18,7 @@ A modern, beautiful wedding invitation platform where users can:
 ### TECHNICAL STACK
 
 **Frontend:**
+
 - React 18 with TypeScript and Vite
 - Tailwind CSS for styling with custom design system
 - React Router 6 for navigation
@@ -25,12 +27,14 @@ A modern, beautiful wedding invitation platform where users can:
 - React Query for data fetching
 
 **Backend & Database:**
+
 - Supabase (PostgreSQL + Auth + Storage + Real-time)
 - Row Level Security (RLS) policies
 - Google OAuth + Email/Password authentication
 - File storage for avatars and images
 
 **Key Libraries:**
+
 ```json
 {
   "dependencies": {
@@ -90,6 +94,7 @@ project/
 ### DESIGN SYSTEM
 
 **Color Palette:**
+
 ```css
 :root {
   --primary: 220 91% 56%; /* Blue #4285f4 */
@@ -110,44 +115,86 @@ project/
 ```
 
 **Typography:**
+
 - Primary font: "Inter" (body text)
 - Heading font: "Poppins" (headings)
 - Accent font: "Playfair Display" (decorative)
 
 **Animation System:**
+
 ```css
 /* Key animations */
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes scale-in {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes glow {
-  0%, 100% { box-shadow: 0 0 5px rgba(99, 102, 241, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.6); }
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(99, 102, 241, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+  }
 }
 
 /* Animation classes */
-.animate-fade-in { animation: fade-in 0.6s ease-out; }
-.animate-slide-up { animation: slide-up 0.8s ease-out; }
-.animate-scale-in { animation: scale-in 0.5s ease-out; }
-.animate-glow { animation: glow 2s ease-in-out infinite; }
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out;
+}
+.animate-slide-up {
+  animation: slide-up 0.8s ease-out;
+}
+.animate-scale-in {
+  animation: scale-in 0.5s ease-out;
+}
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
 
 /* Hover effects */
-.hover-lift { transition: all 0.3s ease; }
-.hover-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
-.hover-scale { transition: transform 0.3s ease; }
-.hover-scale:hover { transform: scale(1.05); }
+.hover-lift {
+  transition: all 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+.hover-scale:hover {
+  transform: scale(1.05);
+}
 ```
 
 ### DATABASE SCHEMA
@@ -254,6 +301,7 @@ CREATE POLICY "Users can upload own avatar" ON storage.objects FOR INSERT WITH C
 ### PAGE SPECIFICATIONS
 
 #### **Index.tsx (Landing Page)**
+
 - Header: "To'y Taklifnomalari Juda Oson"
 - Hero section with animated badges and call-to-action buttons
 - Features showcase with icons and descriptions
@@ -263,6 +311,7 @@ CREATE POLICY "Users can upload own avatar" ON storage.objects FOR INSERT WITH C
 - Animations: fade-in, slide-up, hover effects with staggered delays
 
 #### **Login.tsx**
+
 - Email/password login form
 - Google OAuth button
 - "Parolni unutdingizmi?" link
@@ -270,12 +319,14 @@ CREATE POLICY "Users can upload own avatar" ON storage.objects FOR INSERT WITH C
 - Form validation and error handling
 
 #### **Register.tsx**
+
 - Full name, email, password fields
 - Google OAuth registration
 - Terms acceptance checkbox
 - Automatic profile creation after registration
 
 #### **Dashboard.tsx (Protected)**
+
 - Welcome message with user's name
 - Statistics cards (Total invitations, Views, RSVPs, Guests)
 - Recent invitations list with quick actions
@@ -283,15 +334,18 @@ CREATE POLICY "Users can upload own avatar" ON storage.objects FOR INSERT WITH C
 - Profile dropdown with navigation to Profile and Settings
 
 #### **Profile.tsx (Protected)**
+
 **Tabs: Profile, Statistics, Invitations, Achievements**
 
 **Profile Tab:**
+
 - Personal information form (name, email, phone, bio, location, website)
 - Avatar upload with image preview
 - Edit mode toggle with save/cancel buttons
 - Account creation date display
 
 **Statistics Tab:**
+
 - Detailed metrics cards with icons
 - Total invitations created
 - Total views across all invitations
@@ -299,19 +353,23 @@ CREATE POLICY "Users can upload own avatar" ON storage.objects FOR INSERT WITH C
 - Total guests count
 
 **Invitations Tab:**
+
 - List of user's invitations with status badges
 - Quick actions: View, Edit, Share, Duplicate
 - Pagination for large lists
 
 **Achievements Tab:**
+
 - Badge system for milestones
 - "First Invitation", "Guest Magnet", "Popular Creator", etc.
 - Progress indicators for locked achievements
 
 #### **Settings.tsx (Protected)**
+
 **Tabs: Notifications, Privacy, Security, Appearance, Account**
 
 **Notifications:**
+
 - Email notifications toggle
 - SMS notifications toggle
 - RSVP update alerts
@@ -319,31 +377,37 @@ CREATE POLICY "Users can upload own avatar" ON storage.objects FOR INSERT WITH C
 - Weekly reports setting
 
 **Privacy:**
+
 - Profile visibility settings
 - Email/phone display options
 - Search indexing permission
 - Data processing consent
 
 **Security:**
+
 - Password change form
 - Two-factor authentication setup
 - Login alerts configuration
 - Session timeout settings
 
 **Appearance:**
+
 - Theme selection (Light, Dark, System)
 - Theme cards with icons and preview
 - Automatic theme switching
 
 **Account:**
+
 - Data export functionality
 - Account deletion (with confirmation dialog)
 - Subscription management
 
 #### **CreateInvitation.tsx (Protected)**
+
 **Features**: Real-time preview, form validation, Supabase integration
 
 **Form Fields:**
+
 - Groom and bride names
 - Wedding date and time picker
 - Venue name and address
@@ -353,11 +417,13 @@ CREATE POLICY "Users can upload own avatar" ON storage.objects FOR INSERT WITH C
 - Guest list import/manual entry
 
 **Preview Panel:**
+
 - Live preview of invitation
 - Template customization options
 - Color and font adjustments
 
 #### **Templates.tsx**
+
 - Grid layout of available templates
 - Category filtering (Classic, Modern, Elegant, Simple)
 - Search functionality
@@ -366,6 +432,7 @@ CREATE POLICY "Users can upload own avatar" ON storage.objects FOR INSERT WITH C
 - "Use Template" button leading to creation page
 
 #### **TemplateBuilder.tsx (Protected)**
+
 - Drag-and-drop interface for custom templates
 - Color picker for theme customization
 - Font selection dropdown
@@ -376,9 +443,11 @@ CREATE POLICY "Users can upload own avatar" ON storage.objects FOR INSERT WITH C
 - Preview mode toggle
 
 #### **Pricing.tsx**
+
 **Three Plans: Basic (Free), Premium (29,000 so'm/month), Business (99,000 so'm/month)**
 
 **Plan Cards with:**
+
 - Animated hover effects and glow animations
 - Feature comparison lists
 - Monthly/yearly toggle with discount badge
@@ -386,12 +455,14 @@ CREATE POLICY "Users can upload own avatar" ON storage.objects FOR INSERT WITH C
 - Call-to-action buttons
 
 **Additional Sections:**
+
 - FAQ accordion
 - Feature overview grid
 - Customer testimonials
 - Money-back guarantee
 
 #### **Features.tsx**
+
 - Comprehensive feature showcase
 - Main features grid with detailed descriptions
 - Additional features list
@@ -400,6 +471,7 @@ CREATE POLICY "Users can upload own avatar" ON storage.objects FOR INSERT WITH C
 - Call-to-action section
 
 #### **InvitationView.tsx (Public)**
+
 - Beautiful invitation display with selected template
 - RSVP form with guest name input
 - Attendance selection (Will attend / Can't attend)
@@ -411,6 +483,7 @@ CREATE POLICY "Users can upload own avatar" ON storage.objects FOR INSERT WITH C
 ### COMPONENT SPECIFICATIONS
 
 #### **Navigation.tsx**
+
 ```typescript
 interface NavigationProps {
   showBackButton?: boolean;
@@ -426,6 +499,7 @@ interface NavigationProps {
 ```
 
 #### **TemplateRenderer.tsx**
+
 ```typescript
 interface TemplateRendererProps {
   template: Template;
@@ -442,17 +516,25 @@ interface TemplateRendererProps {
 ```
 
 #### **AuthContext.tsx**
+
 ```typescript
 interface AuthContextType {
   user: User | null;
   profile: Profile | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string, metadata?: any) => Promise<{error: AuthError | null}>;
-  signIn: (email: string, password: string) => Promise<{error: AuthError | null}>;
-  signInWithGoogle: () => Promise<{error: AuthError | null}>;
-  signOut: () => Promise<{error: AuthError | null}>;
-  updateProfile: (updates: Partial<Profile>) => Promise<{error: any}>;
+  signUp: (
+    email: string,
+    password: string,
+    metadata?: any,
+  ) => Promise<{ error: AuthError | null }>;
+  signIn: (
+    email: string,
+    password: string,
+  ) => Promise<{ error: AuthError | null }>;
+  signInWithGoogle: () => Promise<{ error: AuthError | null }>;
+  signOut: () => Promise<{ error: AuthError | null }>;
+  updateProfile: (updates: Partial<Profile>) => Promise<{ error: any }>;
 }
 
 // Features:
@@ -463,6 +545,7 @@ interface AuthContextType {
 ```
 
 #### **ThemeContext.tsx**
+
 ```typescript
 interface ThemeContextType {
   theme: "light" | "dark" | "system";
@@ -482,6 +565,7 @@ interface ThemeContextType {
 **Primary Language**: Uzbek (Latin script)
 
 **Key Translations:**
+
 - Taklifnomalar → Invitations
 - Yaratish → Create
 - Shablonlar → Templates
@@ -495,6 +579,7 @@ interface ThemeContextType {
 - Sozlamalar → Settings
 
 **Template Content Examples:**
+
 - Groom/Bride: "Jahongir & Sarvinoz"
 - Date format: "15-iyun, 2024-yil"
 - Time format: "16:00"
@@ -504,21 +589,25 @@ interface ThemeContextType {
 ### ANIMATION AND INTERACTION PATTERNS
 
 **Page Load Animations:**
+
 - Staggered fade-in for content sections
 - Slide-up animations with delays (0.1s intervals)
 - Scale-in for cards and buttons
 
 **Hover Effects:**
+
 - Lift effect for cards (translateY(-2px) + shadow)
 - Scale effect for buttons and icons (scale(1.05))
 - Glow effect for primary actions
 
 **Loading States:**
+
 - Skeleton loaders for content
 - Spinner animations for buttons
 - Progressive image loading
 
 **Micro-interactions:**
+
 - Button press animations
 - Form field focus states
 - Success/error message animations
@@ -527,21 +616,25 @@ interface ThemeContextType {
 ### COLOR USAGE GUIDELINES
 
 **Primary Blue (#4285f4):**
+
 - Main brand color for buttons, links, highlights
 - Active states and selections
 - Progress indicators
 
 **Success Green:**
+
 - Form validation success
 - Confirmation messages
 - Achievement badges
 
 **Warning/Error Colors:**
+
 - Form validation errors
 - Alert messages
 - Destructive actions
 
 **Typography:**
+
 - Page titles: text-3xl to text-4xl
 - Section headings: text-xl to text-2xl
 - Body text: text-sm to text-base
@@ -550,11 +643,13 @@ interface ThemeContextType {
 ### RESPONSIVE DESIGN
 
 **Breakpoints:**
+
 - Mobile: 320px - 768px
 - Tablet: 768px - 1024px
 - Desktop: 1024px+
 
 **Mobile Adaptations:**
+
 - Collapsible navigation menu
 - Stacked layout for cards
 - Touch-friendly button sizes (min 44px)
@@ -563,12 +658,14 @@ interface ThemeContextType {
 ### DEVELOPMENT SETUP
 
 **Environment Variables:**
+
 ```env
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 **Build Commands:**
+
 ```bash
 npm install
 npm run dev     # Development server
@@ -579,6 +676,7 @@ npm run preview # Preview production build
 ### FUNCTIONAL REQUIREMENTS CHECKLIST
 
 **Authentication:**
+
 - [ ] User registration with email/password
 - [ ] Google OAuth integration
 - [ ] Session management and persistence
@@ -586,6 +684,7 @@ npm run preview # Preview production build
 - [ ] Profile creation and updates
 
 **Invitation Management:**
+
 - [ ] Create invitations with form validation
 - [ ] Template selection and customization
 - [ ] Image upload and management
@@ -593,24 +692,28 @@ npm run preview # Preview production build
 - [ ] Save drafts and publish
 
 **Guest Management:**
+
 - [ ] Add guests manually or via import
 - [ ] Track RSVP responses
 - [ ] Send invitations via multiple channels
 - [ ] Guest analytics and reporting
 
 **Template System:**
+
 - [ ] Multiple built-in templates
 - [ ] Custom template builder
 - [ ] Template preview and selection
 - [ ] Template categorization
 
 **Analytics:**
+
 - [ ] View tracking for invitations
 - [ ] RSVP response tracking
 - [ ] User dashboard with statistics
 - [ ] Export functionality
 
 **UI/UX:**
+
 - [ ] Responsive design for all devices
 - [ ] Dark/light theme support
 - [ ] Smooth animations and transitions
@@ -620,6 +723,7 @@ npm run preview # Preview production build
 ### SUCCESS METRICS
 
 The completed platform should provide:
+
 1. **User Experience**: Intuitive interface that allows users to create invitations in under 3 minutes
 2. **Technical Performance**: Fast loading times (<2s), responsive design, smooth animations
 3. **Functionality**: All CRUD operations working, real-time updates, secure authentication

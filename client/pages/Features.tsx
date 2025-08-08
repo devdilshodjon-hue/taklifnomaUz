@@ -117,38 +117,72 @@ export default function Features() {
     {
       icon: Palette,
       title: "Chiroyli Shablonlar",
-      description: "15+ professional shablon va cheksiz personallashtirish imkoniyatlari",
-      features: ["Zamonaviy dizaynlar", "Ranglar va shriftlar", "Maxsus logotip", "Mobil uchun optimallashtirilgan"],
+      description:
+        "15+ professional shablon va cheksiz personallashtirish imkoniyatlari",
+      features: [
+        "Zamonaviy dizaynlar",
+        "Ranglar va shriftlar",
+        "Maxsus logotip",
+        "Mobil uchun optimallashtirilgan",
+      ],
     },
     {
       icon: Users,
       title: "Mehmon Boshqaruvi",
-      description: "RSVP javoblarini kuzatib boring va mehmon ro'yxatini oson boshqaring",
-      features: ["RSVP kuzatuvi", "Mehmon kategoriyalari", "Avtomatik eslatmalar", "CSV export"],
+      description:
+        "RSVP javoblarini kuzatib boring va mehmon ro'yxatini oson boshqaring",
+      features: [
+        "RSVP kuzatuvi",
+        "Mehmon kategoriyalari",
+        "Avtomatik eslatmalar",
+        "CSV export",
+      ],
     },
     {
       icon: Share2,
       title: "Kuchli Ulashish",
-      description: "Taklifnomani barcha ijtimoiy tarmoqlarda va messenger'larda ulashing",
-      features: ["WhatsApp, Telegram", "Facebook, Instagram", "QR kod", "Direct link"],
+      description:
+        "Taklifnomani barcha ijtimoiy tarmoqlarda va messenger'larda ulashing",
+      features: [
+        "WhatsApp, Telegram",
+        "Facebook, Instagram",
+        "QR kod",
+        "Direct link",
+      ],
     },
     {
       icon: BarChart3,
       title: "Real-time Statistika",
-      description: "Taklifnomangiz qanchalik ko'rilganini va javoblar statistikasini kuzatib boring",
-      features: ["Ko'rishlar soni", "RSVP statistikasi", "Geografik ma'lumotlar", "Haftalik hisobotlar"],
+      description:
+        "Taklifnomangiz qanchalik ko'rilganini va javoblar statistikasini kuzatib boring",
+      features: [
+        "Ko'rishlar soni",
+        "RSVP statistikasi",
+        "Geografik ma'lumotlar",
+        "Haftalik hisobotlar",
+      ],
     },
     {
       icon: Smartphone,
       title: "Mobil Optimizatsiya",
       description: "Barcha qurilmalarda mukammal ko'rinish va tez yuklash",
-      features: ["Responsive dizayn", "Tez yuklash", "Offline ko'rish", "Touch friendly"],
+      features: [
+        "Responsive dizayn",
+        "Tez yuklash",
+        "Offline ko'rish",
+        "Touch friendly",
+      ],
     },
     {
       icon: Shield,
       title: "Xavfsizlik va Maxfiylik",
       description: "Ma'lumotlaringiz himoyalangan va xavfsiz saqlanadi",
-      features: ["SSL shifrlash", "GDPR muvofiq", "Ma'lumotlar backup", "Spam himoyasi"],
+      features: [
+        "SSL shifrlash",
+        "GDPR muvofiq",
+        "Ma'lumotlar backup",
+        "Spam himoyasi",
+      ],
     },
   ];
 
@@ -214,8 +248,8 @@ export default function Features() {
             </span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-            Professional taklifnomalar yaratish uchun eng zamonaviy vositalar va imkoniyatlar.
-            Bepul rejadan boshlab, biznes darajasigacha.
+            Professional taklifnomalar yaratish uchun eng zamonaviy vositalar va
+            imkoniyatlar. Bepul rejadan boshlab, biznes darajasigacha.
           </p>
         </div>
 
@@ -224,8 +258,8 @@ export default function Features() {
           {mainFeatures.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="card-modern p-8 hover-lift animate-slide-up transition-all duration-300"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
@@ -240,7 +274,10 @@ export default function Features() {
                 </p>
                 <ul className="space-y-2">
                   {feature.features.map((item, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <li
+                      key={idx}
+                      className="flex items-center gap-2 text-sm text-muted-foreground"
+                    >
                       <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
                       {item}
                     </li>
@@ -266,8 +303,8 @@ export default function Features() {
             {additionalFeatures.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="card-modern p-6 text-center hover-lift animate-fade-in transition-all duration-300"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
@@ -342,7 +379,9 @@ export default function Features() {
                 <div
                   key={plan.id}
                   className={`relative card-modern p-8 hover-lift transition-all duration-300 animate-slide-up ${
-                    plan.popular ? "ring-2 ring-primary shadow-xl scale-105 hover:scale-110" : "hover:scale-105"
+                    plan.popular
+                      ? "ring-2 ring-primary shadow-xl scale-105 hover:scale-110"
+                      : "hover:scale-105"
                   }`}
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
@@ -410,7 +449,9 @@ export default function Features() {
                       <ul className="space-y-2">
                         {plan.limitations.map((limitation, idx) => (
                           <li key={idx} className="flex items-start gap-3">
-                            <span className="w-4 h-4 text-red-500 mt-0.5">✕</span>
+                            <span className="w-4 h-4 text-red-500 mt-0.5">
+                              ✕
+                            </span>
                             <span className="text-sm text-muted-foreground">
                               {limitation}
                             </span>
@@ -422,7 +463,9 @@ export default function Features() {
 
                   <Button
                     className={`w-full hover-lift transition-all ${
-                      plan.popular ? "primary-gradient animate-glow" : "hover:border-primary hover:text-primary"
+                      plan.popular
+                        ? "primary-gradient animate-glow"
+                        : "hover:border-primary hover:text-primary"
                     }`}
                     variant={plan.popular ? "default" : "outline"}
                     asChild

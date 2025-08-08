@@ -259,7 +259,9 @@ export default function Pricing() {
               <div
                 key={plan.id}
                 className={`relative card-modern p-8 hover-lift transition-all duration-300 animate-slide-up ${
-                  plan.popular ? "ring-2 ring-primary shadow-xl scale-105 hover:scale-110" : "hover:scale-105"
+                  plan.popular
+                    ? "ring-2 ring-primary shadow-xl scale-105 hover:scale-110"
+                    : "hover:scale-105"
                 }`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
@@ -339,7 +341,9 @@ export default function Pricing() {
 
                 <Button
                   className={`w-full hover-lift transition-all ${
-                    plan.popular ? "primary-gradient animate-glow" : "hover:border-primary hover:text-primary"
+                    plan.popular
+                      ? "primary-gradient animate-glow"
+                      : "hover:border-primary hover:text-primary"
                   }`}
                   variant={plan.popular ? "default" : "outline"}
                   asChild

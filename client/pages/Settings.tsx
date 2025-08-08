@@ -651,12 +651,20 @@ export default function Settings() {
                                 : "border-border hover:border-primary/30"
                             }`}
                           >
-                            <Icon className={`w-6 h-6 mx-auto mb-2 transition-transform hover-scale ${
-                              theme === option.value ? "text-primary" : "text-muted-foreground"
-                            }`} />
-                            <div className={`text-sm font-medium ${
-                              theme === option.value ? "text-primary" : "text-foreground"
-                            }`}>
+                            <Icon
+                              className={`w-6 h-6 mx-auto mb-2 transition-transform hover-scale ${
+                                theme === option.value
+                                  ? "text-primary"
+                                  : "text-muted-foreground"
+                              }`}
+                            />
+                            <div
+                              className={`text-sm font-medium ${
+                                theme === option.value
+                                  ? "text-primary"
+                                  : "text-foreground"
+                              }`}
+                            >
                               {option.label}
                             </div>
                           </button>

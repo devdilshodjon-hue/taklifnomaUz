@@ -36,20 +36,92 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-// Supabase jadvallar mavjudligini tekshirish
-export const checkDatabaseSetup = async (): Promise<boolean> => {
-  try {
-    const { error } = await supabase.from("invitations").select("id").limit(1);
+// Enhanced database operations with caching and performance optimizations
+// ===================================================================
 
-    if (
-      error &&
-      error.message.includes("table") &&
-      error.message.includes("does not exist")
-    ) {
-      return false;
+// Connection pool manager
+class ConnectionManager {
+  private static instance: ConnectionManager;
+  private connectionCount = 0;
+  private maxConnections = 10;
+  private activeQueries = new Map<string, Promise<any>>();
+
+  static getInstance(): ConnectionManager {
+    if (!ConnectionManager.instance) {
+      ConnectionManager.instance = new ConnectionManager();
+    }
+    return ConnectionManager.instance;
+  }
+
+  async executeQuery<T>(key: string, queryFn: () => Promise<T>): Promise<T> {
+    // Check if same query is already running
+    if (this.activeQueries.has(key)) {
+      return this.activeQueries.get(key);
     }
 
-    return true;
+    // Execute query
+    const queryPromise = this.withConnection(queryFn);
+    this.activeQueries.set(key, queryPromise);
+
+    try {
+      const result = await queryPromise;
+      return result;
+    } finally {
+      this.activeQueries.delete(key);
+    }
+  }
+
+  private async withConnection<T>(queryFn: () => Promise<T>): Promise<T> {
+    if (this.connectionCount >= this.maxConnections) {
+      await this.waitForConnection();
+    }
+
+    this.connectionCount++;
+    try {
+      return await queryFn();
+    } finally {
+      this.connectionCount--;
+    }
+  }
+
+  private async waitForConnection(): Promise<void> {
+    return new Promise((resolve) => {
+      const checkConnection = () => {
+        if (this.connectionCount < this.maxConnections) {
+          resolve();
+        } else {
+          setTimeout(checkConnection, 10);
+        }
+      };
+      checkConnection();
+    });
+  }
+}
+
+const connectionManager = ConnectionManager.getInstance();
+
+// Database setup check with caching
+export const checkDatabaseSetup = async (): Promise<boolean> => {
+  const cached = cacheUtils.getConfig('database_setup');
+  if (cached !== null) {
+    return cached;
+  }
+
+  try {
+    const result = await connectionManager.executeQuery('db_setup_check', async () => {
+      const { error } = await supabase.from("invitations").select("id").limit(1);
+
+      if (error &&
+          (error.message.includes("table") && error.message.includes("does not exist")) ||
+          error.message.includes("does not exist")) {
+        return false;
+      }
+      return true;
+    });
+
+    // Cache result for 5 minutes
+    cacheUtils.setConfig('database_setup', result);
+    return result;
   } catch (error) {
     console.log("Database tekshiruvida xatolik:", error);
     return false;

@@ -187,6 +187,9 @@ CREATE INDEX IF NOT EXISTS idx_invitations_slug ON public.invitations(slug);
 CREATE INDEX IF NOT EXISTS idx_invitations_active ON public.invitations(is_active);
 CREATE INDEX IF NOT EXISTS idx_guests_invitation_id ON public.guests(invitation_id);
 CREATE INDEX IF NOT EXISTS idx_rsvps_invitation_id ON public.rsvps(invitation_id);
+CREATE INDEX IF NOT EXISTS idx_custom_templates_user_id ON public.custom_templates(user_id);
+CREATE INDEX IF NOT EXISTS idx_custom_templates_public ON public.custom_templates(is_public);
+CREATE INDEX IF NOT EXISTS idx_custom_templates_featured ON public.custom_templates(is_featured);
 
 -- Demo ma'lumotlar (ixtiyoriy)
 -- Bu qismni faqat test uchun ishlatishingiz mumkin

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Dancing+Script:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,58 +6,59 @@
 
 @layer base {
   /**
-   * Tailwind CSS theme
-   * tailwind.config.ts expects the following color variables to be expressed as HSL values.
-   * A different format will require also updating the theme in tailwind.config.ts.
+   * Modern minimalistic color scheme
+   * Deep blues, pure whites, and subtle accents for premium feel
   */
   :root {
-    --background: 40 20% 97%;
-    --foreground: 30 15% 15%;
+    --background: 0 0% 100%;
+    --foreground: 224 71% 4%;
 
-    --card: 40 20% 99%;
-    --card-foreground: 30 15% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
 
-    --popover: 40 20% 99%;
-    --popover-foreground: 30 15% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
 
-    --primary: 340 30% 75%;
-    --primary-foreground: 40 20% 99%;
+    --primary: 220 91% 56%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 30 15% 92%;
-    --secondary-foreground: 30 15% 25%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 9% 46%;
 
-    --muted: 30 15% 92%;
-    --muted-foreground: 30 10% 45%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 340 25% 90%;
-    --accent-foreground: 340 30% 25%;
+    --accent: 220 14% 96%;
+    --accent-foreground: 220 9% 46%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 30 15% 85%;
-    --input: 30 15% 90%;
-    --ring: 340 30% 75%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 220 91% 56%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    /* Wedding-specific colors */
-    --wedding-cream: 40 20% 97%;
-    --wedding-blush: 340 30% 85%;
-    --wedding-rose: 340 40% 75%;
-    --wedding-gold: 40 50% 70%;
-    --wedding-sage: 120 15% 70%;
-    --wedding-ivory: 45 25% 95%;
-    --wedding-dusty: 340 20% 80%;
+    /* Modern theme colors */
+    --theme-primary: 220 91% 56%;
+    --theme-primary-light: 220 91% 66%;
+    --theme-primary-dark: 220 91% 46%;
+    --theme-secondary: 220 14% 96%;
+    --theme-accent: 47 96% 89%;
+    --theme-gray: 220 9% 46%;
+    --theme-gray-light: 220 14% 96%;
+    --theme-success: 142 71% 45%;
+    --theme-warning: 38 92% 50%;
 
-    --sidebar-background: 40 20% 97%;
-    --sidebar-foreground: 30 15% 25%;
-    --sidebar-primary: 340 30% 75%;
-    --sidebar-primary-foreground: 40 20% 99%;
-    --sidebar-accent: 30 15% 90%;
-    --sidebar-accent-foreground: 30 15% 25%;
-    --sidebar-border: 30 15% 85%;
-    --sidebar-ring: 340 30% 75%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 9% 46%;
+    --sidebar-primary: 220 91% 56%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent-foreground: 220 9% 46%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 220 91% 56%;
   }
 
   .dark {

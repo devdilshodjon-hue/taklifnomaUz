@@ -53,7 +53,7 @@ export default function Templates() {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background animate-fade-in">
       <Navigation showBackButton />
 
       <div className="max-w-6xl mx-auto p-6">

@@ -146,8 +146,8 @@ export default function CreateInvitation() {
       if (error) {
         console.log('Supabase xatoligi:', error.message || error);
         console.log('Demo rejimida taklifnoma yaratilmoqda...');
-        // Demo uchun mock ID yaratamiz
-        const mockId = "demo-" + Date.now();
+        // Demo uchun UUID formatda ID yaratamiz
+        const mockId = generateDemoInvitationId();
         navigate(`/invitation/${mockId}`);
         return;
       }

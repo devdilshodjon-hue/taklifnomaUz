@@ -102,9 +102,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // First check if we have a valid session
       const {
         data: { session },
+        error: sessionError,
       } = await supabase.auth.getSession();
-      if (!session) {
+
+      if (sessionError || !session) {
+        console.log("Session invalid, signing out...");
+        await supabase.auth.signOut();
         setProfile(null);
+        setSession(null);
+        setUser(null);
         setLoading(false);
         return;
       }

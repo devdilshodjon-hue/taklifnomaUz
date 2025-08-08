@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase, isTableNotFoundError } from "@/lib/supabase";
 import { isDemoId, isValidUUID } from "@/lib/utils";
 import DatabaseSetupGuide from "@/components/DatabaseSetupGuide";
+import TemplateRenderer from "@/components/TemplateRenderer";
 
 interface Invitation {
   id: string;

@@ -420,5 +420,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     updateProfile,
   };
 
+  console.log("AuthProvider providing value:", value);
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

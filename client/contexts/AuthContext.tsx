@@ -182,8 +182,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             hint: error?.hint,
             code: error?.code,
           });
-          // For RLS errors or other issues, set profile to null but don't break auth
-          setProfile(null);
+
+          // Handle 406 and other session-related errors by signing out
+          if (error?.message?.includes('406') || error?.code === 'PGRST301' || error?.message?.includes('JWT')) {
+            console.log("Session-related error detected, signing out...");
+            await supabase.auth.signOut();
+            setProfile(null);
+            setSession(null);
+            setUser(null);
+          } else {
+            // For other RLS errors, set profile to null but don't break auth
+            setProfile(null);
+          }
         }
       } else if (data) {
         setProfile(data);

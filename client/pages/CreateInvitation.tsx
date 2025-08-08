@@ -503,6 +503,22 @@ export default function CreateInvitation() {
                               <span className="text-white text-xs">✓</span>
                             </div>
                           )}
+
+                          {/* Preview button */}
+                          <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-6 px-2 text-xs"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handlePreviewTemplate(template);
+                              }}
+                            >
+                              <Eye className="w-3 h-3 mr-1" />
+                              Ko'rish
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     ))}

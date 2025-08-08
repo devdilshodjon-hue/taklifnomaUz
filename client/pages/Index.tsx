@@ -107,7 +107,7 @@ export default function Index() {
       <section className="hero-gradient pt-20 pb-32 animate-fade-in">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <div className="max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-8">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-8 animate-slide-up hover-scale">
               <Sparkles className="w-4 h-4" />
               10,000 dan ortiq er-xotin TaklifNoma ga ishonadi
             </div>

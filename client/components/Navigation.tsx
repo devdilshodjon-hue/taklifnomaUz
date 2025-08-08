@@ -35,7 +35,7 @@ export default function Navigation({
     >
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-4">
-          {showBackButton && (
+          {shouldShowBackButton && (
             <Button variant="ghost" size="sm" asChild>
               <Link to="/">
                 <ArrowRight className="w-4 h-4 mr-2 rotate-180" />

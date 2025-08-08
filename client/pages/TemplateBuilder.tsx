@@ -30,7 +30,13 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface TemplateConfig {
@@ -72,7 +78,9 @@ export default function TemplateBuilder() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("colors");
-  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("desktop");
+  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">(
+    "desktop",
+  );
 
   // Template data for real-time preview
   const [templateData, setTemplateData] = useState<InvitationData>({
@@ -83,7 +91,8 @@ export default function TemplateBuilder() {
     weddingTime: "16:00",
     venue: "Atirgul Bog'i",
     address: "Toshkent sh., Yunusobod t., Bog' ko'chasi 123",
-    customMessage: "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz."
+    customMessage:
+      "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
   });
 
   const [config, setConfig] = useState<TemplateConfig>({
@@ -151,20 +160,39 @@ export default function TemplateBuilder() {
   ];
 
   const fontOptions = [
-    "Inter", "Poppins", "Playfair Display", "Dancing Script", "Montserrat", 
-    "Lora", "Open Sans", "Roboto", "Merriweather", "Crimson Text"
+    "Inter",
+    "Poppins",
+    "Playfair Display",
+    "Dancing Script",
+    "Montserrat",
+    "Lora",
+    "Open Sans",
+    "Roboto",
+    "Merriweather",
+    "Crimson Text",
   ];
 
   const layoutStyles = [
-    { value: "classic", label: "Klassik", description: "An'anaviy va sodda dizayn" },
-    { value: "modern", label: "Zamonaviy", description: "Minimalistik va zamonaviy" },
+    {
+      value: "classic",
+      label: "Klassik",
+      description: "An'anaviy va sodda dizayn",
+    },
+    {
+      value: "modern",
+      label: "Zamonaviy",
+      description: "Minimalistik va zamonaviy",
+    },
     { value: "elegant", label: "Nafis", description: "Chiroyli va nafis" },
     { value: "rustic", label: "Tabiy", description: "Tabiy va issiq" },
     { value: "luxury", label: "Hashamatli", description: "Dabdabali va noyob" },
   ];
 
-  const handleColorChange = (colorType: keyof TemplateConfig["colors"], value: string) => {
-    setConfig(prev => ({
+  const handleColorChange = (
+    colorType: keyof TemplateConfig["colors"],
+    value: string,
+  ) => {
+    setConfig((prev) => ({
       ...prev,
       colors: {
         ...prev.colors,
@@ -173,8 +201,11 @@ export default function TemplateBuilder() {
     }));
   };
 
-  const handleFontChange = (fontType: keyof TemplateConfig["fonts"], value: string) => {
-    setConfig(prev => ({
+  const handleFontChange = (
+    fontType: keyof TemplateConfig["fonts"],
+    value: string,
+  ) => {
+    setConfig((prev) => ({
       ...prev,
       fonts: {
         ...prev.fonts,
@@ -183,8 +214,11 @@ export default function TemplateBuilder() {
     }));
   };
 
-  const handleLayoutChange = (layoutKey: keyof TemplateConfig["layout"], value: any) => {
-    setConfig(prev => ({
+  const handleLayoutChange = (
+    layoutKey: keyof TemplateConfig["layout"],
+    value: any,
+  ) => {
+    setConfig((prev) => ({
       ...prev,
       layout: {
         ...prev.layout,
@@ -193,15 +227,18 @@ export default function TemplateBuilder() {
     }));
   };
 
-  const handleTemplateDataChange = (key: keyof InvitationData, value: string) => {
-    setTemplateData(prev => ({
+  const handleTemplateDataChange = (
+    key: keyof InvitationData,
+    value: string,
+  ) => {
+    setTemplateData((prev) => ({
       ...prev,
       [key]: value,
     }));
   };
 
-  const applyColorPreset = (preset: typeof colorPresets[0]) => {
-    setConfig(prev => ({
+  const applyColorPreset = (preset: (typeof colorPresets)[0]) => {
+    setConfig((prev) => ({
       ...prev,
       colors: preset.colors,
     }));
@@ -209,35 +246,35 @@ export default function TemplateBuilder() {
 
   const saveTemplate = async () => {
     if (!user) return;
-    
+
     setLoading(true);
     setError("");
     setSuccess("");
-    
+
     try {
       const templateToSave = {
         user_id: user.id,
         name: templateData.templateName,
-        description: `Custom template created on ${new Date().toLocaleDateString('uz-UZ')}`,
-        category: 'custom',
+        description: `Custom template created on ${new Date().toLocaleDateString("uz-UZ")}`,
+        category: "custom",
         colors: config.colors,
         fonts: config.fonts,
         layout_config: config.layout,
         is_public: false,
         is_featured: false,
       };
-      
+
       const { data, error: saveError } = await supabase
-        .from('custom_templates')
+        .from("custom_templates")
         .insert(templateToSave)
         .select()
         .single();
-        
+
       if (saveError) throw saveError;
-      
+
       setSuccess("Shablon muvaffaqiyatli saqlandi!");
       setTimeout(() => {
-        navigate('/templates');
+        navigate("/templates");
       }, 2000);
     } catch (err: any) {
       console.error("Template save error:", err);
@@ -292,20 +329,23 @@ export default function TemplateBuilder() {
     };
 
     return (
-      <div 
-        className={`template-preview ${previewDevice === 'mobile' ? 'max-w-sm' : 'max-w-md'} mx-auto`}
+      <div
+        className={`template-preview ${previewDevice === "mobile" ? "max-w-sm" : "max-w-md"} mx-auto`}
         style={style}
       >
         <div className="text-center space-y-6">
           {/* Header */}
           <div className="space-y-2">
-            <div 
+            <div
               className="text-sm font-medium tracking-widest uppercase"
               style={{ color: config.colors.secondary }}
             >
               To'y Taklifnomasi
             </div>
-            <div className="w-16 h-0.5 mx-auto" style={{ backgroundColor: config.colors.accent }}></div>
+            <div
+              className="w-16 h-0.5 mx-auto"
+              style={{ backgroundColor: config.colors.accent }}
+            ></div>
           </div>
 
           {/* Names */}
@@ -323,7 +363,10 @@ export default function TemplateBuilder() {
 
           {/* Date and Time */}
           <div className="space-y-2">
-            <div className="text-lg font-semibold" style={{ color: config.colors.primary }}>
+            <div
+              className="text-lg font-semibold"
+              style={{ color: config.colors.primary }}
+            >
               {templateData.weddingDate}
             </div>
             <div className="text-md" style={{ color: config.colors.secondary }}>
@@ -333,8 +376,14 @@ export default function TemplateBuilder() {
 
           {/* Venue */}
           <div className="space-y-2">
-            <div className="w-12 h-0.5 mx-auto" style={{ backgroundColor: config.colors.accent }}></div>
-            <div className="text-lg font-medium" style={{ color: config.colors.primary }}>
+            <div
+              className="w-12 h-0.5 mx-auto"
+              style={{ backgroundColor: config.colors.accent }}
+            ></div>
+            <div
+              className="text-lg font-medium"
+              style={{ color: config.colors.primary }}
+            >
               {templateData.venue}
             </div>
             <div className="text-sm" style={{ color: config.colors.secondary }}>
@@ -343,15 +392,27 @@ export default function TemplateBuilder() {
           </div>
 
           {/* Message */}
-          <div className="text-sm leading-relaxed italic" style={{ color: config.colors.text }}>
+          <div
+            className="text-sm leading-relaxed italic"
+            style={{ color: config.colors.text }}
+          >
             "{templateData.customMessage}"
           </div>
 
           {/* Decorative element */}
           <div className="flex justify-center items-center space-x-2">
-            <div className="w-8 h-0.5" style={{ backgroundColor: config.colors.accent }}></div>
-            <Sparkles className="w-4 h-4" style={{ color: config.colors.accent }} />
-            <div className="w-8 h-0.5" style={{ backgroundColor: config.colors.accent }}></div>
+            <div
+              className="w-8 h-0.5"
+              style={{ backgroundColor: config.colors.accent }}
+            ></div>
+            <Sparkles
+              className="w-4 h-4"
+              style={{ color: config.colors.accent }}
+            />
+            <div
+              className="w-8 h-0.5"
+              style={{ backgroundColor: config.colors.accent }}
+            ></div>
           </div>
         </div>
       </div>
@@ -435,7 +496,9 @@ export default function TemplateBuilder() {
                     <Input
                       id="templateName"
                       value={templateData.templateName}
-                      onChange={(e) => handleTemplateDataChange("templateName", e.target.value)}
+                      onChange={(e) =>
+                        handleTemplateDataChange("templateName", e.target.value)
+                      }
                       placeholder="Mening yangi shablonim"
                       className="mt-1"
                     />
@@ -446,7 +509,9 @@ export default function TemplateBuilder() {
                       <Input
                         id="groomName"
                         value={templateData.groomName}
-                        onChange={(e) => handleTemplateDataChange("groomName", e.target.value)}
+                        onChange={(e) =>
+                          handleTemplateDataChange("groomName", e.target.value)
+                        }
                         className="mt-1"
                       />
                     </div>
@@ -455,7 +520,9 @@ export default function TemplateBuilder() {
                       <Input
                         id="brideName"
                         value={templateData.brideName}
-                        onChange={(e) => handleTemplateDataChange("brideName", e.target.value)}
+                        onChange={(e) =>
+                          handleTemplateDataChange("brideName", e.target.value)
+                        }
                         className="mt-1"
                       />
                     </div>
@@ -466,7 +533,12 @@ export default function TemplateBuilder() {
                       <Input
                         id="weddingDate"
                         value={templateData.weddingDate}
-                        onChange={(e) => handleTemplateDataChange("weddingDate", e.target.value)}
+                        onChange={(e) =>
+                          handleTemplateDataChange(
+                            "weddingDate",
+                            e.target.value,
+                          )
+                        }
                         className="mt-1"
                       />
                     </div>
@@ -475,7 +547,12 @@ export default function TemplateBuilder() {
                       <Input
                         id="weddingTime"
                         value={templateData.weddingTime}
-                        onChange={(e) => handleTemplateDataChange("weddingTime", e.target.value)}
+                        onChange={(e) =>
+                          handleTemplateDataChange(
+                            "weddingTime",
+                            e.target.value,
+                          )
+                        }
                         className="mt-1"
                       />
                     </div>
@@ -485,7 +562,9 @@ export default function TemplateBuilder() {
                     <Input
                       id="venue"
                       value={templateData.venue}
-                      onChange={(e) => handleTemplateDataChange("venue", e.target.value)}
+                      onChange={(e) =>
+                        handleTemplateDataChange("venue", e.target.value)
+                      }
                       className="mt-1"
                     />
                   </div>
@@ -494,7 +573,9 @@ export default function TemplateBuilder() {
                     <Input
                       id="address"
                       value={templateData.address}
-                      onChange={(e) => handleTemplateDataChange("address", e.target.value)}
+                      onChange={(e) =>
+                        handleTemplateDataChange("address", e.target.value)
+                      }
                       className="mt-1"
                     />
                   </div>
@@ -503,7 +584,12 @@ export default function TemplateBuilder() {
                     <Textarea
                       id="customMessage"
                       value={templateData.customMessage}
-                      onChange={(e) => handleTemplateDataChange("customMessage", e.target.value)}
+                      onChange={(e) =>
+                        handleTemplateDataChange(
+                          "customMessage",
+                          e.target.value,
+                        )
+                      }
                       className="mt-1"
                       rows={3}
                     />
@@ -515,15 +601,24 @@ export default function TemplateBuilder() {
               <div className="card-modern p-6 animate-slide-up delay-100">
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
                   <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="colors" className="flex items-center gap-2">
+                    <TabsTrigger
+                      value="colors"
+                      className="flex items-center gap-2"
+                    >
                       <Palette className="w-4 h-4" />
                       Ranglar
                     </TabsTrigger>
-                    <TabsTrigger value="fonts" className="flex items-center gap-2">
+                    <TabsTrigger
+                      value="fonts"
+                      className="flex items-center gap-2"
+                    >
                       <Type className="w-4 h-4" />
                       Shriftlar
                     </TabsTrigger>
-                    <TabsTrigger value="layout" className="flex items-center gap-2">
+                    <TabsTrigger
+                      value="layout"
+                      className="flex items-center gap-2"
+                    >
                       <Layout className="w-4 h-4" />
                       Layout
                     </TabsTrigger>
@@ -532,7 +627,9 @@ export default function TemplateBuilder() {
                   <TabsContent value="colors" className="space-y-6 mt-6">
                     {/* Color Presets */}
                     <div>
-                      <Label className="text-sm font-medium">Ranglar Presetlari</Label>
+                      <Label className="text-sm font-medium">
+                        Ranglar Presetlari
+                      </Label>
                       <div className="grid grid-cols-2 gap-3 mt-2">
                         {colorPresets.map((preset, index) => (
                           <button
@@ -541,20 +638,28 @@ export default function TemplateBuilder() {
                             className="p-3 border border-border rounded-lg hover:border-primary/50 transition-colors hover-lift"
                           >
                             <div className="flex items-center gap-2 mb-2">
-                              <div 
-                                className="w-4 h-4 rounded-full" 
-                                style={{ backgroundColor: preset.colors.primary }}
+                              <div
+                                className="w-4 h-4 rounded-full"
+                                style={{
+                                  backgroundColor: preset.colors.primary,
+                                }}
                               ></div>
-                              <div 
-                                className="w-4 h-4 rounded-full" 
-                                style={{ backgroundColor: preset.colors.secondary }}
+                              <div
+                                className="w-4 h-4 rounded-full"
+                                style={{
+                                  backgroundColor: preset.colors.secondary,
+                                }}
                               ></div>
-                              <div 
-                                className="w-4 h-4 rounded-full" 
-                                style={{ backgroundColor: preset.colors.accent }}
+                              <div
+                                className="w-4 h-4 rounded-full"
+                                style={{
+                                  backgroundColor: preset.colors.accent,
+                                }}
                               ></div>
                             </div>
-                            <div className="text-xs font-medium text-foreground">{preset.name}</div>
+                            <div className="text-xs font-medium text-foreground">
+                              {preset.name}
+                            </div>
                           </button>
                         ))}
                       </div>
@@ -564,18 +669,30 @@ export default function TemplateBuilder() {
                     <div className="space-y-4">
                       {Object.entries(config.colors).map(([key, value]) => (
                         <div key={key}>
-                          <Label className="text-sm font-medium capitalize">{key}</Label>
+                          <Label className="text-sm font-medium capitalize">
+                            {key}
+                          </Label>
                           <div className="flex items-center gap-3 mt-1">
                             <Input
                               type="color"
                               value={value}
-                              onChange={(e) => handleColorChange(key as keyof TemplateConfig["colors"], e.target.value)}
+                              onChange={(e) =>
+                                handleColorChange(
+                                  key as keyof TemplateConfig["colors"],
+                                  e.target.value,
+                                )
+                              }
                               className="w-12 h-10 p-1 border border-border rounded-lg"
                             />
                             <Input
                               type="text"
                               value={value}
-                              onChange={(e) => handleColorChange(key as keyof TemplateConfig["colors"], e.target.value)}
+                              onChange={(e) =>
+                                handleColorChange(
+                                  key as keyof TemplateConfig["colors"],
+                                  e.target.value,
+                                )
+                              }
                               className="flex-1"
                             />
                           </div>
@@ -587,14 +704,28 @@ export default function TemplateBuilder() {
                   <TabsContent value="fonts" className="space-y-4 mt-6">
                     {Object.entries(config.fonts).map(([key, value]) => (
                       <div key={key}>
-                        <Label className="text-sm font-medium capitalize">{key} Shrift</Label>
-                        <Select value={value} onValueChange={(val) => handleFontChange(key as keyof TemplateConfig["fonts"], val)}>
+                        <Label className="text-sm font-medium capitalize">
+                          {key} Shrift
+                        </Label>
+                        <Select
+                          value={value}
+                          onValueChange={(val) =>
+                            handleFontChange(
+                              key as keyof TemplateConfig["fonts"],
+                              val,
+                            )
+                          }
+                        >
                           <SelectTrigger className="mt-1">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
                             {fontOptions.map((font) => (
-                              <SelectItem key={font} value={font} style={{ fontFamily: font }}>
+                              <SelectItem
+                                key={font}
+                                value={font}
+                                style={{ fontFamily: font }}
+                              >
                                 {font}
                               </SelectItem>
                             ))}
@@ -607,20 +738,28 @@ export default function TemplateBuilder() {
                   <TabsContent value="layout" className="space-y-6 mt-6">
                     {/* Layout Style */}
                     <div>
-                      <Label className="text-sm font-medium">Layout Uslubi</Label>
+                      <Label className="text-sm font-medium">
+                        Layout Uslubi
+                      </Label>
                       <div className="grid grid-cols-1 gap-2 mt-2">
                         {layoutStyles.map((style) => (
                           <button
                             key={style.value}
-                            onClick={() => handleLayoutChange("style", style.value)}
+                            onClick={() =>
+                              handleLayoutChange("style", style.value)
+                            }
                             className={`p-3 border rounded-lg text-left transition-all hover-lift ${
-                              config.layout.style === style.value 
-                                ? "border-primary bg-primary/5" 
+                              config.layout.style === style.value
+                                ? "border-primary bg-primary/5"
                                 : "border-border hover:border-primary/50"
                             }`}
                           >
-                            <div className="font-medium text-foreground">{style.label}</div>
-                            <div className="text-xs text-muted-foreground">{style.description}</div>
+                            <div className="font-medium text-foreground">
+                              {style.label}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {style.description}
+                            </div>
                           </button>
                         ))}
                       </div>
@@ -629,10 +768,14 @@ export default function TemplateBuilder() {
                     {/* Layout Controls */}
                     <div className="space-y-4">
                       <div>
-                        <Label className="text-sm font-medium">Spacing: {config.layout.spacing}px</Label>
+                        <Label className="text-sm font-medium">
+                          Spacing: {config.layout.spacing}px
+                        </Label>
                         <Slider
                           value={[config.layout.spacing]}
-                          onValueChange={(value) => handleLayoutChange("spacing", value[0])}
+                          onValueChange={(value) =>
+                            handleLayoutChange("spacing", value[0])
+                          }
                           max={50}
                           min={10}
                           step={5}
@@ -640,10 +783,14 @@ export default function TemplateBuilder() {
                         />
                       </div>
                       <div>
-                        <Label className="text-sm font-medium">Border Radius: {config.layout.borderRadius}px</Label>
+                        <Label className="text-sm font-medium">
+                          Border Radius: {config.layout.borderRadius}px
+                        </Label>
                         <Slider
                           value={[config.layout.borderRadius]}
-                          onValueChange={(value) => handleLayoutChange("borderRadius", value[0])}
+                          onValueChange={(value) =>
+                            handleLayoutChange("borderRadius", value[0])
+                          }
                           max={30}
                           min={0}
                           step={2}
@@ -651,10 +798,14 @@ export default function TemplateBuilder() {
                         />
                       </div>
                       <div>
-                        <Label className="text-sm font-medium">Shadow: {config.layout.shadowIntensity}</Label>
+                        <Label className="text-sm font-medium">
+                          Shadow: {config.layout.shadowIntensity}
+                        </Label>
                         <Slider
                           value={[config.layout.shadowIntensity]}
-                          onValueChange={(value) => handleLayoutChange("shadowIntensity", value[0])}
+                          onValueChange={(value) =>
+                            handleLayoutChange("shadowIntensity", value[0])
+                          }
                           max={20}
                           min={0}
                           step={1}
@@ -677,7 +828,9 @@ export default function TemplateBuilder() {
                   </h2>
                   <div className="flex items-center gap-2">
                     <Button
-                      variant={previewDevice === "desktop" ? "default" : "outline"}
+                      variant={
+                        previewDevice === "desktop" ? "default" : "outline"
+                      }
                       size="sm"
                       onClick={() => setPreviewDevice("desktop")}
                       className="hover-scale"
@@ -685,7 +838,9 @@ export default function TemplateBuilder() {
                       <Monitor className="w-4 h-4" />
                     </Button>
                     <Button
-                      variant={previewDevice === "mobile" ? "default" : "outline"}
+                      variant={
+                        previewDevice === "mobile" ? "default" : "outline"
+                      }
                       size="sm"
                       onClick={() => setPreviewDevice("mobile")}
                       className="hover-scale"
@@ -694,17 +849,25 @@ export default function TemplateBuilder() {
                     </Button>
                   </div>
                 </div>
-                
+
                 <div className="border border-border rounded-lg p-6 bg-muted/30 min-h-[600px] flex items-center justify-center">
                   <TemplatePreview />
                 </div>
 
                 <div className="flex gap-2 mt-4">
-                  <Button variant="outline" size="sm" className="flex-1 hover-scale">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 hover-scale"
+                  >
                     <Download className="w-4 h-4 mr-2" />
                     Yuklab olish
                   </Button>
-                  <Button variant="outline" size="sm" className="flex-1 hover-scale">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 hover-scale"
+                  >
                     <Share2 className="w-4 h-4 mr-2" />
                     Ulashish
                   </Button>

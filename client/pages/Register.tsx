@@ -23,15 +23,15 @@ export default function Register() {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
-    if (!formData.email.trim()) newErrors.email = "Email is required";
-    if (!formData.password) newErrors.password = "Password is required";
-    if (formData.password.length < 8) newErrors.password = "Password must be at least 8 characters";
+    if (!formData.firstName.trim()) newErrors.firstName = "Ism kiritish shart";
+    if (!formData.lastName.trim()) newErrors.lastName = "Familiya kiritish shart";
+    if (!formData.email.trim()) newErrors.email = "Email kiritish shart";
+    if (!formData.password) newErrors.password = "Parol kiritish shart";
+    if (formData.password.length < 8) newErrors.password = "Parol kamida 8 ta belgidan iborat bo'lishi kerak";
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords don't match";
+      newErrors.confirmPassword = "Parollar mos kelmadi";
     }
-    if (!formData.agreeToTerms) newErrors.agreeToTerms = "You must agree to the terms";
+    if (!formData.agreeToTerms) newErrors.agreeToTerms = "Shartlarga rozi bo'lishingiz kerak";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -59,12 +59,12 @@ export default function Register() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-md">
-        {/* Back to home */}
+        {/* Bosh sahifaga qaytish */}
         <div className="mb-8">
           <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-foreground">
             <Link to="/">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to home
+              Bosh sahifaga qaytish
             </Link>
           </Button>
         </div>
@@ -75,24 +75,24 @@ export default function Register() {
             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
               <Sparkles className="w-6 h-6 text-white" />
             </div>
-            <span className="font-heading text-2xl font-bold text-foreground">InviteNow</span>
+            <span className="font-heading text-2xl font-bold text-foreground">TaklifNoma</span>
           </Link>
-          <h1 className="font-heading text-3xl font-bold text-foreground mb-2">Create your account</h1>
-          <p className="text-muted-foreground">Start creating beautiful invitations today</p>
+          <h1 className="font-heading text-3xl font-bold text-foreground mb-2">Hisobingizni yarating</h1>
+          <p className="text-muted-foreground">Bugun chiroyli taklifnomalar yaratishni boshlang</p>
         </div>
         
-        {/* Form */}
+        {/* Forma */}
         <div className="card-modern p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firstName" className="text-foreground font-medium">First Name</Label>
+                <Label htmlFor="firstName" className="text-foreground font-medium">Ism</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input
                     id="firstName"
                     type="text"
-                    placeholder="John"
+                    placeholder="Jahongir"
                     className="input-modern pl-11 h-12"
                     value={formData.firstName}
                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
@@ -103,11 +103,11 @@ export default function Register() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="lastName" className="text-foreground font-medium">Last Name</Label>
+                <Label htmlFor="lastName" className="text-foreground font-medium">Familiya</Label>
                 <Input
                   id="lastName"
                   type="text"
-                  placeholder="Doe"
+                  placeholder="Aliyev"
                   className="input-modern h-12"
                   value={formData.lastName}
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
@@ -124,7 +124,7 @@ export default function Register() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="john@example.com"
+                  placeholder="jahongir@misol.com"
                   className="input-modern pl-11 h-12"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -135,13 +135,13 @@ export default function Register() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-foreground font-medium">Password</Label>
+              <Label htmlFor="password" className="text-foreground font-medium">Parol</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Create a strong password"
+                  placeholder="Kuchli parol yarating"
                   className="input-modern pl-11 pr-11 h-12"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -159,13 +159,13 @@ export default function Register() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-foreground font-medium">Confirm Password</Label>
+              <Label htmlFor="confirmPassword" className="text-foreground font-medium">Parolni tasdiqlang</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
                   id="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Confirm your password"
+                  placeholder="Parolni qayta kiriting"
                   className="input-modern pl-11 pr-11 h-12"
                   value={formData.confirmPassword}
                   onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
@@ -196,10 +196,11 @@ export default function Register() {
                   </div>
                 </div>
                 <span>
-                  I agree to the{" "}
-                  <Link to="/terms" className="text-primary hover:underline font-medium">Terms of Service</Link>
-                  {" "}and{" "}
-                  <Link to="/privacy" className="text-primary hover:underline font-medium">Privacy Policy</Link>
+                  Men{" "}
+                  <Link to="/terms" className="text-primary hover:underline font-medium">Foydalanish Shartlari</Link>
+                  {" "}va{" "}
+                  <Link to="/privacy" className="text-primary hover:underline font-medium">Maxfiylik Siyosati</Link>
+                  ga roziman
                 </span>
               </label>
               {errors.agreeToTerms && <p className="text-destructive text-sm">{errors.agreeToTerms}</p>}
@@ -213,10 +214,10 @@ export default function Register() {
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                  Creating account...
+                  Hisob yaratilmoqda...
                 </div>
               ) : (
-                "Create Account"
+                "Hisob Yaratish"
               )}
             </Button>
           </form>
@@ -227,7 +228,7 @@ export default function Register() {
                 <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-card px-4 text-muted-foreground">Or sign up with</span>
+                <span className="bg-card px-4 text-muted-foreground">Yoki ro'yxatdan o'ting</span>
               </div>
             </div>
 
@@ -243,15 +244,15 @@ export default function Register() {
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Continue with Google
+              Google bilan davom etish
             </Button>
           </div>
         </div>
 
         <p className="text-center mt-6 text-muted-foreground">
-          Already have an account?{" "}
+          Hisobingiz bormi?{" "}
           <Link to="/login" className="text-primary hover:text-primary/80 hover:underline font-medium">
-            Sign in here
+            Bu yerda kiring
           </Link>
         </p>
       </div>

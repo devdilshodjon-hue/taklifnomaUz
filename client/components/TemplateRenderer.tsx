@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapPin, Calendar, Clock, Heart, Star, Sparkles, Crown, Flower2, Diamond, Gem } from 'lucide-react';
 import { getTemplateById, type TemplateData } from '@/lib/templates';
+import { supabase } from '@/lib/supabase';
 
 interface InvitationData {
   id: string;

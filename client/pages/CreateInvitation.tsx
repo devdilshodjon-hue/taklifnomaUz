@@ -184,8 +184,25 @@ export default function CreateInvitation() {
     setIsLoading(true);
     setError("");
     console.log("Starting invitation creation...");
+    console.log("User authenticated:", !!user, "User ID:", user?.id);
 
     try {
+      // Check authentication session first
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) {
+        console.error("Session error:", sessionError);
+        setError("Autentifikatsiya sessiyasida xatolik. Iltimos, qayta kiring.");
+        return;
+      }
+
+      if (!session) {
+        console.error("No active session found");
+        setError("Sessiya tugagan. Iltimos, qayta kiring.");
+        return;
+      }
+
+      console.log("Session verified:", !!session, "Session user:", session.user?.id);
+
       const slug = generateSlug();
       console.log("Generated slug:", slug);
 
@@ -210,6 +227,19 @@ export default function CreateInvitation() {
       console.log("Invitation data prepared:", invitationData);
 
       console.log("Attempting to save to Supabase...");
+
+      // Test connection first
+      const { data: testData, error: testError } = await supabase
+        .from("invitations")
+        .select("id")
+        .limit(1);
+
+      if (testError) {
+        console.error("Database connection test failed:", testError);
+      } else {
+        console.log("Database connection test successful");
+      }
+
       const { data: invitation, error } = await supabase
         .from("invitations")
         .insert(invitationData)
@@ -217,13 +247,24 @@ export default function CreateInvitation() {
         .single();
 
       if (error) {
-        console.error("Supabase xatoligi:", {
+        console.error("Supabase insertion error:", {
           error: error,
           message: error.message,
           details: error.details,
           hint: error.hint,
           code: error.code,
         });
+
+        // Show user-friendly error message based on error type
+        if (error.message.includes("auth")) {
+          setError("Autentifikatsiya xatoligi. Iltimos, qayta kiring.");
+          return;
+        } else if (error.message.includes("duplicate")) {
+          setError("Bu ma'lumotlar bilan taklifnoma allaqachon mavjud.");
+          return;
+        } else {
+          setError(`Ma'lumotlar bazasiga saqlashda xatolik: ${error.message}`);
+        }
 
         // Create demo invitation as fallback
         console.log("Demo rejimida taklifnoma yaratilmoqda...");
@@ -289,6 +330,7 @@ export default function CreateInvitation() {
       );
 
       console.log("Navigating to invitation:", invitation.id);
+      setSuccess(true);
 
       // Add a small delay to ensure state updates
       setTimeout(() => {
@@ -296,6 +338,8 @@ export default function CreateInvitation() {
       }, 100);
     } catch (error) {
       console.error("Taklifnoma yaratishda umumiy xatolik:", error);
+      setError("Kutilmagan xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
+
       console.log("Demo rejimida taklifnoma yaratilmoqda...");
       // Demo uchun UUID formatda ID yaratamiz
       const mockId = generateDemoInvitationId();
@@ -326,7 +370,7 @@ export default function CreateInvitation() {
       // Ensure loading state is always reset
       setTimeout(() => {
         setIsLoading(false);
-      }, 500);
+      }, 1000);
     }
   };
 

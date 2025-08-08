@@ -56,6 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event, session?.user?.id);
       setSession(session);
       setUser(session?.user ?? null);
 
@@ -72,39 +73,59 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loadProfile = async (userId: string) => {
     try {
+      setLoading(true);
+
+      // First check if we have a valid session
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setProfile(null);
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", userId)
         .single();
 
-      if (error && error.code === "PGRST116") {
-        // Profile doesn't exist, create one
-        const user = await supabase.auth.getUser();
-        if (user.data.user) {
-          const newProfile = {
-            id: userId,
-            email: user.data.user.email,
-            first_name: user.data.user.user_metadata?.first_name || null,
-            last_name: user.data.user.user_metadata?.last_name || null,
-            avatar_url: user.data.user.user_metadata?.avatar_url || null,
-          };
+      if (error) {
+        if (error.code === "PGRST116" || error.code === "PGRST301") {
+          // Profile doesn't exist, create one
+          const { data: user } = await supabase.auth.getUser();
+          if (user.user) {
+            const newProfile = {
+              id: userId,
+              email: user.user.email,
+              first_name: user.user.user_metadata?.first_name || null,
+              last_name: user.user.user_metadata?.last_name || null,
+              avatar_url: user.user.user_metadata?.avatar_url || null,
+            };
 
-          const { data: createdProfile, error: createError } = await supabase
-            .from("profiles")
-            .insert(newProfile)
-            .select()
-            .single();
+            const { data: createdProfile, error: createError } = await supabase
+              .from("profiles")
+              .insert(newProfile)
+              .select()
+              .single();
 
-          if (!createError && createdProfile) {
-            setProfile(createdProfile);
+            if (!createError && createdProfile) {
+              setProfile(createdProfile);
+            } else {
+              console.error("Error creating profile:", createError);
+              setProfile(null);
+            }
           }
+        } else {
+          console.error("Error loading profile:", error);
+          // For RLS errors or other issues, set profile to null but don't break auth
+          setProfile(null);
         }
-      } else if (!error && data) {
+      } else if (data) {
         setProfile(data);
       }
     } catch (error) {
-      console.error("Error loading profile:", error);
+      console.error("Error in loadProfile:", error);
+      setProfile(null);
     } finally {
       setLoading(false);
     }

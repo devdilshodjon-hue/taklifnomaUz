@@ -98,7 +98,8 @@ export default function Contact() {
                       Telefon
                     </h3>
                     <p className="text-muted-foreground">+998 90 123 45 67</p>
-                    <p className="text-muted-foreground">+998 91 234 56 78</p>
+                    <p className="text-muted-foreground">+998 99 534 03 13</p>
+                    <p className="text-muted-foreground">+998 33 143 20 03</p>
                   </div>
                 </div>
 

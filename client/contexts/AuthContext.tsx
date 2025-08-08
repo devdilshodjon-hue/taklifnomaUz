@@ -415,7 +415,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setProfile(null);
           }
         } else {
-          console.error("Error loading profile:", {
+          console.error("Error loading profile:", error?.message || error, {
             error: error,
             message: error?.message,
             details: error?.details,

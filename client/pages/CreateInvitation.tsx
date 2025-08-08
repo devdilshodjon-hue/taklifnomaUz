@@ -246,6 +246,11 @@ export default function CreateInvitation() {
 
       if (testError) {
         console.error("Database connection test failed:", testError);
+        if (testError.message.includes("does not exist")) {
+          console.log("Invitations table does not exist, using demo mode");
+          // Show database setup guide
+          setError("Ma'lumotlar bazasi jadvallari mavjud emas. Demo rejimida davom etmoqda.");
+        }
       } else {
         console.log("Database connection test successful");
       }

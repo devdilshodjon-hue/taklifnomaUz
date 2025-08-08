@@ -198,6 +198,14 @@ export default function CreateInvitation() {
           .insert(guestData);
       }
 
+      // Backup uchun localStorage ga ham saqlaymiz
+      const backupData = {
+        ...invitation,
+        is_demo: false,
+        guests: guests
+      };
+      localStorage.setItem(`invitation_${invitation.id}`, JSON.stringify(backupData));
+
       navigate(`/invitation/${invitation.id}`);
     } catch (error) {
       console.error('Taklifnoma yaratishda umumiy xatolik:', error);

@@ -138,10 +138,20 @@ export default function AdminDashboard() {
 
   const loadStats = async () => {
     try {
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Stats loading timeout")), 5000)
+      );
+
       // Get total users
-      const { count: usersCount, error: usersError } = await supabase
+      const usersPromise = supabase
         .from("profiles")
         .select("*", { count: "exact", head: true });
+
+      const { count: usersCount, error: usersError } = await Promise.race([
+        usersPromise,
+        timeoutPromise,
+      ]) as any;
 
       // Get total invitations
       const { count: invitationsCount, error: invitationsError } =

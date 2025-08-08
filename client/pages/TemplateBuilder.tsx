@@ -317,40 +317,76 @@ export default function TemplateBuilder() {
         .select("id")
         .limit(1);
 
+      let data: any = null;
+
       if (testError) {
         console.error("Database connection test failed:", testError);
         clearTimeout(timeoutId);
-        setError(
-          "Ma'lumotlar bazasiga ulanishda xatolik. Iltimos, internetni tekshiring.",
-        );
-        return;
-      } else {
-        console.log("Database connection test successful");
-      }
 
-      const { data, error: saveError } = await supabase
-        .from("custom_templates")
-        .insert(templateToSave)
-        .select()
-        .single();
+        // If table doesn't exist, save to localStorage
+        if (testError.message.includes("does not exist")) {
+          console.log("Using localStorage for template saving");
 
-      clearTimeout(timeoutId);
+          const localTemplate = {
+            ...templateToSave,
+            id: `local_${Date.now()}`,
+            is_local: true,
+            saved_at: new Date().toISOString(),
+          };
 
-      if (saveError) {
-        console.error("Template save error:", saveError);
+          localStorage.setItem(
+            `custom_template_${localTemplate.id}`,
+            JSON.stringify(localTemplate),
+          );
 
-        // Show user-friendly error message based on error type
-        if (saveError.message.includes("auth")) {
-          setError("Autentifikatsiya xatoligi. Iltimos, qayta kiring.");
-          return;
-        } else if (saveError.message.includes("duplicate")) {
-          setError("Bu nomda shablon allaqachon mavjud.");
-          return;
+          data = localTemplate;
+          console.log("Template saved to localStorage:", data);
         } else {
           setError(
-            `Ma'lumotlar bazasiga saqlashda xatolik: ${saveError.message}`,
+            "Ma'lumotlar bazasiga ulanishda xatolik. Iltimos, internetni tekshiring.",
           );
           return;
+        }
+      } else {
+        console.log("Database connection test successful");
+
+        const { data: supabaseData, error: saveError } = await supabase
+          .from("custom_templates")
+          .insert(templateToSave)
+          .select()
+          .single();
+
+        clearTimeout(timeoutId);
+
+        if (saveError) {
+          console.error("Template save error:", saveError);
+
+          // Show user-friendly error message based on error type
+          if (saveError.message.includes("auth")) {
+            setError("Autentifikatsiya xatoligi. Iltimos, qayta kiring.");
+            return;
+          } else if (saveError.message.includes("duplicate")) {
+            setError("Bu nomda shablon allaqachon mavjud.");
+            return;
+          } else {
+            // Save to localStorage as fallback
+            console.log("Saving to localStorage as fallback");
+            const localTemplate = {
+              ...templateToSave,
+              id: `local_${Date.now()}`,
+              is_local: true,
+              saved_at: new Date().toISOString(),
+            };
+
+            localStorage.setItem(
+              `custom_template_${localTemplate.id}`,
+              JSON.stringify(localTemplate),
+            );
+
+            data = localTemplate;
+          }
+        } else {
+          data = supabaseData;
         }
       }
 

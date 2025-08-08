@@ -53,9 +53,24 @@ export default function Templates() {
           <h1 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-4">
             Taklifnoma Shablonlari
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Har qanday uslub uchun chiroyli dizaynlar. Shablonni tanlang va o'zingizning maxsus kuningiz uchun moslang.
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
+            15+ professional shablon har qanday uslub uchun. Klassik, zamonaviy, hashamatli va rustic dizaynlar orasidan tanlang.
           </p>
+
+          {/* Statistics */}
+          <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-8">
+            {[
+              { number: "15+", label: "Professional Shablonlar" },
+              { number: "10K+", label: "Yaratilgan Taklifnomalar" },
+              { number: "6", label: "Turli Kategoriyalar" },
+              { number: "100%", label: "Mobil Mos" }
+            ].map((stat, index) => (
+              <div key={index} className="text-center">
+                <div className="text-3xl font-bold text-primary mb-1">{stat.number}</div>
+                <div className="text-sm text-muted-foreground">{stat.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Category Filter */}
@@ -156,6 +171,117 @@ export default function Templates() {
           ))}
         </div>
 
+        {/* Template Features */}
+        <div className="mt-20 mb-16">
+          <div className="text-center mb-12">
+            <h2 className="font-heading text-3xl font-bold text-foreground mb-4">
+              Barcha Shablonlarda Mavjud Imkoniyatlar
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Har bir shablon professional darajada yaratilgan va barcha zamonaviy imkoniyatlarni o'z ichiga oladi
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {[
+              {
+                icon: "🎨",
+                title: "Maxsus Rang Palitralari",
+                description: "Har bir shablon o'ziga xos professional rang kombinatsiyasiga ega"
+              },
+              {
+                icon: "📱",
+                title: "Responsiv Dizayn",
+                description: "Barcha qurilmalarda mukammal ko'rinish - telefon, planshet, kompyuter"
+              },
+              {
+                icon: "✏️",
+                title: "Oson Tahrirlash",
+                description: "Barcha matn va ma'lumotlarni osongina o'zgartirish mumkin"
+              },
+              {
+                icon: "🔗",
+                title: "QR Kod Integratsiyasi",
+                description: "Har bir taklifnomada avtomatik QR kod yaratiladi"
+              },
+              {
+                icon: "📤",
+                title: "Ijtimoiy Ulashish",
+                description: "WhatsApp, Telegram, Facebook orqali bir bosishda ulashish"
+              },
+              {
+                icon: "🎯",
+                title: "RSVP Funksiyasi",
+                description: "Mehmonlar to'g'ridan-to'g'ri javob bera olishadi"
+              }
+            ].map((feature, index) => (
+              <div key={index} className="card-modern p-6 text-center">
+                <div className="text-4xl mb-4">{feature.icon}</div>
+                <h3 className="font-heading text-lg font-semibold text-foreground mb-3">
+                  {feature.title}
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Popular Categories */}
+        <div className="mb-16">
+          <div className="text-center mb-8">
+            <h2 className="font-heading text-3xl font-bold text-foreground mb-4">
+              Mashhur Kategoriyalar
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                category: "classic",
+                name: "Klassik",
+                description: "An'anaviy va nafis dizaynlar",
+                count: "5 ta shablon",
+                color: "bg-rose-100 text-rose-800"
+              },
+              {
+                category: "modern",
+                name: "Zamonaviy",
+                description: "Minimal va zamonaviy uslublar",
+                count: "4 ta shablon",
+                color: "bg-blue-100 text-blue-800"
+              },
+              {
+                category: "elegant",
+                name: "Nafis",
+                description: "Hashamatli va chiroyli dizaynlar",
+                count: "6 ta shablon",
+                color: "bg-purple-100 text-purple-800"
+              }
+            ].map((cat, index) => (
+              <div key={index} className="card-modern p-8 text-center hover:shadow-lg transition-all duration-300">
+                <div className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-4 ${cat.color}`}>
+                  {cat.count}
+                </div>
+                <h3 className="font-heading text-xl font-bold text-foreground mb-3">
+                  {cat.name}
+                </h3>
+                <p className="text-muted-foreground mb-6">
+                  {cat.description}
+                </p>
+                <Button
+                  variant="outline"
+                  onClick={() => handleCategoryChange(cat.category)}
+                  className="w-full"
+                >
+                  {cat.name} Shablonlarni Ko'rish
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Call to Action */}
         <div className="text-center mt-16">
           <h2 className="font-heading text-3xl font-bold text-foreground mb-4">
@@ -164,12 +290,19 @@ export default function Templates() {
           <p className="text-lg text-muted-foreground mb-8">
             Yuqoridagi shablonlardan birini tanlab, bir necha daqiqada chiroyli taklifnoma yarating.
           </p>
-          <Button size="lg" asChild className="primary-gradient px-8 py-4 text-lg rounded-xl">
-            <Link to="/create">
-              Hoziroq Boshlash
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" asChild className="primary-gradient px-8 py-4 text-lg rounded-xl">
+              <Link to="/create">
+                Hoziroq Boshlash
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild className="px-8 py-4 text-lg rounded-xl">
+              <Link to="/pricing">
+                Narxlarni Ko'rish
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
 

@@ -86,13 +86,28 @@ export default function Navigation({
 
         <div className="flex items-center gap-3">
           {user ? (
-            // Authenticated user
-            <Button variant="ghost" asChild>
-              <Link to="/dashboard" className="flex items-center gap-2">
-                <User className="w-4 h-4" />
+            // Authenticated user - show profile avatar/initials
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-2 hover:opacity-75 transition-opacity"
+            >
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white font-semibold">
+                {profile?.avatar_url ? (
+                  <img
+                    src={profile.avatar_url}
+                    alt={profile?.first_name || "Profile"}
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="text-sm">
+                    {(profile?.first_name?.[0] || profile?.email?.[0] || user?.email?.[0] || "U").toUpperCase()}
+                  </span>
+                )}
+              </div>
+              <span className="hidden md:block text-sm font-medium text-foreground">
                 {profile?.first_name || "Dashboard"}
-              </Link>
-            </Button>
+              </span>
+            </Link>
           ) : (
             // Not authenticated
             <>

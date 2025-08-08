@@ -59,13 +59,13 @@ export default function Index() {
               <span className="font-heading text-xl font-bold text-foreground">TaklifNoma</span>
             </div>
             <div className="hidden md:flex items-center gap-8">
-              <Link to="#features" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
                 Imkoniyatlar
-              </Link>
-              <Link to="#templates" className="text-muted-foreground hover:text-foreground transition-colors">
+              </a>
+              <Link to="/templates" className="text-muted-foreground hover:text-foreground transition-colors">
                 Shablonlar
               </Link>
-              <Link to="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link to="/pricing" className="text-muted-foreground hover:text-foreground transition-colors">
                 Narxlar
               </Link>
             </div>

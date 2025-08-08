@@ -487,8 +487,19 @@ export default function CreateInvitation() {
         {error && (
           <Alert className="mb-6 border-red-200 bg-red-50">
             <X className="h-4 w-4 text-red-600" />
-            <AlertDescription className="text-red-800">
-              {error}
+            <AlertDescription className="text-red-800 flex items-center justify-between">
+              <span>{error}</span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setError("");
+                  setIsLoading(false);
+                }}
+                className="ml-4"
+              >
+                Qayta urinish
+              </Button>
             </AlertDescription>
           </Alert>
         )}

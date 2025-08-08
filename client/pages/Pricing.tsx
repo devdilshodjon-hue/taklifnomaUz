@@ -367,8 +367,12 @@ export default function Pricing() {
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div key={index} className="card-modern p-6 text-center">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 mx-auto">
+                <div
+                  key={index}
+                  className="card-modern p-6 text-center hover-lift animate-fade-in transition-all duration-300"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 mx-auto hover-scale transition-transform">
                     <Icon className="w-6 h-6 text-primary" />
                   </div>
                   <h3 className="font-heading text-lg font-semibold text-foreground mb-2">
@@ -397,7 +401,11 @@ export default function Pricing() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="card-modern p-6">
+              <div
+                key={index}
+                className="card-modern p-6 hover-lift animate-slide-up transition-all duration-300"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
                 <div className="flex items-center gap-1 mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star
@@ -438,7 +446,11 @@ export default function Pricing() {
 
           <div className="max-w-3xl mx-auto space-y-4">
             {faqs.map((faq, index) => (
-              <details key={index} className="card-modern">
+              <details
+                key={index}
+                className="card-modern hover-lift animate-fade-in transition-all duration-300"
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
                 <summary className="p-6 cursor-pointer font-semibold text-foreground hover:text-primary transition-colors">
                   {faq.question}
                 </summary>
@@ -451,7 +463,7 @@ export default function Pricing() {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center bg-gradient-to-r from-primary to-purple-600 rounded-2xl p-12 text-white">
+        <div className="text-center bg-gradient-to-r from-primary to-purple-600 rounded-2xl p-12 text-white animate-slide-up hover-lift transition-all duration-300">
           <h2 className="font-heading text-3xl font-bold mb-4">
             Bugun Taklifnomangizni Yarating!
           </h2>

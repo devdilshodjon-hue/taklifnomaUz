@@ -254,6 +254,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       setProfile(null);
     } finally {
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   };

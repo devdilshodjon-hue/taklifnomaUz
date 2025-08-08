@@ -1,4 +1,4 @@
-import { AlertCircle, Database, CheckCircle2, Copy } from "lucide-react";
+import { AlertCircle, Database, CheckCircle2, Copy, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 

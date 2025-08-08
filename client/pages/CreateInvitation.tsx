@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/lib/supabase";
 import { generateDemoUUID, generateUUIDFromSlug } from "@/lib/utils";
 import { weddingTemplates, templateCategories, getTemplatesByCategory, type TemplateData } from "@/lib/templates";
+import TemplateRenderer from "@/components/TemplateRenderer";
 
 interface Guest {
   id: string;

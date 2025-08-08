@@ -13,6 +13,7 @@ export default function Navigation({
   className = "",
 }: NavigationProps) {
   const location = useLocation();
+  const { user, profile } = useAuth();
 
   const navLinks = [
     { href: "/features", label: "Imkoniyatlar", isAnchor: false },

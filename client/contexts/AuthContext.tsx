@@ -86,6 +86,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (error) {
           console.error("Session error on load:", error);
+          // Clear any stored session data
+          await supabase.auth.signOut();
           setSession(null);
           setUser(null);
           setProfile(null);
@@ -94,28 +96,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         if (session) {
-          // Validate session by refreshing it
-          const {
-            data: { session: refreshedSession },
-            error: refreshError,
-          } = await supabase.auth.refreshSession();
+          console.log("Session found, validating...");
 
-          if (!mounted) return;
+          // Check if session is expired
+          const now = Math.floor(Date.now() / 1000);
+          if (session.expires_at && session.expires_at < now) {
+            console.log("Session expired, attempting refresh...");
 
-          if (refreshError || !refreshedSession) {
-            console.log("Session invalid, signing out...");
-            await supabase.auth.signOut();
-            setSession(null);
-            setUser(null);
-            setProfile(null);
-            setLoading(false);
-            return;
+            // Try to refresh the session
+            const {
+              data: { session: refreshedSession },
+              error: refreshError,
+            } = await supabase.auth.refreshSession();
+
+            if (!mounted) return;
+
+            if (refreshError || !refreshedSession) {
+              console.log("Session refresh failed, signing out...");
+              await supabase.auth.signOut();
+              setSession(null);
+              setUser(null);
+              setProfile(null);
+              setLoading(false);
+              return;
+            }
+
+            console.log("Session refreshed successfully");
+            setSession(refreshedSession);
+            setUser(refreshedSession.user);
+            await loadProfile(refreshedSession.user.id);
+          } else {
+            console.log("Session is valid");
+            setSession(session);
+            setUser(session.user);
+            await loadProfile(session.user.id);
           }
-
-          setSession(refreshedSession);
-          setUser(refreshedSession.user);
-          loadProfile(refreshedSession.user.id);
         } else {
+          console.log("No session found");
           setSession(null);
           setUser(null);
           setProfile(null);
@@ -144,10 +161,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       try {
         // Handle different auth events
-        if (
-          event === "SIGNED_OUT" ||
-          (event === "TOKEN_REFRESHED" && !session)
-        ) {
+        if (event === "SIGNED_OUT") {
+          console.log("User signed out");
           setSession(null);
           setUser(null);
           setProfile(null);
@@ -155,25 +170,64 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
-        if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
-          setSession(session);
-          setUser(session?.user ?? null);
-
-          if (session?.user) {
-            await loadProfile(session.user.id);
-          } else {
+        if (event === "TOKEN_REFRESHED") {
+          if (!session) {
+            console.log("Token refresh failed, signing out");
+            await supabase.auth.signOut();
+            setSession(null);
+            setUser(null);
             setProfile(null);
             setLoading(false);
+            return;
           }
-        } else {
+
+          console.log("Token refreshed successfully");
           setSession(session);
-          setUser(session?.user ?? null);
-          setProfile(null);
+          setUser(session.user);
+
+          // Only reload profile if we don't have one or if user changed
+          if (!profile || profile.id !== session.user.id) {
+            await loadProfile(session.user.id);
+          } else {
+            setLoading(false);
+          }
+          return;
+        }
+
+        if (event === "SIGNED_IN") {
+          console.log("User signed in");
+
+          // Validate the session
+          if (!session || !session.user) {
+            console.error("Invalid session on sign in");
+            setSession(null);
+            setUser(null);
+            setProfile(null);
+            setLoading(false);
+            return;
+          }
+
+          setSession(session);
+          setUser(session.user);
+          await loadProfile(session.user.id);
+          return;
+        }
+
+        // For other events, just update the session
+        console.log("Other auth event:", event);
+        setSession(session);
+        setUser(session?.user ?? null);
+
+        if (session?.user && session.user.id !== profile?.id) {
+          await loadProfile(session.user.id);
+        } else {
           setLoading(false);
         }
       } catch (err) {
         console.error("Auth state change error:", err);
         if (mounted) {
+          // On error, clear everything and sign out
+          await supabase.auth.signOut();
           setSession(null);
           setUser(null);
           setProfile(null);
@@ -191,33 +245,78 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Add session recovery on window focus
   useEffect(() => {
     const handleWindowFocus = async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
+      try {
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
 
-      if (error || !session) {
-        // Session is invalid, sign out
-        if (user) {
-          console.log("Session lost on focus, signing out...");
-          await supabase.auth.signOut();
+        if (error) {
+          console.error("Session error on focus:", error);
+          if (user) {
+            console.log("Session error on focus, signing out...");
+            await supabase.auth.signOut();
+          }
+          return;
         }
-        return;
-      }
 
-      // Session exists but user state is lost, restore it
-      if (session && !user) {
-        console.log("Restoring session on focus...");
-        setSession(session);
-        setUser(session.user);
-        if (session.user && !profile) {
-          loadProfile(session.user.id);
+        if (!session) {
+          // No session but we think user is logged in, sign out
+          if (user) {
+            console.log("No session on focus but user exists, signing out...");
+            await supabase.auth.signOut();
+            setSession(null);
+            setUser(null);
+            setProfile(null);
+          }
+          return;
         }
+
+        // Check if session is expired
+        const now = Math.floor(Date.now() / 1000);
+        if (session.expires_at && session.expires_at < now) {
+          console.log("Session expired on focus");
+          if (user) {
+            await supabase.auth.signOut();
+            setSession(null);
+            setUser(null);
+            setProfile(null);
+          }
+          return;
+        }
+
+        // Session exists and is valid, restore if needed
+        if (session && !user) {
+          console.log("Restoring valid session on focus...");
+          setSession(session);
+          setUser(session.user);
+          if (session.user && !profile) {
+            await loadProfile(session.user.id);
+          }
+        } else if (session && user && session.user.id !== user.id) {
+          // Different user, update
+          console.log("Different user detected on focus, updating...");
+          setSession(session);
+          setUser(session.user);
+          await loadProfile(session.user.id);
+        }
+      } catch (error) {
+        console.error("Error in window focus handler:", error);
       }
     };
 
-    window.addEventListener("focus", handleWindowFocus);
-    return () => window.removeEventListener("focus", handleWindowFocus);
+    // Add a debounce to avoid too many calls
+    let focusTimeout: NodeJS.Timeout;
+    const debouncedFocusHandler = () => {
+      clearTimeout(focusTimeout);
+      focusTimeout = setTimeout(handleWindowFocus, 500);
+    };
+
+    window.addEventListener("focus", debouncedFocusHandler);
+    return () => {
+      window.removeEventListener("focus", debouncedFocusHandler);
+      clearTimeout(focusTimeout);
+    };
   }, [user, profile]);
 
   const createUserProfile = async (user: User) => {

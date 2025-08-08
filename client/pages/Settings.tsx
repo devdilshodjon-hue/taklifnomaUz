@@ -101,7 +101,6 @@ export default function Settings() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [theme, setTheme] = useState<"light" | "dark" | "system">("system");
 
   useEffect(() => {
     loadSettings();

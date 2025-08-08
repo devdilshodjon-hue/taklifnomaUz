@@ -264,7 +264,7 @@ export default function CreateInvitation() {
         .single();
 
       if (error) {
-        console.error("Supabase insertion error:", {
+        console.error("Supabase insertion error:", error?.message || error, {
           error: error,
           message: error.message,
           details: error.details,

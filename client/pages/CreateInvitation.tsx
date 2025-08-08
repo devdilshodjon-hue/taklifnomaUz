@@ -43,32 +43,15 @@ export default function CreateInvitation() {
     rsvpDeadline: "",
   });
 
-  const templates: InvitationTemplate[] = [
-    {
-      id: "classic",
-      name: "Klassik Nafis",
-      preview: "🌸",
-      description: "Gul naqshlari bilan klassik dizayn",
-    },
-    {
-      id: "modern",
-      name: "Zamonaviy Oddiy",
-      preview: "💍",
-      description: "Toza chiziqlar va zamonaviy uslub",
-    },
-    {
-      id: "rustic",
-      name: "Qishloq Uslubi",
-      preview: "🌿",
-      description: "Tabiiy elementlar va issiq ranglar",
-    },
-    {
-      id: "luxury",
-      name: "Hashamatli Oltin",
-      preview: "✨",
-      description: "Oltin aksentlar bilan nafis dizayn",
-    },
-  ];
+  // Template kategoriya filter
+  const handleCategoryChange = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    if (categoryId === 'all') {
+      setFilteredTemplates(weddingTemplates);
+    } else {
+      setFilteredTemplates(getTemplatesByCategory(categoryId));
+    }
+  };
 
   const addGuest = () => {
     if (newGuest.name.trim()) {

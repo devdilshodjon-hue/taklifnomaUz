@@ -18,7 +18,7 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate API call
+    // API chaqiruvini simulyatsiya qilish
     setTimeout(() => {
       setIsLoading(false);
       navigate("/dashboard");
@@ -34,12 +34,12 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6">
       <div className="w-full max-w-md">
-        {/* Back to home */}
+        {/* Bosh sahifaga qaytish */}
         <div className="mb-8">
           <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-foreground">
             <Link to="/">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to home
+              Bosh sahifaga qaytish
             </Link>
           </Button>
         </div>
@@ -50,13 +50,13 @@ export default function Login() {
             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
               <Sparkles className="w-6 h-6 text-white" />
             </div>
-            <span className="font-heading text-2xl font-bold text-foreground">InviteNow</span>
+            <span className="font-heading text-2xl font-bold text-foreground">TaklifNoma</span>
           </Link>
-          <h1 className="font-heading text-3xl font-bold text-foreground mb-2">Welcome back</h1>
-          <p className="text-muted-foreground">Sign in to manage your invitations</p>
+          <h1 className="font-heading text-3xl font-bold text-foreground mb-2">Xush kelibsiz</h1>
+          <p className="text-muted-foreground">Taklifnomalaringizni boshqarish uchun kiring</p>
         </div>
         
-        {/* Form */}
+        {/* Forma */}
         <div className="card-modern p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function Login() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="Emailingizni kiriting"
                   className="input-modern pl-11 h-12"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -76,13 +76,13 @@ export default function Login() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-foreground font-medium">Password</Label>
+              <Label htmlFor="password" className="text-foreground font-medium">Parol</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder="Parolingizni kiriting"
                   className="input-modern pl-11 pr-11 h-12"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -101,10 +101,10 @@ export default function Login() {
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2 text-muted-foreground cursor-pointer">
                 <input type="checkbox" className="rounded border-border" />
-                Remember me
+                Meni eslab qol
               </label>
               <Link to="/forgot-password" className="text-primary hover:text-primary/80 hover:underline font-medium">
-                Forgot password?
+                Parolni unutdingizmi?
               </Link>
             </div>
 
@@ -116,10 +116,10 @@ export default function Login() {
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                  Signing in...
+                  Kirishmoqda...
                 </div>
               ) : (
-                "Sign In"
+                "Kirish"
               )}
             </Button>
           </form>
@@ -130,7 +130,7 @@ export default function Login() {
                 <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-card px-4 text-muted-foreground">Or continue with</span>
+                <span className="bg-card px-4 text-muted-foreground">Yoki bilan davom eting</span>
               </div>
             </div>
 
@@ -146,15 +146,15 @@ export default function Login() {
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Continue with Google
+              Google bilan davom etish
             </Button>
           </div>
         </div>
 
         <p className="text-center mt-6 text-muted-foreground">
-          Don't have an account?{" "}
+          Hisobingiz yo'qmi?{" "}
           <Link to="/register" className="text-primary hover:text-primary/80 hover:underline font-medium">
-            Create one here
+            Bu yerda yarating
           </Link>
         </p>
       </div>

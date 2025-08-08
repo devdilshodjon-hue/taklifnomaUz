@@ -1,209 +1,347 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Sparkles, Plus, Calendar, Eye, Users, LogOut, BarChart3 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabase";
+import { PlusCircle, Eye, Edit, Trash2, Users, Calendar, Share2, MoreVertical, LogOut, User, Settings, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import ProtectedRoute from "@/components/ProtectedRoute";
+
+interface Invitation {
+  id: string;
+  groom_name: string;
+  bride_name: string;
+  wedding_date: string;
+  venue: string;
+  template_id: string;
+  is_active: boolean;
+  created_at: string;
+  slug: string;
+}
+
+interface InvitationStats {
+  views: number;
+  rsvps: number;
+  guests: number;
+}
 
 export default function Dashboard() {
-  // localStorage dan taklifnomalarni olish
-  const getStoredInvitations = () => {
-    const invitations = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith('invitation_')) {
-        try {
-          const data = JSON.parse(localStorage.getItem(key) || '');
-          invitations.push({
-            id: data.id,
-            groomName: data.groom_name,
-            brideName: data.bride_name,
-            date: data.wedding_date,
-            guests: 50, // Default
-            rsvps: 12, // Default
-            status: "active"
-          });
-        } catch (error) {
-          console.error('Error parsing invitation data:', error);
-        }
-      }
+  const { user, profile, signOut } = useAuth();
+  const [invitations, setInvitations] = useState<Invitation[]>([]);
+  const [stats, setStats] = useState<Record<string, InvitationStats>>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      loadInvitations();
     }
-    return invitations;
+  }, [user]);
+
+  const loadInvitations = async () => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('invitations')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      setInvitations(data || []);
+
+      // Load stats for each invitation
+      const statsData: Record<string, InvitationStats> = {};
+      for (const invitation of data || []) {
+        // Get RSVP count
+        const { count: rsvpCount } = await supabase
+          .from('rsvps')
+          .select('*', { count: 'exact', head: true })
+          .eq('invitation_id', invitation.id);
+
+        // Get guests count  
+        const { count: guestCount } = await supabase
+          .from('guests')
+          .select('*', { count: 'exact', head: true })
+          .eq('invitation_id', invitation.id);
+
+        statsData[invitation.id] = {
+          views: Math.floor(Math.random() * 100), // For demo - would need view tracking
+          rsvps: rsvpCount || 0,
+          guests: guestCount || 0
+        };
+      }
+      setStats(statsData);
+    } catch (error) {
+      console.error('Error loading invitations:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const invitations = getStoredInvitations();
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
-  const stats = [
-    {
-      label: "Jami Taklifnomalar",
-      value: invitations.length,
-      icon: <Calendar className="w-5 h-5" />
+  const getStatusBadge = (isActive: boolean) => {
+    return isActive ? (
+      <Badge className="bg-green-100 text-green-800 animate-scale-in">Faol</Badge>
+    ) : (
+      <Badge variant="secondary" className="animate-scale-in">Noaktiv</Badge>
+    );
+  };
+
+  const totalStats = invitations.reduce(
+    (acc, inv) => {
+      const invStats = stats[inv.id] || { views: 0, rsvps: 0, guests: 0 };
+      return {
+        views: acc.views + invStats.views,
+        rsvps: acc.rsvps + invStats.rsvps,
+        guests: acc.guests + invStats.guests
+      };
     },
-    {
-      label: "Jami Mehmonlar",
-      value: invitations.reduce((sum, inv) => sum + inv.guests, 0),
-      icon: <Users className="w-5 h-5" />
-    },
-    {
-      label: "Javob Berganlar",
-      value: invitations.reduce((sum, inv) => sum + inv.rsvps, 0),
-      icon: <BarChart3 className="w-5 h-5" />
-    }
-  ];
+    { views: 0, rsvps: 0, guests: 0 }
+  );
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="bg-card border-b border-border p-4 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-heading text-xl font-bold text-foreground">TaklifNoma</span>
-          </Link>
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/login">
-              <LogOut className="w-4 h-4 mr-2" />
-              Chiqish
-            </Link>
-          </Button>
-        </div>
-      </nav>
-
-      <div className="max-w-6xl mx-auto p-6">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="font-heading text-4xl font-bold text-foreground mb-2">Taklifnomalaringiz</h1>
-            <p className="text-muted-foreground">To'y taklifnomalaringizni boshqaring va kuzating</p>
-          </div>
-          <Button className="button-modern" asChild>
-            <Link to="/create">
-              <Plus className="w-4 h-4 mr-2" />
-              Yangi Taklifnoma Yaratish
-            </Link>
-          </Button>
-        </div>
-
-        {/* Statistics */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          {stats.map((stat, index) => (
-            <div key={index} className="card-modern p-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
-                  {stat.icon}
+    <ProtectedRoute>
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/2 to-purple-50/30">
+        {/* Navigation Bar */}
+        <nav className="bg-card/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto p-4">
+            <div className="flex items-center justify-between">
+              <Link to="/" className="flex items-center gap-2 animate-fade-in">
+                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                  <Calendar className="w-5 h-5 text-white" />
                 </div>
-                <div>
-                  <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
-                </div>
+                <span className="font-heading text-xl font-bold text-foreground">TaklifNoma</span>
+              </Link>
+
+              <div className="flex items-center gap-4">
+                <Button asChild className="button-modern hover-lift">
+                  <Link to="/create">
+                    <PlusCircle className="w-4 h-4 mr-2" />
+                    Yangi Taklifnoma
+                  </Link>
+                </Button>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-10 w-10 rounded-full hover-scale">
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src={profile?.avatar_url || ""} alt={profile?.first_name || ""} />
+                        <AvatarFallback className="bg-primary text-white">
+                          {profile?.first_name?.[0] || user?.email?.[0] || "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <div className="flex flex-col space-y-1 p-2">
+                      <p className="text-sm font-medium leading-none">
+                        {profile?.first_name} {profile?.last_name}
+                      </p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {user?.email}
+                      </p>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profil</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Sozlamalar</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleSignOut}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Chiqish</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* Invitations List */}
-        {invitations.length > 0 ? (
-          <div className="space-y-4">
-            <h2 className="font-heading text-2xl font-semibold text-foreground mb-4">Sizning taklifnomalaringiz</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {invitations.map((invitation) => (
-                <div key={invitation.id} className="card-modern p-6 hover:shadow-lg transition-all duration-300">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-heading text-xl font-semibold text-foreground">
-                      {invitation.groomName} & {invitation.brideName}
-                    </h3>
-                    <Button variant="ghost" size="sm" asChild>
-                      <Link to={`/invitation/${invitation.id}`}>
-                        <Eye className="w-4 h-4" />
-                      </Link>
-                    </Button>
-                  </div>
-                  
-                  <div className="space-y-3 text-sm text-muted-foreground mb-6">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4" />
-                      <span>{new Date(invitation.date).toLocaleDateString('uz-UZ')}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4" />
-                      <span>{invitation.rsvps}/{invitation.guests} javob berdi</span>
-                    </div>
-                  </div>
-
-                  {/* Progress bar */}
-                  <div className="mb-4">
-                    <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                      <span>Javob foizi</span>
-                      <span>{Math.round((invitation.rsvps / invitation.guests) * 100)}%</span>
-                    </div>
-                    <div className="w-full bg-secondary rounded-full h-2">
-                      <div 
-                        className="bg-primary h-2 rounded-full transition-all duration-300" 
-                        style={{ width: `${(invitation.rsvps / invitation.guests) * 100}%` }}
-                      ></div>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" className="flex-1" asChild>
-                      <Link to={`/invitation/${invitation.id}/edit`}>Tahrirlash</Link>
-                    </Button>
-                    <Button variant="outline" size="sm" className="flex-1" asChild>
-                      <Link to={`/invitation/${invitation.id}`}>Ko'rish</Link>
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
-        ) : (
-          <div className="text-center py-20">
-            <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto mb-6">
-              <Sparkles className="w-8 h-8" />
-            </div>
-            <h2 className="font-heading text-2xl font-semibold text-foreground mb-4">Hali taklifnomalar yo'q</h2>
-            <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-              Birinchi chiroyli to'y taklifnomangizni yaratish uchun quyidagi tugmani bosing
+        </nav>
+
+        <div className="max-w-7xl mx-auto p-6">
+          {/* Header */}
+          <div className="mb-8 animate-fade-in">
+            <h1 className="font-heading text-4xl font-bold text-foreground mb-2">
+              Salom, {profile?.first_name || "Foydalanuvchi"}! 👋
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Taklifnomalaringizni boshqaring va mehmonlar statistikasini kuzatib boring
             </p>
-            <Button className="button-modern" asChild>
-              <Link to="/create">
-                <Plus className="w-4 h-4 mr-2" />
-                Birinchi Taklifnomangizni Yarating
-              </Link>
-            </Button>
           </div>
-        )}
 
-        {/* Quick Actions */}
-        <div className="mt-12 bg-theme-gray-light/30 rounded-2xl p-8">
-          <h3 className="font-heading text-xl font-semibold text-foreground mb-4">Tezkor harakatlar</h3>
-          <div className="grid md:grid-cols-3 gap-4">
-            <Button variant="outline" asChild className="h-auto p-4 text-left">
-              <Link to="/templates">
-                <div>
-                  <h4 className="font-medium text-foreground mb-1">Shablonlarni Ko'rish</h4>
-                  <p className="text-sm text-muted-foreground">Turli dizayn variantlarini o'rganing</p>
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="flex items-center gap-2 animate-fade-in">
+                <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                <span className="text-muted-foreground">Taklifnomalar yuklanmoqda...</span>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Stats */}
+              <div className="grid md:grid-cols-3 gap-6 mb-8">
+                <div className="card-modern p-6 hover-lift animate-slide-up">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Jami Taklifnomalar</p>
+                      <p className="text-3xl font-bold text-foreground animate-scale-in">
+                        {invitations.length}
+                      </p>
+                    </div>
+                    <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                      <Calendar className="w-6 h-6 text-primary" />
+                    </div>
+                  </div>
                 </div>
-              </Link>
-            </Button>
-            <Button variant="outline" asChild className="h-auto p-4 text-left">
-              <Link to="/help">
-                <div>
-                  <h4 className="font-medium text-foreground mb-1">Yordam</h4>
-                  <p className="text-sm text-muted-foreground">Ko'p beriladigan savollarga javob toping</p>
+                
+                <div className="card-modern p-6 hover-lift animate-slide-up delay-100">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Jami Ko'rishlar</p>
+                      <p className="text-3xl font-bold text-foreground animate-scale-in">
+                        {totalStats.views}
+                      </p>
+                    </div>
+                    <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center">
+                      <Eye className="w-6 h-6 text-blue-500" />
+                    </div>
+                  </div>
                 </div>
-              </Link>
-            </Button>
-            <Button variant="outline" asChild className="h-auto p-4 text-left">
-              <Link to="/settings">
-                <div>
-                  <h4 className="font-medium text-foreground mb-1">Sozlamalar</h4>
-                  <p className="text-sm text-muted-foreground">Hisobingizni boshqaring</p>
+                
+                <div className="card-modern p-6 hover-lift animate-slide-up delay-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Jami RSVP</p>
+                      <p className="text-3xl font-bold text-foreground animate-scale-in">
+                        {totalStats.rsvps}
+                      </p>
+                    </div>
+                    <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center">
+                      <Users className="w-6 h-6 text-green-500" />
+                    </div>
+                  </div>
                 </div>
-              </Link>
-            </Button>
-          </div>
+              </div>
+
+              {/* Invitations List */}
+              {invitations.length > 0 ? (
+                <div className="space-y-4">
+                  <h2 className="font-heading text-2xl font-bold text-foreground mb-6 animate-fade-in">
+                    Sizning Taklifnomalaringiz
+                  </h2>
+                  {invitations.map((invitation, index) => {
+                    const invStats = stats[invitation.id] || { views: 0, rsvps: 0, guests: 0 };
+                    return (
+                      <div
+                        key={invitation.id}
+                        className="card-modern p-6 hover-lift transition-smooth animate-slide-up"
+                        style={{ animationDelay: `${index * 0.1}s` }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-4 mb-3">
+                              <h3 className="font-heading text-xl font-semibold text-foreground">
+                                {invitation.groom_name} & {invitation.bride_name}
+                              </h3>
+                              {getStatusBadge(invitation.is_active)}
+                            </div>
+                            <div className="grid md:grid-cols-4 gap-4 text-sm text-muted-foreground">
+                              <div>
+                                <p className="font-medium text-foreground">Sana:</p>
+                                <p>{new Date(invitation.wedding_date).toLocaleDateString('uz-UZ')}</p>
+                              </div>
+                              <div>
+                                <p className="font-medium text-foreground">Joy:</p>
+                                <p>{invitation.venue}</p>
+                              </div>
+                              <div>
+                                <p className="font-medium text-foreground">Shablon:</p>
+                                <p className="capitalize">{invitation.template_id}</p>
+                              </div>
+                              <div>
+                                <p className="font-medium text-foreground">Statistika:</p>
+                                <p>{invStats.views} ko'rish, {invStats.rsvps} RSVP</p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center gap-2">
+                            <Button variant="outline" size="sm" asChild className="hover-scale">
+                              <Link to={`/invitation/${invitation.id}`}>
+                                <Eye className="w-4 h-4 mr-1" />
+                                Ko'rish
+                              </Link>
+                            </Button>
+                            
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="sm" className="hover-scale">
+                                  <MoreVertical className="w-4 h-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem>
+                                  <Edit className="w-4 h-4 mr-2" />
+                                  Tahrirlash
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                  <Share2 className="w-4 h-4 mr-2" />
+                                  Ulashish
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="text-red-600">
+                                  <Trash2 className="w-4 h-4 mr-2" />
+                                  O'chirish
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-16 animate-fade-in">
+                  <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce-soft">
+                    <Calendar className="w-12 h-12 text-primary" />
+                  </div>
+                  <h3 className="font-heading text-2xl font-semibold text-foreground mb-3">
+                    Hali taklifnomalar yo'q
+                  </h3>
+                  <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+                    Birinchi taklifnomangizni yaratib, mehmonlarni taklif qilishni boshlang. 
+                    Bu juda oson va faqat bir necha daqiqa vaqt oladi!
+                  </p>
+                  <Button asChild className="button-modern hover-lift primary-gradient">
+                    <Link to="/create">
+                      <PlusCircle className="w-5 h-5 mr-2" />
+                      Birinchi Taklifnomani Yaratish
+                    </Link>
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }

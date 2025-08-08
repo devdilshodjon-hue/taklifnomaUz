@@ -420,26 +420,71 @@ export default function CreateInvitation() {
                 <p className="text-muted-foreground mb-6">Dizayn tanlang va shaxsiy ta'sir qo'shing</p>
               </div>
 
-              <div className="space-y-4">
-                <Label className="text-foreground font-medium">Shablon Tanlang</Label>
-                <div className="grid md:grid-cols-2 gap-4">
-                  {templates.map((template) => (
-                    <div
-                      key={template.id}
-                      className={`p-4 border-2 rounded-xl cursor-pointer transition-all hover:scale-105 ${
-                        formData.selectedTemplate === template.id
-                          ? "border-primary bg-primary/5"
-                          : "border-border hover:border-primary/50"
-                      }`}
-                      onClick={() => setFormData({ ...formData, selectedTemplate: template.id })}
-                    >
-                      <div className="text-center">
-                        <div className="text-4xl mb-2">{template.preview}</div>
-                        <h3 className="font-heading text-lg font-semibold text-foreground">{template.name}</h3>
-                        <p className="text-sm text-muted-foreground">{template.description}</p>
+              <div className="space-y-6">
+                <div>
+                  <Label className="text-foreground font-medium mb-4 block">Shablon Kategoriyasi</Label>
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {templateCategories.map((category) => (
+                      <Button
+                        key={category.id}
+                        variant={selectedCategory === category.id ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handleCategoryChange(category.id)}
+                        className="text-xs"
+                      >
+                        <Filter className="w-3 h-3 mr-1" />
+                        {category.name} ({category.count})
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-foreground font-medium mb-4 block">Shablon Tanlang</Label>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredTemplates.map((template) => (
+                      <div
+                        key={template.id}
+                        className={`group p-4 border-2 rounded-xl cursor-pointer transition-all hover:scale-105 hover:shadow-lg ${
+                          formData.selectedTemplate === template.id
+                            ? "border-primary bg-primary/5 shadow-md"
+                            : "border-border hover:border-primary/50"
+                        }`}
+                        onClick={() => setFormData({ ...formData, selectedTemplate: template.id })}
+                      >
+                        <div className="text-center space-y-3">
+                          <div className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center transition-colors"
+                               style={{ backgroundColor: template.colors.background, border: `2px solid ${template.colors.primary}` }}>
+                            <span className="text-2xl">{template.preview}</span>
+                          </div>
+
+                          <div>
+                            <h3 className="font-heading text-base font-semibold text-foreground mb-1">
+                              {template.name}
+                            </h3>
+                            <p className="text-xs text-muted-foreground leading-tight">
+                              {template.description}
+                            </p>
+                          </div>
+
+                          <div className="flex items-center justify-center gap-2 pt-2">
+                            <div className="w-3 h-3 rounded-full border"
+                                 style={{ backgroundColor: template.colors.primary }}></div>
+                            <div className="w-3 h-3 rounded-full border"
+                                 style={{ backgroundColor: template.colors.accent }}></div>
+                            <div className="w-3 h-3 rounded-full border"
+                                 style={{ backgroundColor: template.colors.secondary }}></div>
+                          </div>
+
+                          {formData.selectedTemplate === template.id && (
+                            <div className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                              <span className="text-white text-xs">✓</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
 

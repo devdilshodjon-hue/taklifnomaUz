@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Heart, ArrowLeft, Save, Eye, Calendar, MapPin, Clock, Upload, Users, Plus, X } from "lucide-react";
+import { Sparkles, ArrowLeft, Save, Eye, Calendar, MapPin, Clock, Upload, Users, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { supabase } from "@/lib/supabase";
 
 interface Guest {
   id: string;
@@ -46,27 +47,27 @@ export default function CreateInvitation() {
   const templates: InvitationTemplate[] = [
     {
       id: "classic",
-      name: "Classic Elegance",
+      name: "Klassik Nafis",
       preview: "🌸",
-      description: "Timeless design with floral accents",
+      description: "Gul naqshlari bilan klassik dizayn",
     },
     {
       id: "modern",
-      name: "Modern Minimalist",
+      name: "Zamonaviy Oddiy",
       preview: "💍",
-      description: "Clean lines and contemporary style",
+      description: "Toza chiziqlar va zamonaviy uslub",
     },
     {
       id: "rustic",
-      name: "Rustic Romance",
+      name: "Qishloq Uslubi",
       preview: "🌿",
-      description: "Natural elements with warm tones",
+      description: "Tabiiy elementlar va issiq ranglar",
     },
     {
       id: "luxury",
-      name: "Luxury Gold",
+      name: "Hashamatli Oltin",
       preview: "✨",
-      description: "Sophisticated with gold accents",
+      description: "Oltin aksentlar bilan nafis dizayn",
     },
   ];
 
@@ -92,54 +93,117 @@ export default function CreateInvitation() {
     }
   };
 
+  const generateSlug = () => {
+    const names = `${formData.groomName}-${formData.brideName}`.toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+    const randomId = Math.random().toString(36).substring(2, 8);
+    return `${names}-${randomId}`;
+  };
+
   const handleSave = async () => {
     setIsLoading(true);
     
-    // Simulate API call to create invitation
-    setTimeout(() => {
+    try {
+      // Get current user (for demo, we'll use a mock user ID)
+      const mockUserId = "demo-user-id";
+      
+      const invitationData = {
+        user_id: mockUserId,
+        groom_name: formData.groomName,
+        bride_name: formData.brideName,
+        wedding_date: formData.weddingDate,
+        wedding_time: formData.weddingTime || null,
+        venue: formData.venue,
+        address: formData.address,
+        city: formData.city || null,
+        state: formData.state || null,
+        zip_code: formData.zipCode || null,
+        custom_message: formData.customMessage || null,
+        template_id: formData.selectedTemplate,
+        rsvp_deadline: formData.rsvpDeadline || null,
+        slug: generateSlug(),
+        is_active: true,
+      };
+
+      const { data: invitation, error } = await supabase
+        .from('invitations')
+        .insert(invitationData)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Taklifnoma yaratishda xatolik:', error);
+        // Demo uchun mock ID yaratamiz
+        const mockId = "demo-" + Date.now();
+        navigate(`/invitation/${mockId}`);
+        return;
+      }
+
+      // Mehmonlarni qo'shish
+      if (guests.length > 0 && invitation) {
+        const guestData = guests.map(guest => ({
+          invitation_id: invitation.id,
+          name: guest.name,
+          email: guest.email || null,
+          phone: guest.phone || null,
+          plus_one: false,
+        }));
+
+        await supabase
+          .from('guests')
+          .insert(guestData);
+      }
+
+      navigate(`/invitation/${invitation.id}`);
+    } catch (error) {
+      console.error('Xatolik:', error);
+      // Demo uchun mock ID yaratamiz
+      const mockId = "demo-" + Date.now();
+      navigate(`/invitation/${mockId}`);
+    } finally {
       setIsLoading(false);
-      // Generate a mock invitation ID and redirect
-      const invitationId = "inv-" + Math.random().toString(36).substr(2, 9);
-      navigate(`/invitation/${invitationId}`);
-    }, 2000);
+    }
   };
 
   const handlePreview = () => {
-    // Open preview in new tab or modal
+    // Oldindan ko'rish uchun yangi tab ochish
     window.open(`/invitation/preview`, '_blank');
   };
 
   const steps = [
-    { id: 1, title: "Basic Details", description: "Couple & Date Info" },
-    { id: 2, title: "Venue & Location", description: "Where & When" },
-    { id: 3, title: "Design & Message", description: "Personalization" },
-    { id: 4, title: "Guest List", description: "Who's Invited" },
+    { id: 1, title: "Asosiy Ma'lumotlar", description: "Er-xotin va sana" },
+    { id: 2, title: "Joy va Manzil", description: "Qayerda va qachon" },
+    { id: 3, title: "Dizayn va Xabar", description: "Shaxsiylashtirish" },
+    { id: 4, title: "Mehmonlar Ro'yxati", description: "Kim taklif qilinadi" },
   ];
 
   return (
-    <div className="min-h-screen bg-wedding-cream">
+    <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="bg-card border-b border-wedding-blush/20 p-4 sticky top-0 z-10">
+      <nav className="bg-card border-b border-border p-4 sticky top-0 z-10">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm" asChild>
               <Link to="/dashboard">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
+                Dashboard ga qaytish
               </Link>
             </Button>
             <div className="flex items-center gap-2">
-              <Heart className="w-6 h-6 text-wedding-rose" />
-              <span className="font-script text-2xl text-wedding-rose">ForeverTogether</span>
+              <div className="w-6 h-6 bg-primary rounded-lg flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-white" />
+              </div>
+              <span className="font-heading text-xl font-bold text-foreground">TaklifNoma</span>
             </div>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={handlePreview}>
               <Eye className="w-4 h-4 mr-2" />
-              Preview
+              Oldindan Ko'rish
             </Button>
             <Button 
-              className="bg-wedding-rose hover:bg-wedding-rose/90 text-white" 
+              className="button-modern" 
               size="sm"
               onClick={handleSave}
               disabled={isLoading}
@@ -147,12 +211,12 @@ export default function CreateInvitation() {
               {isLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2" />
-                  Saving...
+                  Saqlanmoqda...
                 </>
               ) : (
                 <>
                   <Save className="w-4 h-4 mr-2" />
-                  Save & Generate Link
+                  Saqlash va Havola Yaratish
                 </>
               )}
             </Button>
@@ -162,8 +226,8 @@ export default function CreateInvitation() {
 
       <div className="max-w-4xl mx-auto p-6">
         <div className="mb-8">
-          <h1 className="font-serif text-4xl text-foreground mb-2">Create Your Invitation</h1>
-          <p className="text-foreground/70">Design a beautiful invitation that perfectly captures your special day</p>
+          <h1 className="font-heading text-4xl font-bold text-foreground mb-2">Taklifnomangizni Yarating</h1>
+          <p className="text-muted-foreground">Maxsus kuningizni mukammal aks ettiruvchi chiroyli taklifnoma dizayn qiling</p>
         </div>
 
         {/* Progress Steps */}
@@ -174,19 +238,19 @@ export default function CreateInvitation() {
                 <div className="flex flex-col items-center">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
                     currentStep >= step.id 
-                      ? "bg-wedding-rose text-white" 
-                      : "bg-wedding-blush/30 text-foreground/60"
+                      ? "bg-primary text-white" 
+                      : "bg-secondary text-muted-foreground"
                   }`}>
                     {step.id}
                   </div>
                   <div className="text-center mt-2">
                     <p className="text-sm font-medium text-foreground">{step.title}</p>
-                    <p className="text-xs text-foreground/60">{step.description}</p>
+                    <p className="text-xs text-muted-foreground">{step.description}</p>
                   </div>
                 </div>
                 {index < steps.length - 1 && (
                   <div className={`w-20 h-0.5 mx-4 transition-colors ${
-                    currentStep > step.id ? "bg-wedding-rose" : "bg-wedding-blush/30"
+                    currentStep > step.id ? "bg-primary" : "bg-border"
                   }`} />
                 )}
               </div>
@@ -194,35 +258,35 @@ export default function CreateInvitation() {
           </div>
         </div>
 
-        <div className="bg-card p-8 rounded-2xl shadow-sm border border-wedding-blush/20">
-          {/* Step 1: Basic Details */}
+        <div className="card-modern p-8">
+          {/* Step 1: Asosiy Ma'lumotlar */}
           {currentStep === 1 && (
             <div className="space-y-6">
               <div>
-                <h2 className="font-serif text-2xl text-foreground mb-4">Tell us about the happy couple</h2>
-                <p className="text-foreground/70 mb-6">Let's start with the most important details</p>
+                <h2 className="font-heading text-2xl font-bold text-foreground mb-4">Baxtli juftlik haqida</h2>
+                <p className="text-muted-foreground mb-6">Eng muhim ma'lumotlar bilan boshlaylik</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="groomName" className="text-foreground/80">Groom's Full Name</Label>
+                  <Label htmlFor="groomName" className="text-foreground font-medium">Kuyovning To'liq Ismi</Label>
                   <Input
                     id="groomName"
                     type="text"
-                    placeholder="Enter groom's name"
-                    className="h-12 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                    placeholder="Kuyov ismini kiriting"
+                    className="input-modern h-12"
                     value={formData.groomName}
                     onChange={(e) => setFormData({ ...formData, groomName: e.target.value })}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="brideName" className="text-foreground/80">Bride's Full Name</Label>
+                  <Label htmlFor="brideName" className="text-foreground font-medium">Kelinning To'liq Ismi</Label>
                   <Input
                     id="brideName"
                     type="text"
-                    placeholder="Enter bride's name"
-                    className="h-12 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                    placeholder="Kelin ismini kiriting"
+                    className="input-modern h-12"
                     value={formData.brideName}
                     onChange={(e) => setFormData({ ...formData, brideName: e.target.value })}
                   />
@@ -231,13 +295,13 @@ export default function CreateInvitation() {
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="weddingDate" className="text-foreground/80">Wedding Date</Label>
+                  <Label htmlFor="weddingDate" className="text-foreground font-medium">To'y Sanasi</Label>
                   <div className="relative">
-                    <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-foreground/40" />
+                    <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
                       id="weddingDate"
                       type="date"
-                      className="pl-10 h-12 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                      className="input-modern pl-11 h-12"
                       value={formData.weddingDate}
                       onChange={(e) => setFormData({ ...formData, weddingDate: e.target.value })}
                     />
@@ -245,13 +309,13 @@ export default function CreateInvitation() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="weddingTime" className="text-foreground/80">Wedding Time</Label>
+                  <Label htmlFor="weddingTime" className="text-foreground font-medium">To'y Vaqti</Label>
                   <div className="relative">
-                    <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-foreground/40" />
+                    <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
                       id="weddingTime"
                       type="time"
-                      className="pl-10 h-12 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                      className="input-modern pl-11 h-12"
                       value={formData.weddingTime}
                       onChange={(e) => setFormData({ ...formData, weddingTime: e.target.value })}
                     />
@@ -260,11 +324,11 @@ export default function CreateInvitation() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="rsvpDeadline" className="text-foreground/80">RSVP Deadline</Label>
+                <Label htmlFor="rsvpDeadline" className="text-foreground font-medium">Javob Berish Muddati</Label>
                 <Input
                   id="rsvpDeadline"
                   type="date"
-                  className="h-12 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                  className="input-modern h-12"
                   value={formData.rsvpDeadline}
                   onChange={(e) => setFormData({ ...formData, rsvpDeadline: e.target.value })}
                 />
@@ -272,23 +336,23 @@ export default function CreateInvitation() {
             </div>
           )}
 
-          {/* Step 2: Venue & Location */}
+          {/* Step 2: Joy va Manzil */}
           {currentStep === 2 && (
             <div className="space-y-6">
               <div>
-                <h2 className="font-serif text-2xl text-foreground mb-4">Where will the magic happen?</h2>
-                <p className="text-foreground/70 mb-6">Tell your guests about the venue</p>
+                <h2 className="font-heading text-2xl font-bold text-foreground mb-4">Sehr qayerda sodir bo'ladi?</h2>
+                <p className="text-muted-foreground mb-6">Mehmonlaringizga joy haqida ma'lumot bering</p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="venue" className="text-foreground/80">Venue Name</Label>
+                <Label htmlFor="venue" className="text-foreground font-medium">Joy Nomi</Label>
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-foreground/40" />
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     id="venue"
                     type="text"
-                    placeholder="Rose Garden Chapel"
-                    className="pl-10 h-12 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                    placeholder="Atirgul Bog'i"
+                    className="input-modern pl-11 h-12"
                     value={formData.venue}
                     onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
                   />
@@ -296,12 +360,12 @@ export default function CreateInvitation() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="address" className="text-foreground/80">Street Address</Label>
+                <Label htmlFor="address" className="text-foreground font-medium">Ko'cha Manzili</Label>
                 <Input
                   id="address"
                   type="text"
-                  placeholder="123 Garden Lane"
-                  className="h-12 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                  placeholder="Bog' ko'chasi 123"
+                  className="input-modern h-12"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                 />
@@ -309,76 +373,76 @@ export default function CreateInvitation() {
 
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="city" className="text-foreground/80">City</Label>
+                  <Label htmlFor="city" className="text-foreground font-medium">Shahar</Label>
                   <Input
                     id="city"
                     type="text"
-                    placeholder="City"
-                    className="h-12 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                    placeholder="Toshkent"
+                    className="input-modern h-12"
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="state" className="text-foreground/80">State</Label>
+                  <Label htmlFor="state" className="text-foreground font-medium">Viloyat</Label>
                   <Input
                     id="state"
                     type="text"
-                    placeholder="State"
-                    className="h-12 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                    placeholder="Toshkent viloyati"
+                    className="input-modern h-12"
                     value={formData.state}
                     onChange={(e) => setFormData({ ...formData, state: e.target.value })}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="zipCode" className="text-foreground/80">ZIP Code</Label>
+                  <Label htmlFor="zipCode" className="text-foreground font-medium">Pochta Indeksi</Label>
                   <Input
                     id="zipCode"
                     type="text"
-                    placeholder="12345"
-                    className="h-12 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                    placeholder="100000"
+                    className="input-modern h-12"
                     value={formData.zipCode}
                     onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
                   />
                 </div>
               </div>
 
-              <div className="bg-wedding-blush/10 p-4 rounded-lg">
-                <p className="text-sm text-foreground/70">
+              <div className="bg-primary/5 p-4 rounded-lg">
+                <p className="text-sm text-muted-foreground">
                   <MapPin className="w-4 h-4 inline mr-1" />
-                  A Google Map will be automatically embedded in your invitation showing the venue location.
+                  Google xarita avtomatik ravishda taklifnomangizga qo'shiladi.
                 </p>
               </div>
             </div>
           )}
 
-          {/* Step 3: Design & Message */}
+          {/* Step 3: Dizayn va Xabar */}
           {currentStep === 3 && (
             <div className="space-y-6">
               <div>
-                <h2 className="font-serif text-2xl text-foreground mb-4">Make it personal</h2>
-                <p className="text-foreground/70 mb-6">Choose a design and add your personal touch</p>
+                <h2 className="font-heading text-2xl font-bold text-foreground mb-4">Shaxsiy qiling</h2>
+                <p className="text-muted-foreground mb-6">Dizayn tanlang va shaxsiy ta'sir qo'shing</p>
               </div>
 
               <div className="space-y-4">
-                <Label className="text-foreground/80">Choose a Template</Label>
+                <Label className="text-foreground font-medium">Shablon Tanlang</Label>
                 <div className="grid md:grid-cols-2 gap-4">
                   {templates.map((template) => (
                     <div
                       key={template.id}
                       className={`p-4 border-2 rounded-xl cursor-pointer transition-all hover:scale-105 ${
                         formData.selectedTemplate === template.id
-                          ? "border-wedding-rose bg-wedding-rose/5"
-                          : "border-wedding-blush/30 hover:border-wedding-rose/50"
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:border-primary/50"
                       }`}
                       onClick={() => setFormData({ ...formData, selectedTemplate: template.id })}
                     >
                       <div className="text-center">
                         <div className="text-4xl mb-2">{template.preview}</div>
-                        <h3 className="font-serif text-lg text-foreground">{template.name}</h3>
-                        <p className="text-sm text-foreground/60">{template.description}</p>
+                        <h3 className="font-heading text-lg font-semibold text-foreground">{template.name}</h3>
+                        <p className="text-sm text-muted-foreground">{template.description}</p>
                       </div>
                     </div>
                   ))}
@@ -386,20 +450,20 @@ export default function CreateInvitation() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="customMessage" className="text-foreground/80">Custom Message</Label>
+                <Label htmlFor="customMessage" className="text-foreground font-medium">Shaxsiy Xabar</Label>
                 <Textarea
                   id="customMessage"
-                  placeholder="We request the honor of your presence as we celebrate our love and begin our journey together as husband and wife."
-                  className="min-h-32 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                  placeholder="Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz."
+                  className="input-modern min-h-32"
                   value={formData.customMessage}
                   onChange={(e) => setFormData({ ...formData, customMessage: e.target.value })}
                 />
-                <p className="text-sm text-foreground/60">This message will appear on your invitation</p>
+                <p className="text-sm text-muted-foreground">Bu xabar taklifnomangizda ko'rsatiladi</p>
               </div>
 
               <div className="space-y-2">
-                <Label className="text-foreground/80">Upload Photo (Optional)</Label>
-                <div className="border-2 border-dashed border-wedding-blush/30 rounded-xl p-8 text-center hover:border-wedding-rose/50 transition-colors">
+                <Label className="text-foreground font-medium">Rasm Yuklash (Ixtiyoriy)</Label>
+                <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/50 transition-colors">
                   <input
                     type="file"
                     id="imageUpload"
@@ -408,13 +472,13 @@ export default function CreateInvitation() {
                     className="hidden"
                   />
                   <label htmlFor="imageUpload" className="cursor-pointer">
-                    <Upload className="w-8 h-8 text-foreground/40 mx-auto mb-2" />
-                    <p className="text-foreground/60">Click to upload a photo</p>
-                    <p className="text-sm text-foreground/40">PNG, JPG up to 10MB</p>
+                    <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-muted-foreground">Rasm yuklash uchun bosing</p>
+                    <p className="text-sm text-muted-foreground">PNG, JPG 10MB gacha</p>
                   </label>
                   {formData.uploadedImage && (
-                    <p className="text-sm text-wedding-rose mt-2">
-                      ✓ {formData.uploadedImage.name} uploaded
+                    <p className="text-sm text-primary mt-2">
+                      ✓ {formData.uploadedImage.name} yuklandi
                     </p>
                   )}
                 </div>
@@ -422,43 +486,43 @@ export default function CreateInvitation() {
             </div>
           )}
 
-          {/* Step 4: Guest List */}
+          {/* Step 4: Mehmonlar Ro'yxati */}
           {currentStep === 4 && (
             <div className="space-y-6">
               <div>
-                <h2 className="font-serif text-2xl text-foreground mb-4">Who's invited?</h2>
-                <p className="text-foreground/70 mb-6">Add your guests to send personalized invitations</p>
+                <h2 className="font-heading text-2xl font-bold text-foreground mb-4">Kim taklif qilinadi?</h2>
+                <p className="text-muted-foreground mb-6">Shaxsiy taklifnomalar yuborish uchun mehmonlaringizni qo'shing</p>
               </div>
 
-              <div className="bg-wedding-blush/10 p-6 rounded-xl">
-                <h3 className="font-medium text-foreground mb-4">Add New Guest</h3>
+              <div className="bg-primary/5 p-6 rounded-xl">
+                <h3 className="font-medium text-foreground mb-4">Yangi Mehmon Qo'shish</h3>
                 <div className="grid md:grid-cols-4 gap-4">
                   <div className="md:col-span-2">
                     <Input
-                      placeholder="Guest name"
+                      placeholder="Mehmon ismi"
                       value={newGuest.name}
                       onChange={(e) => setNewGuest({ ...newGuest, name: e.target.value })}
-                      className="h-10 border-wedding-blush/30"
+                      className="input-modern h-10"
                     />
                   </div>
                   <div>
                     <Input
-                      placeholder="Email (optional)"
+                      placeholder="Email (ixtiyoriy)"
                       type="email"
                       value={newGuest.email}
                       onChange={(e) => setNewGuest({ ...newGuest, email: e.target.value })}
-                      className="h-10 border-wedding-blush/30"
+                      className="input-modern h-10"
                     />
                   </div>
                   <div className="flex gap-2">
                     <Input
-                      placeholder="Phone (optional)"
+                      placeholder="Telefon (ixtiyoriy)"
                       type="tel"
                       value={newGuest.phone}
                       onChange={(e) => setNewGuest({ ...newGuest, phone: e.target.value })}
-                      className="h-10 border-wedding-blush/30"
+                      className="input-modern h-10"
                     />
-                    <Button onClick={addGuest} size="sm" className="bg-wedding-rose hover:bg-wedding-rose/90">
+                    <Button onClick={addGuest} size="sm" className="button-modern">
                       <Plus className="w-4 h-4" />
                     </Button>
                   </div>
@@ -469,14 +533,14 @@ export default function CreateInvitation() {
                 <div>
                   <h3 className="font-medium text-foreground mb-4 flex items-center gap-2">
                     <Users className="w-4 h-4" />
-                    Guest List ({guests.length} guests)
+                    Mehmonlar Ro'yxati ({guests.length} mehmon)
                   </h3>
                   <div className="space-y-2 max-h-64 overflow-y-auto">
                     {guests.map((guest) => (
-                      <div key={guest.id} className="flex items-center justify-between p-3 bg-card border border-wedding-blush/20 rounded-lg">
+                      <div key={guest.id} className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
                         <div>
                           <p className="font-medium text-foreground">{guest.name}</p>
-                          <div className="flex gap-4 text-sm text-foreground/60">
+                          <div className="flex gap-4 text-sm text-muted-foreground">
                             {guest.email && <span>{guest.email}</span>}
                             {guest.phone && <span>{guest.phone}</span>}
                           </div>
@@ -485,7 +549,7 @@ export default function CreateInvitation() {
                           variant="ghost"
                           size="sm"
                           onClick={() => removeGuest(guest.id)}
-                          className="text-foreground/40 hover:text-destructive"
+                          className="text-muted-foreground hover:text-destructive"
                         >
                           <X className="w-4 h-4" />
                         </Button>
@@ -496,40 +560,40 @@ export default function CreateInvitation() {
               )}
 
               {guests.length === 0 && (
-                <div className="text-center py-8 text-foreground/60">
-                  <Users className="w-12 h-12 mx-auto mb-4 text-wedding-blush" />
-                  <p>No guests added yet</p>
-                  <p className="text-sm">Add guests above to create personalized invitations</p>
+                <div className="text-center py-8 text-muted-foreground">
+                  <Users className="w-12 h-12 mx-auto mb-4 text-primary/30" />
+                  <p>Hali mehmonlar qo'shilmagan</p>
+                  <p className="text-sm">Shaxsiy taklifnomalar yaratish uchun yuqorida mehmon qo'shing</p>
                 </div>
               )}
             </div>
           )}
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between mt-8 pt-6 border-t border-wedding-blush/20">
+          <div className="flex justify-between mt-8 pt-6 border-t border-border">
             <Button
               variant="outline"
               onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
               disabled={currentStep === 1}
-              className="border-wedding-blush/30"
+              className="border-border"
             >
-              Previous
+              Orqaga
             </Button>
 
             {currentStep < 4 ? (
               <Button
                 onClick={() => setCurrentStep(Math.min(4, currentStep + 1))}
-                className="bg-wedding-rose hover:bg-wedding-rose/90 text-white"
+                className="button-modern"
               >
-                Next Step
+                Keyingi Qadam
               </Button>
             ) : (
               <Button
                 onClick={handleSave}
                 disabled={isLoading}
-                className="bg-wedding-rose hover:bg-wedding-rose/90 text-white"
+                className="button-modern"
               >
-                {isLoading ? "Saving..." : "Create Invitation"}
+                {isLoading ? "Saqlanmoqda..." : "Taklifnoma Yaratish"}
               </Button>
             )}
           </div>

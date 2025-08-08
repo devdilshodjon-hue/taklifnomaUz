@@ -113,18 +113,52 @@ CREATE POLICY "Taklifnoma egasi mehmon qo'shishi mumkin"
     );
 
 -- RSVPs jadvali uchun RLS policies
-CREATE POLICY "Hamma RSVP qo'shishi mumkin" 
-    ON public.rsvps FOR INSERT 
+CREATE POLICY "Hamma RSVP qo'shishi mumkin"
+    ON public.rsvps FOR INSERT
     WITH CHECK (true);
 
-CREATE POLICY "Taklifnoma egasi RSVPlarni ko'rishi mumkin" 
-    ON public.rsvps FOR SELECT 
+CREATE POLICY "Taklifnoma egasi RSVPlarni ko'rishi mumkin"
+    ON public.rsvps FOR SELECT
     USING (
         EXISTS (
-            SELECT 1 FROM public.invitations 
+            SELECT 1 FROM public.invitations
             WHERE id = invitation_id AND user_id = auth.uid()
         )
     );
+
+-- 5. Custom templates jadvali (foydalanuvchi tomonidan yaratilgan shablonlar)
+CREATE TABLE IF NOT EXISTS public.custom_templates (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    description TEXT,
+    category TEXT DEFAULT 'custom',
+    colors JSONB DEFAULT '{}',
+    fonts JSONB DEFAULT '{}',
+    layout_config JSONB DEFAULT '{}',
+    preview_image_url TEXT,
+    is_public BOOLEAN DEFAULT FALSE,
+    is_featured BOOLEAN DEFAULT FALSE,
+    usage_count INTEGER DEFAULT 0,
+    tags TEXT[] DEFAULT '{}'
+);
+
+-- Custom templates jadvali uchun RLS
+ALTER TABLE public.custom_templates ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Foydalanuvchilar o'z shablonlarini ko'rishlari mumkin"
+    ON public.custom_templates FOR SELECT
+    USING (auth.uid() = user_id OR is_public = true);
+
+CREATE POLICY "Foydalanuvchilar o'z shablonlarini yaratashlari mumkin"
+    ON public.custom_templates FOR INSERT
+    WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Foydalanuvchilar o'z shablonlarini yangilashlari mumkin"
+    ON public.custom_templates FOR UPDATE
+    USING (auth.uid() = user_id);
 
 -- Trigger function: profil yaratish
 CREATE OR REPLACE FUNCTION public.handle_new_user()

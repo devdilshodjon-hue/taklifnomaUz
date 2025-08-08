@@ -141,6 +141,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setLoading(true);
 
+      // Set a timeout to prevent infinite loading
+      const timeoutId = setTimeout(() => {
+        console.log("Profile loading timeout, stopping...");
+        setLoading(false);
+      }, 10000); // 10 second timeout
+
       // First check if we have a valid session
       const {
         data: { session },

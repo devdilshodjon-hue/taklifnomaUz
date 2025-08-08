@@ -147,7 +147,7 @@ export default function Index() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
             {features.map((feature, index) => (
               <div key={index} className="group text-center">
                 <div className="w-16 h-16 mx-auto mb-6 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
@@ -159,6 +159,80 @@ export default function Index() {
                 <p className="text-muted-foreground leading-relaxed">
                   {feature.description}
                 </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Additional Features Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            {[
+              { icon: "📊", title: "Aniq Statistika", desc: "Kim ko'rdi, kim javob berdi - barchasi batafsil" },
+              { icon: "🔗", title: "QR Kodlar", desc: "Kartalar uchun QR kod yaratish va bosib chiqarish" },
+              { icon: "💾", title: "PDF Yuklab Olish", desc: "Professional PDF formatda saqlash va bosib chiqarish" },
+              { icon: "🔔", title: "SMS Xabarnomalar", desc: "Mehmonlarga avtomatik xabar jo'natish" },
+              { icon: "🎨", title: "Maxsus Dizayn", desc: "O'z logongiz va brendingizni qo'shing" },
+              { icon: "📱", title: "Mobil Ilovalar", desc: "Android va iOS ilovalarida mukammal ko'rinish" },
+              { icon: "🌐", title: "Ko'p Tillar", desc: "O'zbek, rus va ingliz tillarida qo'llab-quvvatlash" },
+              { icon: "🛡️", title: "Xavfsizlik", desc: "Ma'lumotlaringiz SSL sertifikat bilan himoyalangan" }
+            ].map((item, index) => (
+              <div key={index} className="card-modern p-6 text-center hover:shadow-lg transition-all duration-300">
+                <div className="text-3xl mb-3">{item.icon}</div>
+                <h4 className="font-heading font-semibold text-foreground mb-2 text-sm">
+                  {item.title}
+                </h4>
+                <p className="text-xs text-muted-foreground">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Process Steps */}
+          <div className="text-center mb-12">
+            <h3 className="font-heading text-3xl font-bold text-foreground mb-4">
+              3 Bosqichda Taklifnoma Yarating
+            </h3>
+            <p className="text-lg text-muted-foreground">
+              Juda oson va tez jarayon - bir necha daqiqada tayyor!
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                step: "01",
+                title: "Shablon Tanlang",
+                description: "15+ dan ortiq chiroyli shablonlar orasidan o'zingizga yoqganini tanlang",
+                color: "bg-blue-500"
+              },
+              {
+                step: "02",
+                title: "Ma'lumotlarni Kiriting",
+                description: "Kelin-kuyov ismi, sana, joy va boshqa muhim ma'lumotlarni yozing",
+                color: "bg-purple-500"
+              },
+              {
+                step: "03",
+                title: "Ulashing va Kuzating",
+                description: "Taklifnomani ulashing va mehmonlar javoblarini real vaqtda kuzatib boring",
+                color: "bg-green-500"
+              }
+            ].map((step, index) => (
+              <div key={index} className="relative">
+                <div className="card-modern p-8 text-center">
+                  <div className={`w-16 h-16 ${step.color} rounded-full flex items-center justify-center mx-auto mb-6`}>
+                    <span className="text-2xl font-bold text-white">{step.step}</span>
+                  </div>
+                  <h4 className="font-heading text-xl font-semibold text-foreground mb-4">
+                    {step.title}
+                  </h4>
+                  <p className="text-muted-foreground">
+                    {step.description}
+                  </p>
+                </div>
+                {index < 2 && (
+                  <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-border transform -translate-y-1/2"></div>
+                )}
               </div>
             ))}
           </div>

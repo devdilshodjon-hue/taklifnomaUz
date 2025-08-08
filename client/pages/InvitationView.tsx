@@ -28,6 +28,7 @@ export default function InvitationView() {
   const [loading, setLoading] = useState(true);
   const [rsvpSubmitted, setRsvpSubmitted] = useState(false);
   const [submittingRsvp, setSubmittingRsvp] = useState(false);
+  const [showDatabaseSetup, setShowDatabaseSetup] = useState(false);
   const [rsvpForm, setRsvpForm] = useState({
     guest_name: "",
     will_attend: null as boolean | null,

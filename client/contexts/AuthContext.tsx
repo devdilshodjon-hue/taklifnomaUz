@@ -138,11 +138,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const loadProfile = async (userId: string) => {
+    let timeoutId: NodeJS.Timeout;
     try {
       setLoading(true);
 
       // Set a timeout to prevent infinite loading
-      const timeoutId = setTimeout(() => {
+      timeoutId = setTimeout(() => {
         console.log("Profile loading timeout, stopping...");
         setLoading(false);
       }, 10000); // 10 second timeout

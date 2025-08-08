@@ -122,11 +122,11 @@ export default function Index() {
               va ulashing. Dizayn tajribasi shart emas.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-slide-up delay-300">
               <Button
                 size="lg"
                 asChild
-                className="primary-gradient px-8 py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                className="primary-gradient px-8 py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover-lift animate-glow"
               >
                 <Link to="/create">
                   Taklifnoma Yaratish
@@ -137,7 +137,7 @@ export default function Index() {
                 variant="outline"
                 size="lg"
                 asChild
-                className="px-8 py-4 text-lg rounded-xl"
+                className="px-8 py-4 text-lg rounded-xl hover-lift"
               >
                 <Link to="#demo">Namunani Ko'rish</Link>
               </Button>

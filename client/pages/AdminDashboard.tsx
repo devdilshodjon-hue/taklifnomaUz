@@ -195,10 +195,18 @@ export default function AdminDashboard() {
         .order("created_at", { ascending: false })
         .limit(50);
 
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes("does not exist")) {
+          console.log("Purchase requests table not found, using empty data");
+          setPurchaseRequests([]);
+          return;
+        }
+        throw error;
+      }
       setPurchaseRequests(data || []);
     } catch (error) {
       console.error("Error loading purchase requests:", error);
+      setPurchaseRequests([]);
     }
   };
 

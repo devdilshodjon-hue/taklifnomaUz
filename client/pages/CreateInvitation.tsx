@@ -16,12 +16,7 @@ interface Guest {
   phone: string;
 }
 
-interface InvitationTemplate {
-  id: string;
-  name: string;
-  preview: string;
-  description: string;
-}
+// Template interface endi templates.tsx dan import qilinadi
 
 export default function CreateInvitation() {
   const navigate = useNavigate();

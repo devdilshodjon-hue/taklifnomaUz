@@ -44,51 +44,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   console.log("AuthProvider rendering with state:", { user: !!user, profile: !!profile, loading });
 
   useEffect(() => {
-    // Test database connection first
-    const testDatabaseConnection = async () => {
+    let mounted = true;
+
+    const initializeAuth = async () => {
       try {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("count")
-          .limit(1);
+        // Test database connection first
+        const testDatabaseConnection = async () => {
+          try {
+            const { data, error } = await supabase
+              .from("profiles")
+              .select("count")
+              .limit(1);
+            if (error) {
+              console.warn("Database connection test failed:", {
+                error: error,
+                message: error?.message,
+                hint: error?.hint,
+                details: error?.details,
+              });
+            } else {
+              console.log("Database connection test successful");
+            }
+          } catch (err) {
+            console.warn("Database connection test error:", err);
+          }
+        };
+
+        await testDatabaseConnection();
+
+        // Get initial session and validate it
+        const { data: { session }, error } = await supabase.auth.getSession();
+
+        if (!mounted) return;
+
         if (error) {
-          console.warn("Database connection test failed:", {
-            error: error,
-            message: error?.message,
-            hint: error?.hint,
-            details: error?.details,
-          });
-        } else {
-          console.log("Database connection test successful");
-        }
-      } catch (err) {
-        console.warn("Database connection test error:", err);
-      }
-    };
-
-    testDatabaseConnection();
-
-    // Get initial session and validate it
-    supabase.auth.getSession().then(async ({ data: { session }, error }) => {
-      if (error) {
-        console.error("Session error on load:", error);
-        setSession(null);
-        setUser(null);
-        setProfile(null);
-        setLoading(false);
-        return;
-      }
-
-      if (session) {
-        // Validate session by refreshing it
-        const {
-          data: { session: refreshedSession },
-          error: refreshError,
-        } = await supabase.auth.refreshSession();
-
-        if (refreshError || !refreshedSession) {
-          console.log("Session invalid, signing out...");
-          await supabase.auth.signOut();
+          console.error("Session error on load:", error);
           setSession(null);
           setUser(null);
           setProfile(null);
@@ -96,16 +86,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
-        setSession(refreshedSession);
-        setUser(refreshedSession.user);
-        loadProfile(refreshedSession.user.id);
-      } else {
-        setSession(null);
-        setUser(null);
-        setProfile(null);
-        setLoading(false);
+        if (session) {
+          // Validate session by refreshing it
+          const {
+            data: { session: refreshedSession },
+            error: refreshError,
+          } = await supabase.auth.refreshSession();
+
+          if (!mounted) return;
+
+          if (refreshError || !refreshedSession) {
+            console.log("Session invalid, signing out...");
+            await supabase.auth.signOut();
+            setSession(null);
+            setUser(null);
+            setProfile(null);
+            setLoading(false);
+            return;
+          }
+
+          setSession(refreshedSession);
+          setUser(refreshedSession.user);
+          loadProfile(refreshedSession.user.id);
+        } else {
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error("Auth initialization error:", err);
+        if (mounted) {
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+          setLoading(false);
+        }
       }
-    });
+    };
+
+    initializeAuth();
 
     // Listen for auth changes
     const {

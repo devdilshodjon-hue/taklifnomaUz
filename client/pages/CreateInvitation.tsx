@@ -363,7 +363,7 @@ export default function CreateInvitation() {
         navigate(`/invitation/${invitation.id}`);
       }, 1500);
     } catch (error) {
-      console.error("Taklifnoma yaratishda umumiy xatolik:", error);
+      console.error("Taklifnoma yaratishda umumiy xatolik:", error?.message || error);
       setError("Kutilmagan xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
 
       console.log("Demo rejimida taklifnoma yaratilmoqda...");

@@ -7,7 +7,9 @@
 Create a **professional wedding invitation platform** called "TaklifNoma" (Uzbek for "Invitation") with the following exact specifications:
 
 ### **Core Concept**
+
 A modern, beautiful wedding invitation platform where users can:
+
 - Register and authenticate (Google OAuth + email/password)
 - Create custom wedding invitations using professional templates
 - Build their own custom templates with a visual editor
@@ -90,33 +92,34 @@ project/
 ## 🎨 **DESIGN SYSTEM SPECIFICATIONS**
 
 ### **Color Palette (Exact)**
+
 ```css
 :root {
   /* Primary Colors */
-  --primary: 99 102 241;        /* Blue #6366f1 */
+  --primary: 99 102 241; /* Blue #6366f1 */
   --primary-foreground: 248 250 252;
-  
+
   /* Secondary Colors */
   --secondary: 241 245 249;
   --secondary-foreground: 15 23 42;
-  
+
   /* Accent Colors */
   --accent: 241 245 249;
   --accent-foreground: 15 23 42;
-  
+
   /* Background Colors */
   --background: 255 255 255;
   --foreground: 15 23 42;
-  
+
   /* Muted Colors */
   --muted: 241 245 249;
   --muted-foreground: 100 116 139;
-  
+
   /* Border and Input */
   --border: 226 232 240;
   --input: 226 232 240;
   --ring: 99 102 241;
-  
+
   /* Destructive Colors */
   --destructive: 239 68 68;
   --destructive-foreground: 248 250 252;
@@ -124,10 +127,15 @@ project/
 ```
 
 ### **Typography**
+
 ```css
 /* Font Families */
-.font-heading { font-family: "Inter", sans-serif; }
-.font-body { font-family: "Inter", sans-serif; }
+.font-heading {
+  font-family: "Inter", sans-serif;
+}
+.font-body {
+  font-family: "Inter", sans-serif;
+}
 
 /* Custom Classes */
 .text-gradient {
@@ -146,47 +154,97 @@ project/
 ```
 
 ### **Animation System**
+
 ```css
 /* Custom Animations - Add to global.css */
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes scale-in {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes bounce-soft {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
 }
 
 /* Animation Classes */
-.animate-fade-in { animation: fade-in 0.6s ease-out; }
-.animate-slide-up { animation: slide-up 0.8s ease-out; }
-.animate-scale-in { animation: scale-in 0.5s ease-out; }
-.animate-bounce-soft { animation: bounce-soft 2s ease-in-out infinite; }
-.animate-shake { animation: shake 0.5s ease-in-out; }
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out;
+}
+.animate-slide-up {
+  animation: slide-up 0.8s ease-out;
+}
+.animate-scale-in {
+  animation: scale-in 0.5s ease-out;
+}
+.animate-bounce-soft {
+  animation: bounce-soft 2s ease-in-out infinite;
+}
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
 
 /* Hover Effects */
-.hover-lift { transition: all 0.3s ease; }
-.hover-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
+.hover-lift {
+  transition: all 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
 
-.hover-scale { transition: transform 0.3s ease; }
-.hover-scale:hover { transform: scale(1.05); }
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+.hover-scale:hover {
+  transform: scale(1.05);
+}
 ```
 
 ---
@@ -194,6 +252,7 @@ project/
 ## 🗄️ **DATABASE SCHEMA (SUPABASE)**
 
 ### **Required Tables**
+
 ```sql
 -- 1. Profiles table (extends auth.users)
 CREATE TABLE profiles (
@@ -286,9 +345,10 @@ CREATE POLICY "Users can update own invitations" ON invitations FOR UPDATE USING
 ```
 
 ### **Storage Buckets**
+
 ```sql
 -- Create storage buckets
-INSERT INTO storage.buckets (id, name, public) VALUES 
+INSERT INTO storage.buckets (id, name, public) VALUES
 ('avatars', 'avatars', true),
 ('templates', 'templates', true),
 ('invitations', 'invitations', true);
@@ -299,10 +359,12 @@ INSERT INTO storage.buckets (id, name, public) VALUES
 ## 📱 **PAGE SPECIFICATIONS**
 
 ### **1. Landing Page (Index.tsx)**
+
 **Layout**: Hero section + Features + Templates preview + Pricing preview + Testimonials + CTA
 **Content**:
+
 ```
-- Header: "To'y Taklifnomalari Juda Oson" 
+- Header: "To'y Taklifnomalari Juda Oson"
 - Subheader: "Professional taklifnomalar bir necha daqiqada"
 - Features: 15+ shablonlar, RSVP boshqaruvi, mobil mos, oson ulashish
 - Stats: "10,000+ er-xotin TaklifNoma ga ishonadi"
@@ -312,14 +374,16 @@ INSERT INTO storage.buckets (id, name, public) VALUES
 ### **2. Authentication Pages**
 
 #### **Login.tsx**
+
 - Google OAuth button (prominent)
 - Email/password form
-- "Parolni unutdingizmi?" link  
+- "Parolni unutdingizmi?" link
 - "Hisobingiz yo'qmi? Ro'yxatdan o'ting" link
 - Animated background with floating circles
 - Form validation with real-time feedback
 
-#### **Register.tsx**  
+#### **Register.tsx**
+
 - Google OAuth button
 - Form fields: First name, Last name, Email, Password, Confirm password
 - Password strength indicator
@@ -327,8 +391,10 @@ INSERT INTO storage.buckets (id, name, public) VALUES
 - Terms and privacy acceptance checkbox
 
 ### **3. Dashboard.tsx**
+
 **Layout**: Navigation + Stats cards + Recent invitations list
 **Content**:
+
 ```
 - Welcome message: "Salom, [name]! 👋"
 - Stats: Total invitations, Total views, Total RSVPs, Total guests
@@ -338,8 +404,10 @@ INSERT INTO storage.buckets (id, name, public) VALUES
 ```
 
 ### **4. Profile.tsx**
+
 **Tabs**: Profile, Statistics, Invitations, Achievements
 **Features**:
+
 - Avatar upload with camera icon overlay
 - Editable personal information
 - User statistics and metrics
@@ -347,8 +415,10 @@ INSERT INTO storage.buckets (id, name, public) VALUES
 - Achievement system with progress badges
 
 ### **5. Settings.tsx**
+
 **Tabs**: Notifications, Privacy, Security, Appearance, Account
 **Features**:
+
 - Notification preferences (email, SMS, RSVP updates)
 - Privacy settings (profile visibility, data sharing)
 - Password change functionality
@@ -356,6 +426,7 @@ INSERT INTO storage.buckets (id, name, public) VALUES
 - Account deletion with confirmation
 
 ### **6. Templates.tsx**
+
 - Template gallery with category filtering
 - Search functionality
 - Template preview modal
@@ -363,8 +434,10 @@ INSERT INTO storage.buckets (id, name, public) VALUES
 - Template statistics and usage counts
 
 ### **7. TemplateBuilder.tsx**
+
 **Layout**: Design controls (left) + Live preview (right)
 **Features**:
+
 - Color picker with preset palettes
 - Font selection dropdown
 - Layout controls (spacing, borders, shadows)
@@ -372,16 +445,20 @@ INSERT INTO storage.buckets (id, name, public) VALUES
 - Save as public/private option
 
 ### **8. CreateInvitation.tsx**
+
 **Multi-step wizard**:
+
 1. Template selection with filtering
 2. Couple information (names, date, venue, message)
 3. Guest list management
 4. Review and save
-**Features**: Real-time preview, form validation, Supabase integration
+   **Features**: Real-time preview, form validation, Supabase integration
 
 ### **9. InvitationView.tsx**
+
 **Layout**: Invitation display + Event details + RSVP form
 **Features**:
+
 - Beautiful template rendering
 - Event information cards
 - RSVP form with guest name input
@@ -389,6 +466,7 @@ INSERT INTO storage.buckets (id, name, public) VALUES
 - Success animations after RSVP submission
 
 ### **10. Pricing.tsx**
+
 **Plans**: Basic (Free), Premium (29,000 so'm/oy), Business (99,000 so'm/oy)
 **Features**: Feature comparison table, FAQ section, testimonials
 
@@ -397,6 +475,7 @@ INSERT INTO storage.buckets (id, name, public) VALUES
 ## 🔧 **COMPONENT SPECIFICATIONS**
 
 ### **TemplateRenderer.tsx**
+
 ```typescript
 interface TemplateRendererProps {
   invitation: InvitationData;
@@ -413,12 +492,14 @@ interface TemplateRendererProps {
 ```
 
 ### **Navigation.tsx**
+
 - Responsive navigation with mobile menu
 - Current page highlighting
 - User avatar dropdown (when authenticated)
 - Logo with "TaklifNoma" brand name
 
 ### **ProtectedRoute.tsx**
+
 - Route protection for authenticated users
 - Loading states during auth check
 - Redirect to login with return URL
@@ -428,10 +509,11 @@ interface TemplateRendererProps {
 ## 🌐 **LANGUAGE & CONTENT (UZBEK)**
 
 ### **Key Translations**
+
 ```
 Uzbek → English
 - TaklifNoma → Invitation
-- Taklifnomalar → Invitations  
+- Taklifnomalar → Invitations
 - Shablonlar → Templates
 - Narxlar → Pricing
 - Sozlamalar → Settings
@@ -451,13 +533,14 @@ Uzbek → English
 ```
 
 ### **Template Content**
+
 ```
 Sample invitation text:
 "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz."
 
 Venue examples:
 - "Atirgul Bog'i"
-- "Royal Palace" 
+- "Royal Palace"
 - "Garden Palace"
 
 Date format: "15 Iyun 2024"
@@ -469,6 +552,7 @@ Time format: "16:00"
 ## ⚡ **FUNCTIONAL REQUIREMENTS**
 
 ### **Authentication Flow**
+
 1. User visits login page
 2. Can sign in with Google OAuth OR email/password
 3. On first Google login, profile is auto-created
@@ -476,6 +560,7 @@ Time format: "16:00"
 5. All sensitive pages require authentication
 
 ### **Invitation Creation Flow**
+
 1. User selects template from gallery
 2. Fills out wedding information form
 3. Adds guests (optional)
@@ -485,6 +570,7 @@ Time format: "16:00"
 7. Can track views and RSVPs
 
 ### **RSVP Flow**
+
 1. Guest receives invitation link
 2. Views beautiful invitation
 3. Enters their name
@@ -494,6 +580,7 @@ Time format: "16:00"
 7. Invitation creator can view all responses
 
 ### **Template Builder Flow**
+
 1. User opens template builder
 2. Customizes colors, fonts, layout
 3. Sees real-time preview
@@ -506,6 +593,7 @@ Time format: "16:00"
 ## 🎯 **UI/UX SPECIFICATIONS**
 
 ### **Animation Requirements**
+
 - Page transitions with fade-in effects
 - Form elements with smooth focus states
 - Button hover effects with slight lift
@@ -515,6 +603,7 @@ Time format: "16:00"
 - Staggered list item animations
 
 ### **Responsive Design**
+
 - Mobile-first approach
 - Breakpoints: sm (640px), md (768px), lg (1024px), xl (1280px)
 - Touch-friendly interfaces on mobile
@@ -523,17 +612,19 @@ Time format: "16:00"
 - Optimized typography scaling
 
 ### **Color Usage**
+
 - Primary blue (#6366f1) for CTAs and links
 - Purple gradients for premium features
-- Green for success states and confirmations  
+- Green for success states and confirmations
 - Red for errors and destructive actions
 - Neutral grays for text and borders
 - Subtle background gradients throughout
 
 ### **Typography Scale**
+
 ```css
 - Hero headlines: text-5xl to text-7xl
-- Page titles: text-3xl to text-4xl  
+- Page titles: text-3xl to text-4xl
 - Section headings: text-xl to text-2xl
 - Body text: text-base
 - Captions: text-sm
@@ -545,6 +636,7 @@ Time format: "16:00"
 ## 🔐 **SECURITY REQUIREMENTS**
 
 ### **Authentication Security**
+
 - Supabase Auth with Google OAuth
 - Email/password with secure validation
 - Protected routes with proper redirects
@@ -552,6 +644,7 @@ Time format: "16:00"
 - User data isolation with RLS
 
 ### **Data Protection**
+
 - Row Level Security on all tables
 - User-specific data access only
 - Secure file upload to Supabase Storage
@@ -563,14 +656,16 @@ Time format: "16:00"
 ## 📊 **ANALYTICS & TRACKING**
 
 ### **User Metrics**
+
 - Total invitations created
 - Total invitation views
-- Total RSVP responses  
+- Total RSVP responses
 - Guest count across all invitations
 - Most popular templates
 - User engagement metrics
 
 ### **Invitation Metrics**
+
 - View count per invitation
 - RSVP response rate
 - Share tracking
@@ -582,12 +677,14 @@ Time format: "16:00"
 ## 🚀 **DEPLOYMENT SPECIFICATIONS**
 
 ### **Environment Variables**
+
 ```
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 ### **Build Configuration**
+
 - Vite for fast builds and HMR
 - TypeScript strict mode enabled
 - Tailwind CSS with custom configuration
@@ -599,8 +696,9 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ## ✅ **TESTING CHECKLIST**
 
 ### **Core Functionality**
+
 - [ ] User registration with Google OAuth
-- [ ] User registration with email/password  
+- [ ] User registration with email/password
 - [ ] Login functionality
 - [ ] Profile creation and editing
 - [ ] Template selection and preview
@@ -614,6 +712,7 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 - [ ] Responsive design on all devices
 
 ### **Database Operations**
+
 - [ ] User profiles save correctly
 - [ ] Invitations persist to Supabase
 - [ ] Guest lists are associated properly
@@ -622,6 +721,7 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 - [ ] File uploads work (avatars)
 
 ### **UI/UX Verification**
+
 - [ ] All animations work smoothly
 - [ ] Forms validate properly
 - [ ] Loading states display correctly
@@ -635,6 +735,7 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ## 📋 **FINAL IMPLEMENTATION NOTES**
 
 ### **Critical Success Factors**
+
 1. **Exact Design Match**: Use the specified color palette, fonts, and spacing
 2. **Smooth Animations**: Every interaction should feel polished and responsive
 3. **Real Database**: Everything must save to and load from Supabase
@@ -643,6 +744,7 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 6. **Mobile Excellence**: The mobile experience must be as good as desktop
 
 ### **Quality Standards**
+
 - All forms must have real-time validation
 - Loading states must be present everywhere
 - Error handling must be comprehensive

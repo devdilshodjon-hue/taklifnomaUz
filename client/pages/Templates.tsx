@@ -54,7 +54,7 @@ export default function Templates() {
 
   return (
     <div className="min-h-screen bg-background animate-fade-in">
-      <Navigation showBackButton />
+      <Navigation showBackButton className="animate-slide-up" />
 
       <div className="max-w-6xl mx-auto p-6">
         {/* Header */}

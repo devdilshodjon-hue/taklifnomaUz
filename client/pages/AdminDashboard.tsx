@@ -670,6 +670,12 @@ export default function AdminDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Database Setup Guide */}
+      <DatabaseSetupGuide
+        isVisible={showDatabaseGuide}
+        onDismiss={() => setShowDatabaseGuide(false)}
+      />
     </div>
   );
 }

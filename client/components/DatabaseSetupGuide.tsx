@@ -9,6 +9,7 @@ interface DatabaseSetupGuideProps {
 
 export default function DatabaseSetupGuide({ isVisible, onDismiss }: DatabaseSetupGuideProps) {
   const [copied, setCopied] = useState(false);
+  const [showFullScript, setShowFullScript] = useState(false);
 
   if (!isVisible) return null;
 

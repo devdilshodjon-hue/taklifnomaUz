@@ -1,47 +1,12 @@
-import { createClient } from '@supabase/supabase-js'
-import { Database } from './database.types'
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://tcilxdkolqodtgowlgrh.supabase.co'
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjaWx4ZGtvbHFvZHRnb3dsZ3JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2NTM1NTEsImV4cCI6MjA3MDIyOTU1MX0.9LFErrgcBMKQVOrl0lndUfBXMdAWmq6206sbBzgk32A'
-
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    redirectTo: `${window.location.origin}/dashboard`,
-    persistSession: true,
-    detectSessionInUrl: true
-  }
-})
-
-// Supabase jadvallar mavjudligini tekshirish
-export const checkDatabaseSetup = async (): Promise<boolean> => {
-  try {
-    const { error } = await supabase
-      .from('invitations')
-      .select('id')
-      .limit(1);
-
-    if (error && error.message.includes('table') && error.message.includes('does not exist')) {
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    console.log('Database tekshiruvida xatolik:', error);
-    return false;
-  }
-}
-
-// Error xabaridan jadval mavjud emasligini aniqlash
-export const isTableNotFoundError = (error: any): boolean => {
-  if (!error) return false;
-  const message = error.message || '';
-  return message.includes('Could not find the table') ||
-         message.includes('table') && message.includes('does not exist') ||
-         message.includes('schema cache');
-}
-
-// Database types
-export type Database = {
+export interface Database {
   public: {
     Tables: {
       profiles: {
@@ -194,6 +159,59 @@ export type Database = {
           message?: string | null
           email?: string | null
           phone?: string | null
+        }
+      }
+      custom_templates: {
+        Row: {
+          id: string
+          created_at: string
+          updated_at: string
+          user_id: string
+          name: string
+          description: string | null
+          category: string
+          colors: Json
+          fonts: Json
+          layout_config: Json
+          preview_image_url: string | null
+          is_public: boolean
+          is_featured: boolean
+          usage_count: number
+          tags: string[]
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          updated_at?: string
+          user_id: string
+          name: string
+          description?: string | null
+          category?: string
+          colors?: Json
+          fonts?: Json
+          layout_config?: Json
+          preview_image_url?: string | null
+          is_public?: boolean
+          is_featured?: boolean
+          usage_count?: number
+          tags?: string[]
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          updated_at?: string
+          user_id?: string
+          name?: string
+          description?: string | null
+          category?: string
+          colors?: Json
+          fonts?: Json
+          layout_config?: Json
+          preview_image_url?: string | null
+          is_public?: boolean
+          is_featured?: boolean
+          usage_count?: number
+          tags?: string[]
         }
       }
     }

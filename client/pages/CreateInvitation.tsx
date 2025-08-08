@@ -332,10 +332,10 @@ export default function CreateInvitation() {
       console.log("Navigating to invitation:", invitation.id);
       setSuccess(true);
 
-      // Add a small delay to ensure state updates
+      // Add a small delay to ensure state updates and show success message
       setTimeout(() => {
         navigate(`/invitation/${invitation.id}`);
-      }, 100);
+      }, 1500);
     } catch (error) {
       console.error("Taklifnoma yaratishda umumiy xatolik:", error);
       setError("Kutilmagan xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
@@ -368,9 +368,11 @@ export default function CreateInvitation() {
       navigate(`/invitation/${mockId}`);
     } finally {
       // Ensure loading state is always reset
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+      if (!success) {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 500);
+      }
     }
   };
 

@@ -1,4 +1,5 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import cacheUtils, { cachedFetch, CACHE_TIMES, CACHE_TAGS } from "./cache";
 
 // Use environment variables or fallback to hardcoded values
 const supabaseUrl =
@@ -11,6 +12,7 @@ const supabaseAnonKey =
   import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjaWx4ZGtvbHFvZHRnb3dsZ3JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2NTM1NTEsImV4cCI6MjA3MDIyOTU1MX0.9LFErrgcBMKQVOrl0lndUfBXMdAWmq6206sbBzgk32A";
 
+// Enhanced Supabase client with performance optimizations
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   db: {
     schema: "public",
@@ -19,10 +21,17 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
+    flowType: 'pkce',
   },
   global: {
     headers: {
       "X-Client-Info": "taklifnoma-app",
+      "X-Cache-Control": "max-age=300", // 5 minutes cache
+    },
+  },
+  realtime: {
+    params: {
+      eventsPerSecond: 10,
     },
   },
 });

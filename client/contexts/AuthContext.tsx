@@ -466,7 +466,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setProfile(null);
         }
       } catch (fallbackError) {
-        console.error("Fallback profile creation failed:", fallbackError);
+        console.error("Fallback profile creation failed:", fallbackError?.message || fallbackError);
         setProfile(null);
       }
     } finally {

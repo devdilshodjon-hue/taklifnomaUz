@@ -196,3 +196,6 @@ INSERT INTO public.invitations (
     'jahongir-sarvinoz-demo'
 ) ON CONFLICT (id) DO NOTHING;
 */
+
+-- Database schema setup yakunlandi!
+-- Endi Supabase SQL Editor da bu skriptni ishga tushiring.

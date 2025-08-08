@@ -73,6 +73,38 @@ export default function Dashboard() {
     }
   }, [user]);
 
+  // Function to load invitations from localStorage
+  const loadInvitationsFromLocalStorage = () => {
+    console.log("Loading invitations from localStorage...");
+    const localInvitations: any[] = [];
+
+    // Search for invitations in localStorage
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith("invitation_")) {
+        try {
+          const invitationData = JSON.parse(localStorage.getItem(key) || "");
+          if (invitationData) {
+            localInvitations.push(invitationData);
+          }
+        } catch (error) {
+          console.warn("Error parsing localStorage invitation:", key, error);
+        }
+      }
+    }
+
+    // Sort by created_at date
+    localInvitations.sort((a, b) => {
+      const dateA = new Date(a.created_at || 0).getTime();
+      const dateB = new Date(b.created_at || 0).getTime();
+      return dateB - dateA; // Newest first
+    });
+
+    console.log("Found", localInvitations.length, "invitations in localStorage");
+    setInvitations(localInvitations);
+    setError("");
+  };
+
   const loadInvitations = async () => {
     if (!user) {
       setLoading(false);

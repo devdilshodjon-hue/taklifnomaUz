@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { Eye, ArrowRight } from "lucide-react";
+import { Eye, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { weddingTemplates, templateCategories, getTemplatesByCategory, type TemplateData } from "@/lib/templates";
 import TemplateRenderer from "@/components/TemplateRenderer";
@@ -279,6 +279,28 @@ export default function Templates() {
                 </Button>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Template Builder CTA */}
+        <div className="mb-16">
+          <div className="card-modern p-8 text-center bg-gradient-to-r from-primary/10 to-purple-500/10 border-primary/20">
+            <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <Sparkles className="w-8 h-8 text-white" />
+            </div>
+            <h2 className="font-heading text-2xl font-bold text-foreground mb-4">
+              O'zingizning Maxsus Shablonngizni Yarating
+            </h2>
+            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+              Bizning shablon yaratuvchi vositasi bilan o'zingizning noyob dizayningizni yarating.
+              Ranglarni, shriftlarni va tartibni o'zingiz tanlang.
+            </p>
+            <Button asChild className="primary-gradient px-8 py-4 text-lg rounded-xl hover-lift">
+              <Link to="/template-builder">
+                <Sparkles className="w-5 h-5 mr-2" />
+                Shablon Yaratish
+              </Link>
+            </Button>
           </div>
         </div>
 

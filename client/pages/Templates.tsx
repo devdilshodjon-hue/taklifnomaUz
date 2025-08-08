@@ -110,7 +110,8 @@ export default function Templates() {
           {filteredTemplates.map((template, index) => (
             <div
               key={template.id}
-              className="group card-modern p-6 hover:shadow-lg transition-all duration-300"
+              className="group card-modern p-6 hover:shadow-lg transition-all duration-300 hover-lift animate-scale-in"
+              style={{ animationDelay: `${index * 0.1 + 0.6}s` }}
             >
               {/* Template Preview */}
               <div

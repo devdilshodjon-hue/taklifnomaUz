@@ -321,7 +321,10 @@ export default function CreateInvitation() {
 
       navigate(`/invitation/${mockId}`);
     } finally {
-      setIsLoading(false);
+      // Ensure loading state is always reset
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
     }
   };
 

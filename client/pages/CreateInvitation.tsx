@@ -467,7 +467,7 @@ export default function CreateInvitation() {
                     {filteredTemplates.map((template) => (
                       <div
                         key={template.id}
-                        className={`group p-4 border-2 rounded-xl cursor-pointer transition-all hover:scale-105 hover:shadow-lg ${
+                        className={`group relative p-4 border-2 rounded-xl cursor-pointer transition-all hover:scale-105 hover:shadow-lg ${
                           formData.selectedTemplate === template.id
                             ? "border-primary bg-primary/5 shadow-md"
                             : "border-border hover:border-primary/50"

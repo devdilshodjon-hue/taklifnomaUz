@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/lib/supabase";
+import { generateDemoUUID, generateUUIDFromSlug } from "@/lib/utils";
 
 interface Guest {
   id: string;

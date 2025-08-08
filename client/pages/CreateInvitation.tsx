@@ -24,6 +24,8 @@ export default function CreateInvitation() {
   const [currentStep, setCurrentStep] = useState(1);
   const [guests, setGuests] = useState<Guest[]>([]);
   const [newGuest, setNewGuest] = useState({ name: "", email: "", phone: "" });
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [filteredTemplates, setFilteredTemplates] = useState<TemplateData[]>(weddingTemplates);
 
   const [formData, setFormData] = useState({
     groomName: "",

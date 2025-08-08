@@ -116,7 +116,6 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
         setAdminUser(adminUser);
         sessionStorage.setItem("admin_user", JSON.stringify(adminUser));
         return { success: true };
-
       } catch (supabaseError) {
         console.log("Using fallback admin authentication...");
 

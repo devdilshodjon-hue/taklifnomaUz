@@ -129,14 +129,16 @@ export default function AdminDashboard() {
         .select("*", { count: "exact", head: true });
 
       // Get total invitations
-      const { count: invitationsCount, error: invitationsError } = await supabase
-        .from("invitations")
-        .select("*", { count: "exact", head: true });
+      const { count: invitationsCount, error: invitationsError } =
+        await supabase
+          .from("invitations")
+          .select("*", { count: "exact", head: true });
 
       // Get total subscriptions
-      const { count: subscriptionsCount, error: subscriptionsError } = await supabase
-        .from("user_subscriptions")
-        .select("*", { count: "exact", head: true });
+      const { count: subscriptionsCount, error: subscriptionsError } =
+        await supabase
+          .from("user_subscriptions")
+          .select("*", { count: "exact", head: true });
 
       // Get pending purchase requests
       const { count: pendingCount, error: pendingError } = await supabase
@@ -151,8 +153,13 @@ export default function AdminDashboard() {
         .eq("status", "active");
 
       // Check if any major errors indicate missing tables
-      const hasTableErrors = [usersError, invitationsError, subscriptionsError, pendingError, activeError]
-        .some(error => error && error.message.includes("does not exist"));
+      const hasTableErrors = [
+        usersError,
+        invitationsError,
+        subscriptionsError,
+        pendingError,
+        activeError,
+      ].some((error) => error && error.message.includes("does not exist"));
 
       if (hasTableErrors) {
         console.log("Database tables not found, using demo data");
@@ -160,7 +167,9 @@ export default function AdminDashboard() {
         // Set demo/default stats
         setStats({
           totalUsers: 0,
-          totalInvitations: parseInt(localStorage.getItem("demo_invitation_count") || "0"),
+          totalInvitations: parseInt(
+            localStorage.getItem("demo_invitation_count") || "0",
+          ),
           totalSubscriptions: 0,
           pendingRequests: 0,
           activeSubscriptions: 0,
@@ -181,7 +190,9 @@ export default function AdminDashboard() {
       // Set demo/fallback stats on error
       setStats({
         totalUsers: 0,
-        totalInvitations: parseInt(localStorage.getItem("demo_invitation_count") || "0"),
+        totalInvitations: parseInt(
+          localStorage.getItem("demo_invitation_count") || "0",
+        ),
         totalSubscriptions: 0,
         pendingRequests: 0,
         activeSubscriptions: 0,

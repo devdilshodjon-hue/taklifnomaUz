@@ -249,7 +249,9 @@ export default function CreateInvitation() {
         if (testError.message.includes("does not exist")) {
           console.log("Invitations table does not exist, using demo mode");
           // Show database setup guide
-          setError("Ma'lumotlar bazasi jadvallari mavjud emas. Demo rejimida davom etmoqda.");
+          setError(
+            "Ma'lumotlar bazasi jadvallari mavjud emas. Demo rejimida davom etmoqda.",
+          );
         }
       } else {
         console.log("Database connection test successful");
@@ -307,8 +309,13 @@ export default function CreateInvitation() {
         );
 
         // Update demo invitation count
-        const currentCount = parseInt(localStorage.getItem("demo_invitation_count") || "0");
-        localStorage.setItem("demo_invitation_count", (currentCount + 1).toString());
+        const currentCount = parseInt(
+          localStorage.getItem("demo_invitation_count") || "0",
+        );
+        localStorage.setItem(
+          "demo_invitation_count",
+          (currentCount + 1).toString(),
+        );
 
         navigate(`/invitation/${mockId}`);
         return;
@@ -385,8 +392,13 @@ export default function CreateInvitation() {
       );
 
       // Update demo invitation count
-      const currentCount = parseInt(localStorage.getItem("demo_invitation_count") || "0");
-      localStorage.setItem("demo_invitation_count", (currentCount + 1).toString());
+      const currentCount = parseInt(
+        localStorage.getItem("demo_invitation_count") || "0",
+      );
+      localStorage.setItem(
+        "demo_invitation_count",
+        (currentCount + 1).toString(),
+      );
 
       navigate(`/invitation/${mockId}`);
     } finally {

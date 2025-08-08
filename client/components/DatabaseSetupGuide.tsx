@@ -7,7 +7,10 @@ interface DatabaseSetupGuideProps {
   onDismiss: () => void;
 }
 
-export default function DatabaseSetupGuide({ isVisible, onDismiss }: DatabaseSetupGuideProps) {
+export default function DatabaseSetupGuide({
+  isVisible,
+  onDismiss,
+}: DatabaseSetupGuideProps) {
   const [copied, setCopied] = useState(false);
   const [showFullScript, setShowFullScript] = useState(false);
 
@@ -215,30 +218,32 @@ CREATE POLICY "Admin users can access user_subscriptions" ON public.user_subscri
       }
 
       // Fallback: eski execCommand usuli
-      const textArea = document.createElement('textarea');
+      const textArea = document.createElement("textarea");
       textArea.value = sqlScript;
-      textArea.style.position = 'fixed';
-      textArea.style.left = '-999999px';
-      textArea.style.top = '-999999px';
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
       document.body.appendChild(textArea);
       textArea.focus();
       textArea.select();
 
       try {
-        const successful = document.execCommand('copy');
+        const successful = document.execCommand("copy");
         if (successful) {
           setCopied(true);
           setTimeout(() => setCopied(false), 2000);
         } else {
-          throw new Error('execCommand nusxalash muvaffaqiyatsiz');
+          throw new Error("execCommand nusxalash muvaffaqiyatsiz");
         }
       } finally {
         document.body.removeChild(textArea);
       }
     } catch (err) {
-      console.error('Clipboard ga nusxalashda xatolik:', err);
+      console.error("Clipboard ga nusxalashda xatolik:", err);
       // Foydalanuvchiga manual copy ni taklif qilamiz
-      alert('Avtomatik nusxalash ishlamadi. Iltimos, matnni qo\'lda belgilab nusxalang.');
+      alert(
+        "Avtomatik nusxalash ishlamadi. Iltimos, matnni qo'lda belgilab nusxalang.",
+      );
     }
   };
 
@@ -255,7 +260,8 @@ CREATE POLICY "Admin users can access user_subscriptions" ON public.user_subscri
                 Ma'lumotlar Bazasini Sozlash
               </h2>
               <p className="text-muted-foreground">
-                TaklifNoma to'liq ishlashi uchun Supabase ma'lumotlar bazasida jadvallar yaratish kerak.
+                TaklifNoma to'liq ishlashi uchun Supabase ma'lumotlar bazasida
+                jadvallar yaratish kerak.
               </p>
             </div>
           </div>
@@ -264,10 +270,12 @@ CREATE POLICY "Admin users can access user_subscriptions" ON public.user_subscri
             <div className="bg-theme-warning/10 border border-theme-warning/20 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <AlertCircle className="w-5 h-5 text-theme-warning" />
-                <h3 className="font-medium text-foreground">Jadvallar topilmadi</h3>
+                <h3 className="font-medium text-foreground">
+                  Jadvallar topilmadi
+                </h3>
               </div>
               <p className="text-sm text-muted-foreground">
-                Supabase ma'lumotlar bazasida kerakli jadvallar mavjud emas. 
+                Supabase ma'lumotlar bazasida kerakli jadvallar mavjud emas.
                 Hozir demo rejimida ishlamoqda.
               </p>
             </div>
@@ -280,12 +288,19 @@ CREATE POLICY "Admin users can access user_subscriptions" ON public.user_subscri
                     1
                   </div>
                   <div>
-                    <p className="text-foreground font-medium">Supabase Dashboard ga kiring</p>
+                    <p className="text-foreground font-medium">
+                      Supabase Dashboard ga kiring
+                    </p>
                     <p className="text-sm text-muted-foreground">
-                      <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" 
-                         className="text-primary hover:underline">
+                      <a
+                        href="https://supabase.com/dashboard"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
                         supabase.com/dashboard
-                      </a> da loyihangizni oching
+                      </a>{" "}
+                      da loyihangizni oching
                     </p>
                   </div>
                 </div>
@@ -295,7 +310,9 @@ CREATE POLICY "Admin users can access user_subscriptions" ON public.user_subscri
                     2
                   </div>
                   <div>
-                    <p className="text-foreground font-medium">SQL Editor ga o'ting</p>
+                    <p className="text-foreground font-medium">
+                      SQL Editor ga o'ting
+                    </p>
                     <p className="text-sm text-muted-foreground">
                       Chap menyudan "SQL Editor" ni tanlang
                     </p>
@@ -307,7 +324,9 @@ CREATE POLICY "Admin users can access user_subscriptions" ON public.user_subscri
                     3
                   </div>
                   <div>
-                    <p className="text-foreground font-medium">SQL kodni nusxalang va ishga tushiring</p>
+                    <p className="text-foreground font-medium">
+                      SQL kodni nusxalang va ishga tushiring
+                    </p>
                     <div className="mt-2">
                       {!showFullScript ? (
                         <div className="bg-muted p-4 rounded-lg text-sm">
@@ -382,7 +401,8 @@ CREATE POLICY "Admin users can access user_subscriptions" ON public.user_subscri
                             </Button>
                           </div>
                           <p className="text-xs text-muted-foreground mt-2">
-                            Matn maydoniga bosib, Ctrl+A va Ctrl+C bilan nusxalashingiz mumkin
+                            Matn maydoniga bosib, Ctrl+A va Ctrl+C bilan
+                            nusxalashingiz mumkin
                           </p>
                         </div>
                       )}
@@ -395,7 +415,9 @@ CREATE POLICY "Admin users can access user_subscriptions" ON public.user_subscri
                     4
                   </div>
                   <div>
-                    <p className="text-foreground font-medium">Sahifani yangilang</p>
+                    <p className="text-foreground font-medium">
+                      Sahifani yangilang
+                    </p>
                     <p className="text-sm text-muted-foreground">
                       Jadvallar yaratilgandan so'ng sahifani yangilang
                     </p>
@@ -405,10 +427,13 @@ CREATE POLICY "Admin users can access user_subscriptions" ON public.user_subscri
             </div>
 
             <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
-              <h3 className="font-medium text-foreground mb-2">Demo rejimida davom etish</h3>
+              <h3 className="font-medium text-foreground mb-2">
+                Demo rejimida davom etish
+              </h3>
               <p className="text-sm text-muted-foreground mb-3">
-                Ma'lumotlar bazasini hozir sozlamagan bo'lsangiz, demo rejimida ishlatishda davom etishingiz mumkin.
-                Barcha ma'lumotlar vaqtincha saqlanadi.
+                Ma'lumotlar bazasini hozir sozlamagan bo'lsangiz, demo rejimida
+                ishlatishda davom etishingiz mumkin. Barcha ma'lumotlar
+                vaqtincha saqlanadi.
               </p>
               <Button onClick={onDismiss} variant="outline">
                 Demo da Davom Etish

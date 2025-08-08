@@ -14,9 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
+        sans: ["Inter", "system-ui", "sans-serif"],
+        heading: ["Poppins", "system-ui", "sans-serif"],
         serif: ["Playfair Display", "Georgia", "serif"],
-        script: ["Dancing Script", "cursive"],
-        sans: ["Inter", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -27,6 +27,8 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          light: "hsl(var(--theme-primary-light))",
+          dark: "hsl(var(--theme-primary-dark))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -43,6 +45,7 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          yellow: "hsl(var(--theme-accent))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -52,15 +55,15 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Wedding-specific color palette
-        wedding: {
-          cream: "hsl(var(--wedding-cream))",
-          blush: "hsl(var(--wedding-blush))",
-          rose: "hsl(var(--wedding-rose))",
-          gold: "hsl(var(--wedding-gold))",
-          sage: "hsl(var(--wedding-sage))",
-          ivory: "hsl(var(--wedding-ivory))",
-          dusty: "hsl(var(--wedding-dusty))",
+        // Modern theme colors
+        theme: {
+          primary: "hsl(var(--theme-primary))",
+          secondary: "hsl(var(--theme-secondary))",
+          accent: "hsl(var(--theme-accent))",
+          gray: "hsl(var(--theme-gray))",
+          "gray-light": "hsl(var(--theme-gray-light))",
+          success: "hsl(var(--theme-success))",
+          warning: "hsl(var(--theme-warning))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",

@@ -60,8 +60,8 @@ export default function Index() {
       <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border animate-fade-in">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+            <div className="flex items-center gap-2 animate-slide-in-left">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center hover-scale">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <span className="font-heading text-xl font-bold text-foreground">

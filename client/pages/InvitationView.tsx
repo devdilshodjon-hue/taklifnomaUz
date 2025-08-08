@@ -245,10 +245,14 @@ export default function InvitationView() {
       />
 
       {/* Share button */}
-      <div className="fixed top-4 right-4 z-10">
+      <div className="fixed top-4 right-4 z-10 flex gap-2">
         <Button variant="outline" size="sm" onClick={shareInvitation} className="shadow-lg">
           <Share2 className="w-4 h-4 mr-2" />
           Ulashish
+        </Button>
+        <Button variant="outline" size="sm" onClick={copyToClipboard} className="shadow-lg">
+          <Download className="w-4 h-4 mr-2" />
+          Nusxalash
         </Button>
       </div>
 

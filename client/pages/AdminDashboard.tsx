@@ -156,6 +156,7 @@ export default function AdminDashboard() {
 
       if (hasTableErrors) {
         console.log("Database tables not found, using demo data");
+        setShowDatabaseGuide(true);
         // Set demo/default stats
         setStats({
           totalUsers: 0,

@@ -181,7 +181,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       timeoutId = setTimeout(() => {
         console.log("Profile loading timeout, stopping...");
         setLoading(false);
-      }, 10000); // 10 second timeout
+        // Try to create a minimal profile if timeout occurs
+        if (session?.user) {
+          setProfile({
+            id: session.user.id,
+            email: session.user.email || "",
+            first_name: session.user.user_metadata?.first_name || null,
+            last_name: session.user.user_metadata?.last_name || null,
+            avatar_url: session.user.user_metadata?.avatar_url || null,
+            created_at: new Date().toISOString(),
+          });
+        }
+      }, 5000); // Reduced to 5 seconds
 
       // First check if we have a valid session
       const {

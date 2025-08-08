@@ -102,6 +102,16 @@ export default function CreateInvitation() {
     return `${names}-${randomId}`;
   };
 
+  const generateDemoInvitationId = () => {
+    // Agar ism-familiyalar kiritilgan bo'lsa, ulardan UUID yaratamiz
+    if (formData.groomName && formData.brideName) {
+      const slug = generateSlug();
+      return generateUUIDFromSlug(slug);
+    }
+    // Aks holda oddiy demo UUID
+    return generateDemoUUID();
+  };
+
   const handleSave = async () => {
     setIsLoading(true);
     

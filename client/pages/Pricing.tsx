@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { Check, Sparkles, ArrowLeft, ArrowRight, Star, Crown, Zap, Heart, Users, Share2, Download, Shield, Clock, Headphones } from "lucide-react";
+import { Check, ArrowRight, Star, Crown, Zap, Heart, Users, Share2, Download, Shield, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Navigation from "@/components/Navigation";
 
 export default function Pricing() {
   const [isYearly, setIsYearly] = useState(false);
@@ -174,31 +175,7 @@ export default function Pricing() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="bg-card border-b border-border p-4 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Bosh sahifaga qaytish
-              </Link>
-            </Button>
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-primary rounded-lg flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-heading text-xl font-bold text-foreground">TaklifNoma</span>
-            </div>
-          </div>
-          <Button asChild className="button-modern">
-            <Link to="/register">
-              Bepul Boshlash
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
-          </Button>
-        </div>
-      </nav>
+      <Navigation showBackButton />
 
       <div className="max-w-6xl mx-auto p-6">
         {/* Header */}

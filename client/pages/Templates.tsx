@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { Sparkles, ArrowLeft, Eye, ArrowRight } from "lucide-react";
+import { Eye, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { weddingTemplates, templateCategories, getTemplatesByCategory, type TemplateData } from "@/lib/templates";
 import TemplateRenderer from "@/components/TemplateRenderer";
+import Navigation from "@/components/Navigation";
 
 export default function Templates() {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -44,31 +45,7 @@ export default function Templates() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="bg-card border-b border-border p-4 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Bosh sahifaga qaytish
-              </Link>
-            </Button>
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-primary rounded-lg flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-heading text-xl font-bold text-foreground">TaklifNoma</span>
-            </div>
-          </div>
-          <Button asChild className="button-modern">
-            <Link to="/create">
-              Taklifnoma Yaratish
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
-          </Button>
-        </div>
-      </nav>
+      <Navigation showBackButton />
 
       <div className="max-w-6xl mx-auto p-6">
         {/* Header */}

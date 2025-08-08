@@ -183,6 +183,7 @@ export default function CreateInvitation() {
     setError("");
 
     try {
+      const slug = generateSlug();
       const invitationData = {
         user_id: user.id,
         groom_name: formData.groomName,
@@ -197,7 +198,7 @@ export default function CreateInvitation() {
         custom_message: formData.customMessage || null,
         template_id: formData.selectedTemplate || "classic-rose",
         rsvp_deadline: formData.rsvpDeadline || null,
-        slug: generateSlug(),
+        slug: slug,
         is_active: true,
       };
 

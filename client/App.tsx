@@ -16,6 +16,7 @@ import InvitationView from "./pages/InvitationView";
 import Templates from "./pages/Templates";
 import TemplateBuilder from "./pages/TemplateBuilder";
 import Pricing from "./pages/Pricing";
+import Features from "./pages/Features";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Contact from "./pages/Contact";

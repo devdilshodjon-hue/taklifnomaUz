@@ -23,10 +23,94 @@ interface TemplateRendererProps {
 }
 
 const TemplateRenderer: React.FC<TemplateRendererProps> = ({ invitation, guestName }) => {
-  const template = getTemplateById(invitation.template_id) || getTemplateById('classic-rose');
-  
+  const [customTemplate, setCustomTemplate] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+
+  // Try to get built-in template first
+  let template = getTemplateById(invitation.template_id);
+
+  useEffect(() => {
+    // If no built-in template found, try to load custom template
+    if (!template && invitation.template_id) {
+      setLoading(true);
+      const loadCustomTemplate = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('custom_templates')
+            .select('*')
+            .eq('id', invitation.template_id)
+            .single();
+
+          if (!error && data) {
+            // Convert custom template to TemplateData format
+            const customTemplateData: TemplateData = {
+              id: data.id,
+              name: data.name,
+              description: data.description || '',
+              category: 'custom' as any,
+              preview: '🎨',
+              colors: data.colors || {
+                primary: '#6366f1',
+                secondary: '#ec4899',
+                accent: '#f59e0b',
+                background: '#ffffff',
+                text: '#1f2937'
+              },
+              fonts: data.fonts || {
+                heading: 'Playfair Display',
+                body: 'Inter',
+                accent: 'Dancing Script'
+              },
+              icon: <Sparkles className="w-5 h-5" />
+            };
+            setCustomTemplate(customTemplateData);
+          }
+        } catch (error) {
+          console.error('Error loading custom template:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      loadCustomTemplate();
+    }
+  }, [invitation.template_id, template]);
+
+  // Use custom template if available
+  if (customTemplate) {
+    template = customTemplate;
+  }
+
+  // Fallback to default template
   if (!template) {
-    return <DefaultTemplate invitation={invitation} guestName={guestName} />;
+    template = getTemplateById('classic-rose') || {
+      id: 'default',
+      name: 'Default',
+      description: 'Default template',
+      category: 'classic' as const,
+      preview: '💍',
+      colors: {
+        primary: '#6366f1',
+        secondary: '#f3f4f6',
+        accent: '#fcd34d',
+        background: '#fffbeb',
+        text: '#1f2937'
+      },
+      fonts: {
+        heading: 'Playfair Display',
+        body: 'Inter',
+        accent: 'Dancing Script'
+      },
+      icon: <Heart className="w-5 h-5" />
+    };
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   const formatDate = (dateString: string) => {

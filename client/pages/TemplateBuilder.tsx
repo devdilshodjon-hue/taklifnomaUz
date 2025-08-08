@@ -245,16 +245,40 @@ export default function TemplateBuilder() {
   };
 
   const saveTemplate = async () => {
-    if (!user) return;
+    if (!user) {
+      setError("Shablon saqlash uchun tizimga kirishingiz kerak");
+      return;
+    }
+
+    if (!templateData.templateName.trim()) {
+      setError("Iltimos, shablon nomini kiriting");
+      return;
+    }
 
     setLoading(true);
     setError("");
     setSuccess("");
 
     try {
+      // Check authentication session first
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) {
+        console.error("Session error:", sessionError);
+        setError("Autentifikatsiya sessiyasida xatolik. Iltimos, qayta kiring.");
+        return;
+      }
+
+      if (!session) {
+        console.error("No active session found");
+        setError("Sessiya tugagan. Iltimos, qayta kiring.");
+        return;
+      }
+
+      console.log("Session verified for template save:", !!session, "User ID:", session.user?.id);
+
       const templateToSave = {
         user_id: user.id,
-        name: templateData.templateName,
+        name: templateData.templateName.trim(),
         description: `Custom template created on ${new Date().toLocaleDateString("uz-UZ")}`,
         category: "custom",
         colors: config.colors,
@@ -264,21 +288,71 @@ export default function TemplateBuilder() {
         is_featured: false,
       };
 
+      console.log("Template data to save:", templateToSave);
+
+      // Test connection first
+      const { data: testData, error: testError } = await supabase
+        .from("custom_templates")
+        .select("id")
+        .limit(1);
+
+      if (testError) {
+        console.error("Database connection test failed:", testError);
+      } else {
+        console.log("Database connection test successful");
+      }
+
       const { data, error: saveError } = await supabase
         .from("custom_templates")
         .insert(templateToSave)
         .select()
         .single();
 
-      if (saveError) throw saveError;
+      if (saveError) {
+        console.error("Template save error:", saveError);
 
+        // Show user-friendly error message based on error type
+        if (saveError.message.includes("auth")) {
+          setError("Autentifikatsiya xatoligi. Iltimos, qayta kiring.");
+          return;
+        } else if (saveError.message.includes("duplicate")) {
+          setError("Bu nomda shablon allaqachon mavjud.");
+          return;
+        } else {
+          setError(`Ma'lumotlar bazasiga saqlashda xatolik: ${saveError.message}`);
+          return;
+        }
+      }
+
+      console.log("Template saved successfully:", data);
       setSuccess("Shablon muvaffaqiyatli saqlandi!");
+
+      // Backup to localStorage as well
+      const backupTemplate = {
+        ...data,
+        is_backup: true,
+        saved_at: new Date().toISOString()
+      };
+      localStorage.setItem(`template_backup_${data?.id}`, JSON.stringify(backupTemplate));
+
       setTimeout(() => {
         navigate("/templates");
       }, 2000);
     } catch (err: any) {
-      console.error("Template save error:", err);
-      setError(err.message || "Shablon saqlanishda xatolik yuz berdi");
+      console.error("Template save general error:", err);
+      setError(err.message || "Shablon saqlanishda kutilmagan xatolik yuz berdi");
+
+      // Save to localStorage as fallback
+      const fallbackTemplate = {
+        id: `backup_${Date.now()}`,
+        ...templateData,
+        config: config,
+        created_at: new Date().toISOString(),
+        is_backup: true
+      };
+      localStorage.setItem(`template_backup_${fallbackTemplate.id}`, JSON.stringify(fallbackTemplate));
+
+      setSuccess("Shablon vaqtincha saqlanadi (backup)");
     } finally {
       setLoading(false);
     }

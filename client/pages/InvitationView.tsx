@@ -55,6 +55,13 @@ export default function InvitationView() {
 
       if (error) {
         console.error('Supabase xatoligi:', error.message || error);
+
+        // Jadvallar mavjud emasligini tekshirish
+        if (isTableNotFoundError(error)) {
+          console.log('Database jadvallar topilmadi - setup guide ko\'rsatilmoqda');
+          setShowDatabaseSetup(true);
+        }
+
         // Demo ma'lumotlar bilan ishlash (ma'lumotlar bazasi hali to'liq konfiguratsiya qilinmagan bo'lishi mumkin)
         console.log('Demo ma\'lumotlar ishlatilmoqda...');
         setInvitation({

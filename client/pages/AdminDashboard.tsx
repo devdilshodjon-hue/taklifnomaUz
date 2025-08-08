@@ -107,15 +107,30 @@ export default function AdminDashboard() {
 
   const loadDashboardData = async () => {
     setLoading(true);
+
+    // Set a timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      console.log("Admin dashboard loading timeout - stopping");
+      setLoading(false);
+    }, 8000); // 8 seconds timeout
+
     try {
-      // Load statistics
-      await Promise.all([
-        loadStats(),
-        loadPurchaseRequests(),
-        loadSubscriptions(),
+      // Load statistics with timeout protection
+      await Promise.race([
+        Promise.all([
+          loadStats(),
+          loadPurchaseRequests(),
+          loadSubscriptions(),
+        ]),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Dashboard loading timeout")), 7000)
+        ),
       ]);
+
+      clearTimeout(timeoutId);
     } catch (error) {
       console.error("Error loading dashboard data:", error);
+      clearTimeout(timeoutId);
     } finally {
       setLoading(false);
     }

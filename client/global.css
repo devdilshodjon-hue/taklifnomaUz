@@ -118,28 +118,54 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
+    font-family: 'Poppins', sans-serif;
+    @apply font-semibold;
   }
 }
 
 @layer components {
-  .wedding-gradient {
+  .modern-gradient {
     background: linear-gradient(135deg,
-      hsl(var(--wedding-ivory)) 0%,
-      hsl(var(--wedding-cream)) 25%,
-      hsl(var(--wedding-blush)) 100%);
+      hsl(var(--background)) 0%,
+      hsl(var(--theme-gray-light)) 100%);
   }
 
-  .wedding-text-gradient {
+  .hero-gradient {
     background: linear-gradient(135deg,
-      hsl(var(--wedding-rose)) 0%,
-      hsl(var(--wedding-gold)) 100%);
+      hsl(var(--background)) 0%,
+      hsl(var(--theme-primary) / 0.05) 50%,
+      hsl(var(--background)) 100%);
+  }
+
+  .primary-gradient {
+    background: linear-gradient(135deg,
+      hsl(var(--theme-primary)) 0%,
+      hsl(var(--theme-primary-dark)) 100%);
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg,
+      hsl(var(--theme-primary)) 0%,
+      hsl(var(--theme-primary-light)) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .card-modern {
+    @apply bg-card border border-border rounded-xl shadow-sm backdrop-blur-sm;
+  }
+
+  .button-modern {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md;
+  }
+
+  .input-modern {
+    @apply border-border bg-background rounded-lg px-4 py-3 text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors;
   }
 }

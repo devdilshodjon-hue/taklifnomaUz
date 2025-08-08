@@ -112,12 +112,12 @@ export default function Index() {
               10,000 dan ortiq er-xotin TaklifNoma ga ishonadi
             </div>
 
-            <h1 className="font-heading text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight">
+            <h1 className="font-heading text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight animate-slide-up delay-100">
               To'y Taklifnomalari
               <span className="text-gradient block">Juda Oson</span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-slide-up delay-200">
               Bir necha daqiqada ajoyib to'y taklifnomalarini yarating, sozlang
               va ulashing. Dizayn tajribasi shart emas.
             </p>

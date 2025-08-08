@@ -141,7 +141,7 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
     } catch (error) {
-      console.error("Admin login error:", error);
+      console.error("Admin login error:", error?.message || error);
       return { success: false, error: "Tizimda xatolik yuz berdi" };
     } finally {
       setLoading(false);

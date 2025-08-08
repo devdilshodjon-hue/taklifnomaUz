@@ -306,6 +306,10 @@ export default function CreateInvitation() {
           JSON.stringify(realInvitationData),
         );
 
+        // Update demo invitation count
+        const currentCount = parseInt(localStorage.getItem("demo_invitation_count") || "0");
+        localStorage.setItem("demo_invitation_count", (currentCount + 1).toString());
+
         navigate(`/invitation/${mockId}`);
         return;
       }

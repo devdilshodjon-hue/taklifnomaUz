@@ -133,7 +133,8 @@ export default function CreateInvitation() {
         .single();
 
       if (error) {
-        console.error('Taklifnoma yaratishda xatolik:', error);
+        console.log('Supabase xatoligi:', error.message || error);
+        console.log('Demo rejimida taklifnoma yaratilmoqda...');
         // Demo uchun mock ID yaratamiz
         const mockId = "demo-" + Date.now();
         navigate(`/invitation/${mockId}`);

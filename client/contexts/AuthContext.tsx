@@ -92,15 +92,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) {
         if (error.code === "PGRST116" || error.code === "PGRST301") {
           // Profile doesn't exist, create one
+          console.log("Profile not found, creating new profile for user:", userId);
+
           const { data: user } = await supabase.auth.getUser();
           if (user.user) {
             const newProfile = {
               id: userId,
-              email: user.user.email,
+              email: user.user.email || "",
               first_name: user.user.user_metadata?.first_name || null,
               last_name: user.user.user_metadata?.last_name || null,
               avatar_url: user.user.user_metadata?.avatar_url || null,
             };
+
+            console.log("Creating profile with data:", newProfile);
 
             const { data: createdProfile, error: createError } = await supabase
               .from("profiles")
@@ -109,6 +113,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               .single();
 
             if (!createError && createdProfile) {
+              console.log("Profile created successfully:", createdProfile);
               setProfile(createdProfile);
             } else {
               console.error("Error creating profile:", {
@@ -116,10 +121,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 message: createError?.message,
                 details: createError?.details,
                 hint: createError?.hint,
-                code: createError?.code
+                code: createError?.code,
+                profileData: newProfile
               });
-              setProfile(null);
+
+              // Try to set a minimal profile object for the app to continue working
+              setProfile({
+                id: userId,
+                email: user.user.email || "",
+                first_name: user.user.user_metadata?.first_name || null,
+                last_name: user.user.user_metadata?.last_name || null,
+                avatar_url: user.user.user_metadata?.avatar_url || null,
+                created_at: new Date().toISOString()
+              });
             }
+          } else {
+            console.error("No user data available for profile creation");
+            setProfile(null);
           }
         } else {
           console.error("Error loading profile:", {

@@ -28,9 +28,7 @@ export default function CreateInvitation() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [filteredTemplates, setFilteredTemplates] = useState<TemplateData[]>(weddingTemplates);
 
-  // Debug templates
-  console.log('weddingTemplates:', weddingTemplates);
-  console.log('filteredTemplates:', filteredTemplates);
+  // Templates loaded
   const [previewTemplate, setPreviewTemplate] = useState<TemplateData | null>(null);
   const [showPreview, setShowPreview] = useState(false);
 

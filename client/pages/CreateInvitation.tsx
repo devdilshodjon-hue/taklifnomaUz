@@ -45,7 +45,7 @@ export default function CreateInvitation() {
     state: "",
     zipCode: "",
     customMessage: "",
-    selectedTemplate: "",
+    selectedTemplate: "classic-rose",
     uploadedImage: null as File | null,
     rsvpDeadline: "",
   });

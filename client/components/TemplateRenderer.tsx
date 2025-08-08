@@ -132,6 +132,8 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({ invitation, guestNa
   switch (template.category) {
     case 'classic':
       return <ClassicTemplate template={template} invitation={invitation} guestName={guestName} formatDate={formatDate} formatTime={formatTime} />;
+    case 'custom':
+      return <CustomTemplate template={template} invitation={invitation} guestName={guestName} formatDate={formatDate} formatTime={formatTime} />;
     case 'modern':
       return <ModernTemplate template={template} invitation={invitation} guestName={guestName} formatDate={formatDate} formatTime={formatTime} />;
     case 'elegant':

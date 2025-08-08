@@ -156,16 +156,50 @@ export default function InvitationView() {
   };
 
   const shareInvitation = async () => {
+    const shareData = {
+      title: `${invitation?.groom_name} & ${invitation?.bride_name} - To'y Taklifnomasi`,
+      text: `${invitation?.groom_name} va ${invitation?.bride_name}ning to'y marosimimizga taklif qilamiz! ${formatDate(invitation?.wedding_date || '')} sanasida ${invitation?.venue}da.`,
+      url: window.location.href,
+    };
+
     if (navigator.share) {
-      await navigator.share({
-        title: `${invitation?.groom_name} & ${invitation?.bride_name} - To'y Taklifnomasi`,
-        text: 'Bizning to\'y marosimimizga taklif qilamiz!',
-        url: window.location.href,
-      });
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        // User cancelled or error occurred, fallback to clipboard
+        copyToClipboard();
+      }
     } else {
       // Fallback: copy to clipboard
-      await navigator.clipboard.writeText(window.location.href);
-      alert('Havola clipboard ga nusxalandi!');
+      copyToClipboard();
+    }
+  };
+
+  const copyToClipboard = async () => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(window.location.href);
+        alert('Havola clipboard ga nusxalandi! Endi uni ulashishingiz mumkin.');
+      } else {
+        // Fallback method
+        const textArea = document.createElement('textarea');
+        textArea.value = window.location.href;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+          document.execCommand('copy');
+          alert('Havola nusxalandi! Endi uni ulashishingiz mumkin.');
+        } finally {
+          document.body.removeChild(textArea);
+        }
+      }
+    } catch (err) {
+      alert('Ulashish uchun: ' + window.location.href);
     }
   };
 

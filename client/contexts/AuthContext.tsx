@@ -137,6 +137,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Add session recovery on window focus
+  useEffect(() => {
+    const handleWindowFocus = async () => {
+      const { data: { session }, error } = await supabase.auth.getSession();
+
+      if (error || !session) {
+        // Session is invalid, sign out
+        if (user) {
+          console.log("Session lost on focus, signing out...");
+          await supabase.auth.signOut();
+        }
+        return;
+      }
+
+      // Session exists but user state is lost, restore it
+      if (session && !user) {
+        console.log("Restoring session on focus...");
+        setSession(session);
+        setUser(session.user);
+        if (session.user && !profile) {
+          loadProfile(session.user.id);
+        }
+      }
+    };
+
+    window.addEventListener('focus', handleWindowFocus);
+    return () => window.removeEventListener('focus', handleWindowFocus);
+  }, [user, profile]);
+
   const loadProfile = async (userId: string) => {
     let timeoutId: NodeJS.Timeout;
     try {

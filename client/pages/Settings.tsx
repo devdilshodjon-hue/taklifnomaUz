@@ -68,6 +68,7 @@ interface SecuritySettings {
 
 export default function Settings() {
   const { user, signOut } = useAuth();
+  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);

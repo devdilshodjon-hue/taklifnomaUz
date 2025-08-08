@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Sparkles, Flower2, Diamond, Rose, Star, Crown } from 'lucide-react';
+import { Heart, Sparkles, Flower2, Diamond, Star, Crown, Gem, Leaf } from 'lucide-react';
 
 export interface TemplateData {
   id: string;

@@ -3,27 +3,32 @@ import { Sparkles, Plus, Calendar, Eye, Users, LogOut, BarChart3 } from "lucide-
 import { Button } from "@/components/ui/button";
 
 export default function Dashboard() {
-  // Mock ma'lumotlar taklifnomalar uchun
-  const invitations = [
-    {
-      id: 1,
-      groomName: "Jahongir",
-      brideName: "Sarvinoz",
-      date: "2024-06-15",
-      guests: 120,
-      rsvps: 85,
-      status: "active"
-    },
-    {
-      id: 2,
-      groomName: "Davron",
-      brideName: "Mohira",
-      date: "2024-08-20",
-      guests: 80,
-      rsvps: 45,
-      status: "active"
-    },
-  ];
+  // localStorage dan taklifnomalarni olish
+  const getStoredInvitations = () => {
+    const invitations = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('invitation_')) {
+        try {
+          const data = JSON.parse(localStorage.getItem(key) || '');
+          invitations.push({
+            id: data.id,
+            groomName: data.groom_name,
+            brideName: data.bride_name,
+            date: data.wedding_date,
+            guests: 50, // Default
+            rsvps: 12, // Default
+            status: "active"
+          });
+        } catch (error) {
+          console.error('Error parsing invitation data:', error);
+        }
+      }
+    }
+    return invitations;
+  };
+
+  const invitations = getStoredInvitations();
 
   const stats = [
     {

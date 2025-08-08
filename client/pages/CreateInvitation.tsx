@@ -30,6 +30,13 @@ export default function CreateInvitation() {
   const [filteredTemplates, setFilteredTemplates] = useState<TemplateData[]>(weddingTemplates);
 
   // Templates loaded
+  useEffect(() => {
+    // Templates sahifasidan kelgan template selection ni qabul qilish
+    if (location.state?.selectedTemplate) {
+      setFormData(prev => ({ ...prev, selectedTemplate: location.state.selectedTemplate }));
+      setCurrentStep(3); // Template selection step ga o'tish
+    }
+  }, [location.state]);
   const [previewTemplate, setPreviewTemplate] = useState<TemplateData | null>(null);
   const [showPreview, setShowPreview] = useState(false);
 

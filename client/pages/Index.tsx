@@ -6,42 +6,42 @@ export default function Index() {
   const features = [
     {
       icon: <Zap className="w-6 h-6" />,
-      title: "Lightning Fast",
-      description: "Create beautiful invitations in under 3 minutes"
+      title: "Juda Tez",
+      description: "3 daqiqadan kamroq vaqtda chiroyli taklifnomalar yarating"
     },
     {
       icon: <Globe className="w-6 h-6" />,
-      title: "Share Instantly",
-      description: "One link, unlimited guests, instant RSVPs"
+      title: "Tezda Ulashing",
+      description: "Bitta havola, cheksiz mehmon, tezkor javoblar"
     },
     {
       icon: <Users className="w-6 h-6" />,
-      title: "Smart Management",
-      description: "Track responses and manage guests effortlessly"
+      title: "Aqlli Boshqaruv",
+      description: "Javoblarni kuzating va mehmonlarni oson boshqaring"
     }
   ];
 
   const templates = [
-    { name: "Classic", emoji: "💝", popular: true },
-    { name: "Modern", emoji: "✨", popular: false },
-    { name: "Elegant", emoji: "🌸", popular: false },
-    { name: "Minimal", emoji: "🤍", popular: true }
+    { name: "Klassik", emoji: "💝", popular: true },
+    { name: "Zamonaviy", emoji: "✨", popular: false },
+    { name: "Nafis", emoji: "🌸", popular: false },
+    { name: "Oddiy", emoji: "🤍", popular: true }
   ];
 
   const testimonials = [
     {
-      name: "Sarah & John",
-      text: "Perfect for our wedding! Saved us so much time and money.",
+      name: "Sarvinoz va Jahongir",
+      text: "To'yimiz uchun ajoyib! Vaqt va pulimizni juda ko'p tejadi.",
       rating: 5
     },
     {
-      name: "Emily & David", 
-      text: "Our guests loved the digital invitations. So easy to use!",
+      name: "Mohira va Davron", 
+      text: "Mehmonlarimiz raqamli taklifnomalarni juda yoqtirishdi. Ishlatish juda oson!",
       rating: 5
     },
     {
-      name: "Maria & Alex",
-      text: "Beautiful templates and seamless RSVP process.",
+      name: "Maryam va Alisher",
+      text: "Chiroyli shablonlar va muammosiz javob jarayoni.",
       rating: 5
     }
   ];
@@ -56,26 +56,26 @@ export default function Index() {
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <span className="font-heading text-xl font-bold text-foreground">InviteNow</span>
+              <span className="font-heading text-xl font-bold text-foreground">TaklifNoma</span>
             </div>
             <div className="hidden md:flex items-center gap-8">
               <Link to="#features" className="text-muted-foreground hover:text-foreground transition-colors">
-                Features
+                Imkoniyatlar
               </Link>
               <Link to="#templates" className="text-muted-foreground hover:text-foreground transition-colors">
-                Templates
+                Shablonlar
               </Link>
               <Link to="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">
-                Pricing
+                Narxlar
               </Link>
             </div>
             <div className="flex items-center gap-3">
               <Button variant="ghost" asChild>
-                <Link to="/login">Sign In</Link>
+                <Link to="/login">Kirish</Link>
               </Button>
               <Button asChild className="button-modern">
                 <Link to="/register">
-                  Get Started
+                  Boshlash
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
               </Button>
@@ -90,29 +90,29 @@ export default function Index() {
           <div className="max-w-4xl mx-auto">
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-8">
               <Sparkles className="w-4 h-4" />
-              Over 10,000 couples trust InviteNow
+              10,000 dan ortiq er-xotin TaklifNoma ga ishonadi
             </div>
             
             <h1 className="font-heading text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight">
-              Wedding Invitations
-              <span className="text-gradient block">Made Simple</span>
+              To'y Taklifnomalari
+              <span className="text-gradient block">Juda Oson</span>
             </h1>
             
             <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
-              Create, customize, and share stunning wedding invitations in minutes. 
-              No design experience needed.
+              Bir necha daqiqada ajoyib to'y taklifnomalarini yarating, sozlang va ulashing. 
+              Dizayn tajribasi shart emas.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
               <Button size="lg" asChild className="primary-gradient px-8 py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                 <Link to="/create">
-                  Create Your Invitation
+                  Taklifnoma Yaratish
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
               <Button variant="outline" size="lg" asChild className="px-8 py-4 text-lg rounded-xl">
                 <Link to="#demo">
-                  View Demo
+                  Namunani Ko'rish
                 </Link>
               </Button>
             </div>
@@ -120,15 +120,15 @@ export default function Index() {
             <div className="flex justify-center gap-8 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-theme-success" />
-                Free to start
+                Bepul boshlang
               </div>
               <div className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-theme-success" />
-                No credit card
+                Karta kerak emas
               </div>
               <div className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-theme-success" />
-                Ready in 3 minutes
+                3 daqiqada tayyor
               </div>
             </div>
           </div>
@@ -140,10 +140,10 @@ export default function Index() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Everything you need for perfect invitations
+              Mukammal taklifnomalar uchun barcha imkoniyatlar
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              From creation to celebration, we handle all the technical details so you can focus on your special day.
+              Yaratishdan nishonlashgacha, biz barcha texnik tafsilotlarni hal qilamiz, siz faqat o'zingizning maxsus kuningizga e'tibor qarating.
             </p>
           </div>
 
@@ -170,10 +170,10 @@ export default function Index() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Beautiful templates for every style
+              Har qanday uslub uchun chiroyli shablonlar
             </h2>
             <p className="text-xl text-muted-foreground">
-              Choose from our curated collection of professional designs
+              Professional dizaynlarimizning tanlanma kolleksiyasidan tanlang
             </p>
           </div>
 
@@ -185,7 +185,7 @@ export default function Index() {
                   <h3 className="font-heading font-semibold text-foreground">{template.name}</h3>
                   {template.popular && (
                     <div className="absolute -top-2 -right-2 bg-theme-accent text-foreground text-xs px-2 py-1 rounded-full font-medium">
-                      Popular
+                      Mashhur
                     </div>
                   )}
                 </div>
@@ -196,7 +196,7 @@ export default function Index() {
           <div className="text-center mt-12">
             <Button asChild className="button-modern">
               <Link to="/templates">
-                View All Templates
+                Barcha Shablonlarni Ko'rish
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
             </Button>
@@ -209,7 +209,7 @@ export default function Index() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Loved by couples worldwide
+              Butun dunyo bo'ylab er-xotinlar sevadi
             </h2>
           </div>
 
@@ -237,14 +237,14 @@ export default function Index() {
       <section className="py-24">
         <div className="max-w-4xl mx-auto text-center px-6">
           <h2 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Ready to create your perfect invitation?
+            Mukammal taklifnomangizni yaratishga tayyormisiz?
           </h2>
           <p className="text-xl text-muted-foreground mb-12">
-            Join thousands of couples who've made their wedding planning easier with InviteNow.
+            TaklifNoma bilan to'y rejalarini osonlashtirgan minglab er-xotinlarga qo'shiling.
           </p>
           <Button size="lg" asChild className="primary-gradient px-12 py-6 text-xl rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
             <Link to="/create">
-              Start Creating Now
+              Hoziroq Yaratishni Boshlang
               <ArrowRight className="w-6 h-6 ml-3" />
             </Link>
           </Button>
@@ -259,16 +259,16 @@ export default function Index() {
               <div className="w-6 h-6 bg-primary rounded-lg flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
-              <span className="font-heading text-lg font-bold text-foreground">InviteNow</span>
+              <span className="font-heading text-lg font-bold text-foreground">TaklifNoma</span>
             </div>
             <p className="text-muted-foreground mb-6">
-              Making your special day even more special, one invitation at a time.
+              Sizning maxsus kuningizni yanada maxsus qilish, har bir taklifnoma bilan.
             </p>
             <div className="flex justify-center gap-8 text-sm text-muted-foreground">
-              <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-              <Link to="/terms" className="hover:text-foreground transition-colors">Terms</Link>
-              <Link to="/contact" className="hover:text-foreground transition-colors">Contact</Link>
-              <Link to="/help" className="hover:text-foreground transition-colors">Help</Link>
+              <Link to="/privacy" className="hover:text-foreground transition-colors">Maxfiylik</Link>
+              <Link to="/terms" className="hover:text-foreground transition-colors">Shartlar</Link>
+              <Link to="/contact" className="hover:text-foreground transition-colors">Aloqa</Link>
+              <Link to="/help" className="hover:text-foreground transition-colors">Yordam</Link>
             </div>
           </div>
         </div>

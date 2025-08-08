@@ -171,8 +171,8 @@ export default function CreateInvitation() {
     } catch (error) {
       console.error('Taklifnoma yaratishda umumiy xatolik:', error);
       console.log('Demo rejimida taklifnoma yaratilmoqda...');
-      // Demo uchun mock ID yaratamiz
-      const mockId = "demo-" + Date.now();
+      // Demo uchun UUID formatda ID yaratamiz
+      const mockId = generateDemoInvitationId();
       navigate(`/invitation/${mockId}`);
     } finally {
       setIsLoading(false);

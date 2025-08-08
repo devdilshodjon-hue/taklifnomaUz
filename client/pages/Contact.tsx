@@ -124,9 +124,11 @@ export default function Contact() {
                       Manzil
                     </h3>
                     <p className="text-muted-foreground">
-                      Toshkent sh., Yunusobod tumani
+                      Farg'ona viloyati, O'zbekiston tumani
                       <br />
-                      IT Park, 2-qavat, 205-xona
+                      Davlatbotir MFY, Maorif qishlog'i
+                      <br />
+                      Yangi hayot ko'chasi, 14-uy
                     </p>
                   </div>
                 </div>

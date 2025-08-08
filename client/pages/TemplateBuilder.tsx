@@ -259,6 +259,8 @@ export default function TemplateBuilder() {
     setError("");
     setSuccess("");
 
+    let timeoutId: NodeJS.Timeout;
+
     try {
       // Check authentication session first
       const {
@@ -300,6 +302,13 @@ export default function TemplateBuilder() {
 
       console.log("Template data to save:", templateToSave);
 
+      // Set a timeout to prevent infinite loading
+      timeoutId = setTimeout(() => {
+        console.log("Template save timeout - stopping");
+        setLoading(false);
+        setError("Saqlash jarayoni uzun davom etmoqda. Iltimos, qayta urinib ko'ring.");
+      }, 15000); // 15 seconds timeout
+
       // Test connection first
       const { data: testData, error: testError } = await supabase
         .from("custom_templates")
@@ -308,6 +317,9 @@ export default function TemplateBuilder() {
 
       if (testError) {
         console.error("Database connection test failed:", testError);
+        clearTimeout(timeoutId);
+        setError("Ma'lumotlar bazasiga ulanishda xatolik. Iltimos, internetni tekshiring.");
+        return;
       } else {
         console.log("Database connection test successful");
       }
@@ -317,6 +329,8 @@ export default function TemplateBuilder() {
         .insert(templateToSave)
         .select()
         .single();
+
+      clearTimeout(timeoutId);
 
       if (saveError) {
         console.error("Template save error:", saveError);
@@ -355,6 +369,7 @@ export default function TemplateBuilder() {
       }, 2000);
     } catch (err: any) {
       console.error("Template save general error:", err);
+      clearTimeout(timeoutId);
       setError(
         err.message || "Shablon saqlanishda kutilmagan xatolik yuz berdi",
       );
@@ -374,6 +389,7 @@ export default function TemplateBuilder() {
 
       setSuccess("Shablon vaqtincha saqlanadi (backup)");
     } finally {
+      if (timeoutId) clearTimeout(timeoutId);
       setLoading(false);
     }
   };

@@ -47,6 +47,25 @@ export default function InvitationView() {
 
   const fetchInvitation = async (invitationId: string) => {
     try {
+      // Agar ID demo format bo'lsa yoki UUID format emas bo'lsa, darhol demo ma'lumotlarni ko'rsatamiz
+      if (isDemoId(invitationId) || !isValidUUID(invitationId)) {
+        console.log('Demo ID aniqlandi, demo ma\'lumotlar ishlatilmoqda...', invitationId);
+        setInvitation({
+          id: invitationId,
+          groom_name: "Jahongir",
+          bride_name: "Sarvinoz",
+          wedding_date: "2024-06-15",
+          wedding_time: "16:00",
+          venue: "Atirgul Bog'i",
+          address: "Toshkent sh., Yunusobod t., Bog' ko'chasi 123",
+          city: "Toshkent",
+          custom_message: "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
+          template_id: "classic",
+        });
+        return;
+      }
+
+      // To'g'ri UUID format bo'lsa, Supabase dan so'raymiz
       const { data, error } = await supabase
         .from('invitations')
         .select('*')
@@ -63,8 +82,8 @@ export default function InvitationView() {
           setShowDatabaseSetup(true);
         }
 
-        // Demo ma'lumotlar bilan ishlash (ma'lumotlar bazasi hali to'liq konfiguratsiya qilinmagan bo'lishi mumkin)
-        console.log('Demo ma\'lumotlar ishlatilmoqda...');
+        // Fallback: demo ma'lumotlar
+        console.log('Demo ma\'lumotlarga o\'tkazilmoqda...');
         setInvitation({
           id: invitationId,
           groom_name: "Jahongir",
@@ -81,7 +100,7 @@ export default function InvitationView() {
         setInvitation(data);
       }
     } catch (error) {
-      console.error('Umumiy xatolik:', error);
+      console.error('Taklifnoma olishda umumiy xatolik:', error);
       // Har qanday holda ham demo ma'lumotlarni ko'rsatish
       setInvitation({
         id: invitationId,

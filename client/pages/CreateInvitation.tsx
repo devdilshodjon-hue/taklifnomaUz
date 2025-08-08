@@ -52,11 +52,15 @@ export default function CreateInvitation() {
 
   // Template kategoriya filter
   const handleCategoryChange = (categoryId: string) => {
+    console.log('Kategoriya o\'zgartirildi:', categoryId);
     setSelectedCategory(categoryId);
     if (categoryId === 'all') {
+      console.log('Barcha shablonlar:', weddingTemplates);
       setFilteredTemplates(weddingTemplates);
     } else {
-      setFilteredTemplates(getTemplatesByCategory(categoryId));
+      const filtered = getTemplatesByCategory(categoryId);
+      console.log('Filtrlangan shablonlar:', filtered);
+      setFilteredTemplates(filtered);
     }
   };
 

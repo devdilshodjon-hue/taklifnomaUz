@@ -88,7 +88,7 @@ export default function Templates() {
         </div>
 
         {/* Category Filter */}
-        <div className="mb-8">
+        <div className="mb-8 animate-slide-up delay-300">
           <div className="flex flex-wrap justify-center gap-3">
             {templateCategories.map((category) => (
               <Button

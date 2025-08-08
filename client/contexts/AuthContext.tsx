@@ -78,7 +78,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (session) {
         // Validate session by refreshing it
-        const { data: { session: refreshedSession }, error: refreshError } = await supabase.auth.refreshSession();
+        const {
+          data: { session: refreshedSession },
+          error: refreshError,
+        } = await supabase.auth.refreshSession();
 
         if (refreshError || !refreshedSession) {
           console.log("Session invalid, signing out...");
@@ -108,7 +111,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log("Auth state changed:", event, session?.user?.id);
 
       // Handle different auth events
-      if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED' && !session) {
+      if (event === "SIGNED_OUT" || (event === "TOKEN_REFRESHED" && !session)) {
         setSession(null);
         setUser(null);
         setProfile(null);
@@ -116,7 +119,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+      if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
         setSession(session);
         setUser(session?.user ?? null);
 
@@ -140,7 +143,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Add session recovery on window focus
   useEffect(() => {
     const handleWindowFocus = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
 
       if (error || !session) {
         // Session is invalid, sign out
@@ -162,8 +168,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    window.addEventListener('focus', handleWindowFocus);
-    return () => window.removeEventListener('focus', handleWindowFocus);
+    window.addEventListener("focus", handleWindowFocus);
+    return () => window.removeEventListener("focus", handleWindowFocus);
   }, [user, profile]);
 
   const loadProfile = async (userId: string) => {
@@ -262,7 +268,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           });
 
           // Handle 406 and other session-related errors by signing out
-          if (error?.message?.includes('406') || error?.code === 'PGRST301' || error?.message?.includes('JWT')) {
+          if (
+            error?.message?.includes("406") ||
+            error?.code === "PGRST301" ||
+            error?.message?.includes("JWT")
+          ) {
             console.log("Session-related error detected, signing out...");
             await supabase.auth.signOut();
             setProfile(null);
@@ -319,8 +329,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         options: {
           redirectTo: `${window.location.origin}/dashboard`,
           queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
+            access_type: "offline",
+            prompt: "consent",
           },
         },
       });

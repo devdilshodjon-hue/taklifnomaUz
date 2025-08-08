@@ -122,7 +122,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
           }
         } else {
-          console.error("Error loading profile:", error);
+          console.error("Error loading profile:", {
+            error: error,
+            message: error?.message,
+            details: error?.details,
+            hint: error?.hint,
+            code: error?.code
+          });
           // For RLS errors or other issues, set profile to null but don't break auth
           setProfile(null);
         }

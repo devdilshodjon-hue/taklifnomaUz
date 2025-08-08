@@ -209,6 +209,7 @@ export default function CreateInvitation() {
 
       console.log("Invitation data prepared:", invitationData);
 
+      console.log("Attempting to save to Supabase...");
       const { data: invitation, error } = await supabase
         .from("invitations")
         .insert(invitationData)
@@ -216,9 +217,16 @@ export default function CreateInvitation() {
         .single();
 
       if (error) {
-        console.log("Supabase xatoligi:", error.message || error);
+        console.error("Supabase xatoligi:", {
+          error: error,
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+
+        // Create demo invitation as fallback
         console.log("Demo rejimida taklifnoma yaratilmoqda...");
-        // Demo uchun UUID formatda ID yaratamiz
         const mockId = generateDemoInvitationId();
 
         // Real ma'lumotlarni localStorage ga saqlaymiz

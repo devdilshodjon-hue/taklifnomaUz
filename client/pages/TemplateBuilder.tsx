@@ -306,7 +306,9 @@ export default function TemplateBuilder() {
       timeoutId = setTimeout(() => {
         console.log("Template save timeout - stopping");
         setLoading(false);
-        setError("Saqlash jarayoni uzun davom etmoqda. Iltimos, qayta urinib ko'ring.");
+        setError(
+          "Saqlash jarayoni uzun davom etmoqda. Iltimos, qayta urinib ko'ring.",
+        );
       }, 15000); // 15 seconds timeout
 
       // Test connection first
@@ -318,7 +320,9 @@ export default function TemplateBuilder() {
       if (testError) {
         console.error("Database connection test failed:", testError);
         clearTimeout(timeoutId);
-        setError("Ma'lumotlar bazasiga ulanishda xatolik. Iltimos, internetni tekshiring.");
+        setError(
+          "Ma'lumotlar bazasiga ulanishda xatolik. Iltimos, internetni tekshiring.",
+        );
         return;
       } else {
         console.log("Database connection test successful");

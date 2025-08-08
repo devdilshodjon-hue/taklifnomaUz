@@ -85,17 +85,15 @@ export default function Purchase() {
 
     try {
       // Save to database first
-      const { error } = await supabase
-        .from("purchase_requests")
-        .insert({
-          plan_type: planId,
-          full_name: formData.fullName.trim(),
-          email: formData.email.trim(),
-          phone: formData.phone.trim(),
-          company_name: formData.companyName.trim() || null,
-          message: formData.message.trim() || null,
-          status: "pending",
-        });
+      const { error } = await supabase.from("purchase_requests").insert({
+        plan_type: planId,
+        full_name: formData.fullName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        company_name: formData.companyName.trim() || null,
+        message: formData.message.trim() || null,
+        status: "pending",
+      });
 
       if (error) {
         console.error("Error saving purchase request:", error);
@@ -169,7 +167,8 @@ Iltimos, to'lov jarayoni haqida ma'lumot bering.
               So'rov Yuborildi!
             </h1>
             <p className="text-lg text-muted-foreground mb-8">
-              Tez orada siz bilan bog'lanamiz va to'lov jarayonini tushuntiramiz.
+              Tez orada siz bilan bog'lanamiz va to'lov jarayonini
+              tushuntiramiz.
             </p>
             <div className="space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -178,7 +177,9 @@ Iltimos, to'lov jarayoni haqida ma'lumot bering.
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   variant="outline"
-                  onClick={() => window.open("https://wa.me/998995340313", "_blank")}
+                  onClick={() =>
+                    window.open("https://wa.me/998995340313", "_blank")
+                  }
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />
                   WhatsApp
@@ -192,7 +193,9 @@ Iltimos, to'lov jarayoni haqida ma'lumot bering.
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => window.open("mailto:dev.dilshodjon@gmail.com", "_blank")}
+                  onClick={() =>
+                    window.open("mailto:dev.dilshodjon@gmail.com", "_blank")
+                  }
                 >
                   <Mail className="w-4 h-4 mr-2" />
                   Email

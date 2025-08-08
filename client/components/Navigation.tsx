@@ -100,7 +100,12 @@ export default function Navigation({
                   />
                 ) : (
                   <span className="text-sm">
-                    {(profile?.first_name?.[0] || profile?.email?.[0] || user?.email?.[0] || "U").toUpperCase()}
+                    {(
+                      profile?.first_name?.[0] ||
+                      profile?.email?.[0] ||
+                      user?.email?.[0] ||
+                      "U"
+                    ).toUpperCase()}
                   </span>
                 )}
               </div>

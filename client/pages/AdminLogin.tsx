@@ -73,9 +73,7 @@ export default function AdminLogin() {
             <Shield className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">Admin Panel</h1>
-          <p className="text-slate-400">
-            TaklifNoma boshqaruv paneli
-          </p>
+          <p className="text-slate-400">TaklifNoma boshqaruv paneli</p>
         </div>
 
         {/* Login Form */}
@@ -163,10 +161,18 @@ export default function AdminLogin() {
 
           {/* Default Credentials */}
           <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-            <p className="text-blue-200 text-sm font-medium mb-2">Default kirish ma'lumotlari:</p>
+            <p className="text-blue-200 text-sm font-medium mb-2">
+              Default kirish ma'lumotlari:
+            </p>
             <div className="text-blue-300 text-xs space-y-1">
-              <p>Foydalanuvchi: <code className="bg-blue-500/20 px-1 rounded">admin</code></p>
-              <p>Parol: <code className="bg-blue-500/20 px-1 rounded">admin</code></p>
+              <p>
+                Foydalanuvchi:{" "}
+                <code className="bg-blue-500/20 px-1 rounded">admin</code>
+              </p>
+              <p>
+                Parol:{" "}
+                <code className="bg-blue-500/20 px-1 rounded">admin</code>
+              </p>
             </div>
           </div>
         </div>

@@ -88,7 +88,9 @@ export default function AdminDashboard() {
     activeSubscriptions: 0,
     monthlyRevenue: 0,
   });
-  const [purchaseRequests, setPurchaseRequests] = useState<PurchaseRequest[]>([]);
+  const [purchaseRequests, setPurchaseRequests] = useState<PurchaseRequest[]>(
+    [],
+  );
   const [subscriptions, setSubscriptions] = useState<UserSubscription[]>([]);
   const [activeTab, setActiveTab] = useState("overview");
 
@@ -178,14 +180,16 @@ export default function AdminDashboard() {
     try {
       const { data, error } = await supabase
         .from("user_subscriptions")
-        .select(`
+        .select(
+          `
           *,
           profiles:user_id (
             first_name,
             last_name,
             email
           )
-        `)
+        `,
+        )
         .order("created_at", { ascending: false })
         .limit(50);
 
@@ -249,7 +253,9 @@ export default function AdminDashboard() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex items-center gap-2">
           <Loader2 className="w-6 h-6 animate-spin text-primary" />
-          <span className="text-muted-foreground">Dashboard yuklanmoqda...</span>
+          <span className="text-muted-foreground">
+            Dashboard yuklanmoqda...
+          </span>
         </div>
       </div>
     );
@@ -316,8 +322,12 @@ export default function AdminDashboard() {
           <div className="bg-card rounded-lg p-6 border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Jami Foydalanuvchilar</p>
-                <p className="text-2xl font-bold text-foreground">{stats.totalUsers}</p>
+                <p className="text-sm text-muted-foreground">
+                  Jami Foydalanuvchilar
+                </p>
+                <p className="text-2xl font-bold text-foreground">
+                  {stats.totalUsers}
+                </p>
               </div>
               <Users className="w-8 h-8 text-blue-500" />
             </div>
@@ -327,7 +337,9 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Taklifnomalar</p>
-                <p className="text-2xl font-bold text-foreground">{stats.totalInvitations}</p>
+                <p className="text-2xl font-bold text-foreground">
+                  {stats.totalInvitations}
+                </p>
               </div>
               <FileText className="w-8 h-8 text-green-500" />
             </div>
@@ -337,7 +349,9 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Obunalar</p>
-                <p className="text-2xl font-bold text-foreground">{stats.totalSubscriptions}</p>
+                <p className="text-2xl font-bold text-foreground">
+                  {stats.totalSubscriptions}
+                </p>
               </div>
               <CreditCard className="w-8 h-8 text-purple-500" />
             </div>
@@ -346,8 +360,12 @@ export default function AdminDashboard() {
           <div className="bg-card rounded-lg p-6 border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Kutilayotgan So'rovlar</p>
-                <p className="text-2xl font-bold text-foreground">{stats.pendingRequests}</p>
+                <p className="text-sm text-muted-foreground">
+                  Kutilayotgan So'rovlar
+                </p>
+                <p className="text-2xl font-bold text-foreground">
+                  {stats.pendingRequests}
+                </p>
               </div>
               <TrendingUp className="w-8 h-8 text-orange-500" />
             </div>
@@ -357,7 +375,9 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Faol Obunalar</p>
-                <p className="text-2xl font-bold text-foreground">{stats.activeSubscriptions}</p>
+                <p className="text-2xl font-bold text-foreground">
+                  {stats.activeSubscriptions}
+                </p>
               </div>
               <Crown className="w-8 h-8 text-yellow-500" />
             </div>
@@ -367,7 +387,9 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Oylik Daromad</p>
-                <p className="text-2xl font-bold text-foreground">{stats.monthlyRevenue.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-foreground">
+                  {stats.monthlyRevenue.toLocaleString()}
+                </p>
               </div>
               <BarChart3 className="w-8 h-8 text-red-500" />
             </div>
@@ -486,7 +508,9 @@ export default function AdminDashboard() {
                       <TableCell>
                         <div className="flex items-center gap-2 text-sm">
                           <Calendar className="w-3 h-3" />
-                          {new Date(request.created_at).toLocaleDateString("uz-UZ")}
+                          {new Date(request.created_at).toLocaleDateString(
+                            "uz-UZ",
+                          )}
                         </div>
                       </TableCell>
                       <TableCell>{getStatusBadge(request.status)}</TableCell>
@@ -496,7 +520,9 @@ export default function AdminDashboard() {
                             <>
                               <Button
                                 size="sm"
-                                onClick={() => updateRequestStatus(request.id, "contacted")}
+                                onClick={() =>
+                                  updateRequestStatus(request.id, "contacted")
+                                }
                               >
                                 <Check className="w-3 h-3 mr-1" />
                                 Bog'lanildi
@@ -504,7 +530,9 @@ export default function AdminDashboard() {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={() => updateRequestStatus(request.id, "rejected")}
+                                onClick={() =>
+                                  updateRequestStatus(request.id, "rejected")
+                                }
                               >
                                 <X className="w-3 h-3 mr-1" />
                                 Rad etish
@@ -514,7 +542,9 @@ export default function AdminDashboard() {
                           {request.status === "contacted" && (
                             <Button
                               size="sm"
-                              onClick={() => updateRequestStatus(request.id, "completed")}
+                              onClick={() =>
+                                updateRequestStatus(request.id, "completed")
+                              }
                             >
                               <Check className="w-3 h-3 mr-1" />
                               Yakunlash
@@ -553,7 +583,8 @@ export default function AdminDashboard() {
                       <TableCell>
                         <div>
                           <p className="font-medium">
-                            {subscription.profiles?.first_name || "Foydalanuvchi"}{" "}
+                            {subscription.profiles?.first_name ||
+                              "Foydalanuvchi"}{" "}
                             {subscription.profiles?.last_name || ""}
                           </p>
                           <p className="text-sm text-muted-foreground">
@@ -561,16 +592,24 @@ export default function AdminDashboard() {
                           </p>
                         </div>
                       </TableCell>
-                      <TableCell>{getPlanBadge(subscription.plan_type)}</TableCell>
-                      <TableCell>{getStatusBadge(subscription.status)}</TableCell>
+                      <TableCell>
+                        {getPlanBadge(subscription.plan_type)}
+                      </TableCell>
+                      <TableCell>
+                        {getStatusBadge(subscription.status)}
+                      </TableCell>
                       <TableCell>
                         {subscription.started_at
-                          ? new Date(subscription.started_at).toLocaleDateString("uz-UZ")
+                          ? new Date(
+                              subscription.started_at,
+                            ).toLocaleDateString("uz-UZ")
                           : "-"}
                       </TableCell>
                       <TableCell>
                         {subscription.expires_at
-                          ? new Date(subscription.expires_at).toLocaleDateString("uz-UZ")
+                          ? new Date(
+                              subscription.expires_at,
+                            ).toLocaleDateString("uz-UZ")
                           : "-"}
                       </TableCell>
                       <TableCell>

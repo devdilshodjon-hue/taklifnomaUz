@@ -98,7 +98,9 @@ export default function Dashboard() {
       if (testError) {
         console.error("Database connection test failed:", testError);
         clearTimeout(timeoutId);
-        setError("Ma'lumotlar bazasiga ulanishda xatolik. Iltimos, internetni tekshiring.");
+        setError(
+          "Ma'lumotlar bazasiga ulanishda xatolik. Iltimos, internetni tekshiring.",
+        );
         setLoading(false);
         return;
       }
@@ -115,7 +117,9 @@ export default function Dashboard() {
 
       if (error) {
         console.error("Error loading invitations:", error);
-        setError("Taklifnomalarni yuklanishda xatolik. Iltimos, qayta urinib ko'ring.");
+        setError(
+          "Taklifnomalarni yuklanishda xatolik. Iltimos, qayta urinib ko'ring.",
+        );
         setInvitations([]);
         setLoading(false);
         return;
@@ -144,10 +148,8 @@ export default function Dashboard() {
               .select("*", { count: "exact", head: true })
               .eq("invitation_id", invitation.id);
 
-            const [{ count: rsvpCount }, { count: guestCount }] = await Promise.all([
-              rsvpPromise,
-              guestPromise
-            ]);
+            const [{ count: rsvpCount }, { count: guestCount }] =
+              await Promise.all([rsvpPromise, guestPromise]);
 
             statsData[invitation.id] = {
               views: Math.floor(Math.random() * 100), // For demo - would need view tracking
@@ -155,7 +157,10 @@ export default function Dashboard() {
               guests: guestCount || 0,
             };
           } catch (statError) {
-            console.error(`Error loading stats for invitation ${invitation.id}:`, statError);
+            console.error(
+              `Error loading stats for invitation ${invitation.id}:`,
+              statError,
+            );
             statsData[invitation.id] = {
               views: 0,
               rsvps: 0,

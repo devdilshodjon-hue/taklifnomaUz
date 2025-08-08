@@ -61,10 +61,16 @@ function App() {
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/help" element={<Help />} />
                     <Route path="/purchase" element={<Purchase />} />
-                    <Route path="/invitation/:id" element={<InvitationView />} />
+                    <Route
+                      path="/invitation/:id"
+                      element={<InvitationView />}
+                    />
                     {/* Admin Routes */}
                     <Route path="/admin" element={<AdminLogin />} />
-                    <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                    <Route
+                      path="/admin/dashboard"
+                      element={<AdminDashboard />}
+                    />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>

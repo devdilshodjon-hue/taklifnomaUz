@@ -13,12 +13,17 @@ interface AdminUser {
 interface AdminAuthContextType {
   adminUser: AdminUser | null;
   loading: boolean;
-  login: (username: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (
+    username: string,
+    password: string,
+  ) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   isLoggedIn: boolean;
 }
 
-const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
+const AdminAuthContext = createContext<AdminAuthContextType | undefined>(
+  undefined,
+);
 
 export function useAdminAuth() {
   const context = useContext(AdminAuthContext);
@@ -56,7 +61,10 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(false);
   }, []);
 
-  const login = async (username: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  const login = async (
+    username: string,
+    password: string,
+  ): Promise<{ success: boolean; error?: string }> => {
     try {
       setLoading(true);
 
@@ -69,12 +77,18 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
         .single();
 
       if (error || !data) {
-        return { success: false, error: "Noto'g'ri foydalanuvchi nomi yoki parol" };
+        return {
+          success: false,
+          error: "Noto'g'ri foydalanuvchi nomi yoki parol",
+        };
       }
 
       // Verify password
       if (!verifyPassword(password, data.password_hash)) {
-        return { success: false, error: "Noto'g'ri foydalanuvchi nomi yoki parol" };
+        return {
+          success: false,
+          error: "Noto'g'ri foydalanuvchi nomi yoki parol",
+        };
       }
 
       // Update last login
@@ -93,7 +107,7 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
       };
 
       setAdminUser(adminUser);
-      
+
       // Store in sessionStorage (no persistence across browser sessions)
       sessionStorage.setItem("admin_user", JSON.stringify(adminUser));
 

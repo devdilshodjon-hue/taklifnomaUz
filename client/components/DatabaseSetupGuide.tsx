@@ -177,27 +177,83 @@ ALTER TABLE public.rsvps ENABLE ROW LEVEL SECURITY;`;
                   <div>
                     <p className="text-foreground font-medium">SQL kodni nusxalang va ishga tushiring</p>
                     <div className="mt-2">
-                      <div className="bg-muted p-4 rounded-lg font-mono text-sm max-h-48 overflow-y-auto">
-                        <pre className="whitespace-pre-wrap">{sqlScript}</pre>
-                      </div>
-                      <Button 
-                        onClick={copyToClipboard}
-                        size="sm" 
-                        className="mt-2"
-                        variant="outline"
-                      >
-                        {copied ? (
-                          <>
-                            <CheckCircle2 className="w-4 h-4 mr-2" />
-                            Nusxalandi!
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-4 h-4 mr-2" />
-                            Kodni Nusxalash
-                          </>
-                        )}
-                      </Button>
+                      {!showFullScript ? (
+                        <div className="bg-muted p-4 rounded-lg text-sm">
+                          <p className="text-muted-foreground mb-2">
+                            Database yaratish uchun SQL skript tayyorlandi.
+                          </p>
+                          <div className="flex gap-2">
+                            <Button
+                              onClick={() => setShowFullScript(true)}
+                              size="sm"
+                              variant="outline"
+                            >
+                              <Eye className="w-4 h-4 mr-2" />
+                              SQL Kodni Ko'rish
+                            </Button>
+                            <Button
+                              onClick={copyToClipboard}
+                              size="sm"
+                              variant="outline"
+                            >
+                              {copied ? (
+                                <>
+                                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                                  Nusxalandi!
+                                </>
+                              ) : (
+                                <>
+                                  <Copy className="w-4 h-4 mr-2" />
+                                  Kodni Nusxalash
+                                </>
+                              )}
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div>
+                          <div className="bg-muted p-4 rounded-lg font-mono text-sm max-h-48 overflow-y-auto border">
+                            <textarea
+                              readOnly
+                              value={sqlScript}
+                              className="w-full h-40 bg-transparent border-none resize-none outline-none text-xs"
+                              onClick={(e) => {
+                                const target = e.target as HTMLTextAreaElement;
+                                target.select();
+                              }}
+                            />
+                          </div>
+                          <div className="flex gap-2 mt-2">
+                            <Button
+                              onClick={copyToClipboard}
+                              size="sm"
+                              variant="outline"
+                            >
+                              {copied ? (
+                                <>
+                                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                                  Nusxalandi!
+                                </>
+                              ) : (
+                                <>
+                                  <Copy className="w-4 h-4 mr-2" />
+                                  Kodni Nusxalash
+                                </>
+                              )}
+                            </Button>
+                            <Button
+                              onClick={() => setShowFullScript(false)}
+                              size="sm"
+                              variant="ghost"
+                            >
+                              Yashirish
+                            </Button>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-2">
+                            Matn maydoniga bosib, Ctrl+A va Ctrl+C bilan nusxalashingiz mumkin
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

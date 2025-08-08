@@ -467,7 +467,9 @@ export default function CreateInvitation() {
                 </div>
 
                 <div>
-                  <Label className="text-foreground font-medium mb-4 block">Shablon Tanlang</Label>
+                  <Label className="text-foreground font-medium mb-4 block">
+                    Shablon Tanlang ({filteredTemplates.length} ta mavjud)
+                  </Label>
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {filteredTemplates.map((template) => (
                       <div

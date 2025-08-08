@@ -220,77 +220,11 @@ export default function InvitationView() {
 
       {/* Invitation Display */}
       <div className="max-w-2xl mx-auto px-6 py-12">
-        <div className="card-modern p-12 relative overflow-hidden mb-8">
-          {/* Decorative elements */}
-          <div className="absolute top-4 left-4 opacity-20">
-            <Heart className="w-8 h-8 text-primary" />
-          </div>
-          <div className="absolute top-4 right-4 opacity-20">
-            <Heart className="w-8 h-8 text-primary" />
-          </div>
-          <div className="absolute bottom-4 left-4 opacity-20">
-            <Heart className="w-8 h-8 text-primary" />
-          </div>
-          <div className="absolute bottom-4 right-4 opacity-20">
-            <Heart className="w-8 h-8 text-primary" />
-          </div>
-
-          <div className="text-center space-y-8">
-            {/* Header */}
-            <div>
-              <p className="text-muted-foreground text-lg mb-4">To'y marosimimizga taklif qilamiz</p>
-              <h1 className="font-heading text-5xl md:text-6xl font-bold text-gradient mb-4">
-                {invitation.groom_name} & {invitation.bride_name}
-              </h1>
-              <div className="w-24 h-0.5 bg-primary mx-auto opacity-50"></div>
-            </div>
-
-            {/* Date and Time */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-center gap-3 text-xl text-foreground">
-                <Calendar className="w-6 h-6 text-primary" />
-                <span className="font-heading font-medium">{formatDate(invitation.wedding_date)}</span>
-              </div>
-              {invitation.wedding_time && (
-                <div className="flex items-center justify-center gap-3 text-xl text-foreground">
-                  <Clock className="w-6 h-6 text-primary" />
-                  <span className="font-heading font-medium">{formatTime(invitation.wedding_time)}</span>
-                </div>
-              )}
-            </div>
-
-            {/* Location */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-center gap-3 text-xl text-foreground">
-                <MapPin className="w-6 h-6 text-primary" />
-                <span className="font-heading font-medium">{invitation.venue}</span>
-              </div>
-              <p className="text-muted-foreground">{invitation.address}</p>
-              {invitation.city && (
-                <p className="text-muted-foreground">{invitation.city}</p>
-              )}
-            </div>
-
-            {/* Custom Message */}
-            {invitation.custom_message && (
-              <div className="border-t border-b border-border py-8">
-                <p className="text-lg text-foreground leading-relaxed italic">
-                  "{invitation.custom_message}"
-                </p>
-              </div>
-            )}
-
-            {/* Image if available */}
-            {invitation.image_url && (
-              <div className="mt-8">
-                <img 
-                  src={invitation.image_url} 
-                  alt="To'y rasmi" 
-                  className="rounded-xl mx-auto max-w-full h-auto shadow-lg"
-                />
-              </div>
-            )}
-          </div>
+        <div className="mb-8">
+          <TemplateRenderer
+            invitation={invitation}
+            guestName={rsvpForm.guest_name || "Hurmatli Mehmon"}
+          />
         </div>
 
         {/* RSVP Section */}

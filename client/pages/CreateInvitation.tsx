@@ -188,10 +188,15 @@ export default function CreateInvitation() {
 
     try {
       // Check authentication session first
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
       if (sessionError) {
         console.error("Session error:", sessionError);
-        setError("Autentifikatsiya sessiyasida xatolik. Iltimos, qayta kiring.");
+        setError(
+          "Autentifikatsiya sessiyasida xatolik. Iltimos, qayta kiring.",
+        );
         return;
       }
 
@@ -201,7 +206,12 @@ export default function CreateInvitation() {
         return;
       }
 
-      console.log("Session verified:", !!session, "Session user:", session.user?.id);
+      console.log(
+        "Session verified:",
+        !!session,
+        "Session user:",
+        session.user?.id,
+      );
 
       const slug = generateSlug();
       console.log("Generated slug:", slug);

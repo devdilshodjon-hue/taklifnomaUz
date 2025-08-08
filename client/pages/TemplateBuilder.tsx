@@ -261,10 +261,15 @@ export default function TemplateBuilder() {
 
     try {
       // Check authentication session first
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
       if (sessionError) {
         console.error("Session error:", sessionError);
-        setError("Autentifikatsiya sessiyasida xatolik. Iltimos, qayta kiring.");
+        setError(
+          "Autentifikatsiya sessiyasida xatolik. Iltimos, qayta kiring.",
+        );
         return;
       }
 
@@ -274,7 +279,12 @@ export default function TemplateBuilder() {
         return;
       }
 
-      console.log("Session verified for template save:", !!session, "User ID:", session.user?.id);
+      console.log(
+        "Session verified for template save:",
+        !!session,
+        "User ID:",
+        session.user?.id,
+      );
 
       const templateToSave = {
         user_id: user.id,
@@ -319,7 +329,9 @@ export default function TemplateBuilder() {
           setError("Bu nomda shablon allaqachon mavjud.");
           return;
         } else {
-          setError(`Ma'lumotlar bazasiga saqlashda xatolik: ${saveError.message}`);
+          setError(
+            `Ma'lumotlar bazasiga saqlashda xatolik: ${saveError.message}`,
+          );
           return;
         }
       }
@@ -331,16 +343,21 @@ export default function TemplateBuilder() {
       const backupTemplate = {
         ...data,
         is_backup: true,
-        saved_at: new Date().toISOString()
+        saved_at: new Date().toISOString(),
       };
-      localStorage.setItem(`template_backup_${data?.id}`, JSON.stringify(backupTemplate));
+      localStorage.setItem(
+        `template_backup_${data?.id}`,
+        JSON.stringify(backupTemplate),
+      );
 
       setTimeout(() => {
         navigate("/templates");
       }, 2000);
     } catch (err: any) {
       console.error("Template save general error:", err);
-      setError(err.message || "Shablon saqlanishda kutilmagan xatolik yuz berdi");
+      setError(
+        err.message || "Shablon saqlanishda kutilmagan xatolik yuz berdi",
+      );
 
       // Save to localStorage as fallback
       const fallbackTemplate = {
@@ -348,9 +365,12 @@ export default function TemplateBuilder() {
         ...templateData,
         config: config,
         created_at: new Date().toISOString(),
-        is_backup: true
+        is_backup: true,
       };
-      localStorage.setItem(`template_backup_${fallbackTemplate.id}`, JSON.stringify(fallbackTemplate));
+      localStorage.setItem(
+        `template_backup_${fallbackTemplate.id}`,
+        JSON.stringify(fallbackTemplate),
+      );
 
       setSuccess("Shablon vaqtincha saqlanadi (backup)");
     } finally {

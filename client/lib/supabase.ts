@@ -13,18 +13,18 @@ const supabaseAnonKey =
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   db: {
-    schema: 'public'
+    schema: "public",
   },
   auth: {
     persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: true
+    detectSessionInUrl: true,
   },
   global: {
     headers: {
-      'X-Client-Info': 'taklifnoma-app'
-    }
-  }
+      "X-Client-Info": "taklifnoma-app",
+    },
+  },
 });
 
 // Supabase jadvallar mavjudligini tekshirish

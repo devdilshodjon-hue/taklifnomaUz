@@ -131,36 +131,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!mounted) return;
+
       console.log("Auth state changed:", event, session?.user?.id);
 
-      // Handle different auth events
-      if (event === "SIGNED_OUT" || (event === "TOKEN_REFRESHED" && !session)) {
-        setSession(null);
-        setUser(null);
-        setProfile(null);
-        setLoading(false);
-        return;
-      }
+      try {
+        // Handle different auth events
+        if (event === "SIGNED_OUT" || (event === "TOKEN_REFRESHED" && !session)) {
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+          setLoading(false);
+          return;
+        }
 
-      if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
-        setSession(session);
-        setUser(session?.user ?? null);
+        if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+          setSession(session);
+          setUser(session?.user ?? null);
 
-        if (session?.user) {
-          await loadProfile(session.user.id);
+          if (session?.user) {
+            await loadProfile(session.user.id);
+          } else {
+            setProfile(null);
+            setLoading(false);
+          }
         } else {
+          setSession(session);
+          setUser(session?.user ?? null);
           setProfile(null);
           setLoading(false);
         }
-      } else {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setProfile(null);
-        setLoading(false);
+      } catch (err) {
+        console.error("Auth state change error:", err);
+        if (mounted) {
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+          setLoading(false);
+        }
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   // Add session recovery on window focus

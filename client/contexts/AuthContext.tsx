@@ -41,6 +41,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
+  console.log("AuthProvider rendering with state:", { user: !!user, profile: !!profile, loading });
+
   useEffect(() => {
     // Test database connection first
     const testDatabaseConnection = async () => {

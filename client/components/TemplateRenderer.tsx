@@ -334,4 +334,110 @@ const DefaultTemplate: React.FC<any> = ({ invitation, guestName }) => (
   </div>
 );
 
+// Custom Template Component
+const CustomTemplate: React.FC<{
+  template: TemplateData;
+  invitation: InvitationData;
+  guestName?: string;
+  formatDate: (date: string) => string;
+  formatTime: (time?: string) => string;
+}> = ({ template, invitation, guestName, formatDate, formatTime }) => {
+  const style = {
+    backgroundColor: template.colors.background,
+    color: template.colors.text,
+    fontFamily: template.fonts.body,
+  };
+
+  const headingStyle = {
+    fontFamily: template.fonts.heading,
+    color: template.colors.primary,
+  };
+
+  const accentStyle = {
+    fontFamily: template.fonts.accent,
+    color: template.colors.accent,
+  };
+
+  return (
+    <div className="max-w-md mx-auto" style={style}>
+      <div className="p-8 rounded-lg shadow-lg">
+        <div className="text-center space-y-6">
+          {/* Header */}
+          <div className="space-y-2">
+            <div
+              className="text-sm font-medium tracking-widest uppercase"
+              style={{ color: template.colors.secondary }}
+            >
+              To'y Taklifnomasi
+            </div>
+            <div className="w-16 h-0.5 mx-auto" style={{ backgroundColor: template.colors.accent }}></div>
+          </div>
+
+          {/* Names */}
+          <div className="space-y-4">
+            <h1 className="text-3xl font-bold" style={headingStyle}>
+              {invitation.groom_name}
+            </h1>
+            <div className="text-2xl" style={accentStyle}>
+              &
+            </div>
+            <h1 className="text-3xl font-bold" style={headingStyle}>
+              {invitation.bride_name}
+            </h1>
+          </div>
+
+          {/* Date and Time */}
+          <div className="space-y-2">
+            <div className="text-lg font-semibold" style={{ color: template.colors.primary }}>
+              {formatDate(invitation.wedding_date)}
+            </div>
+            {invitation.wedding_time && (
+              <div className="text-md" style={{ color: template.colors.secondary }}>
+                {formatTime(invitation.wedding_time)}
+              </div>
+            )}
+          </div>
+
+          {/* Venue */}
+          <div className="space-y-2">
+            <div className="w-12 h-0.5 mx-auto" style={{ backgroundColor: template.colors.accent }}></div>
+            <div className="text-lg font-medium" style={{ color: template.colors.primary }}>
+              {invitation.venue}
+            </div>
+            <div className="text-sm" style={{ color: template.colors.secondary }}>
+              {invitation.address}
+            </div>
+          </div>
+
+          {/* Custom Message */}
+          {invitation.custom_message && (
+            <div className="text-sm leading-relaxed italic" style={{ color: template.colors.text }}>
+              "{invitation.custom_message}"
+            </div>
+          )}
+
+          {/* Decorative element */}
+          <div className="flex justify-center items-center space-x-2">
+            <div className="w-8 h-0.5" style={{ backgroundColor: template.colors.accent }}></div>
+            <Sparkles className="w-4 h-4" style={{ color: template.colors.accent }} />
+            <div className="w-8 h-0.5" style={{ backgroundColor: template.colors.accent }}></div>
+          </div>
+
+          {/* Guest Name */}
+          {guestName && (
+            <div className="pt-4 border-t" style={{ borderColor: template.colors.accent }}>
+              <p className="text-sm font-medium" style={{ color: template.colors.primary }}>
+                Hurmatli {guestName}
+              </p>
+              <p className="text-xs mt-1" style={{ color: template.colors.secondary }}>
+                Sizni baxt to'la kunimizda ko'rishdan mamnun bo'lamiz
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default TemplateRenderer;

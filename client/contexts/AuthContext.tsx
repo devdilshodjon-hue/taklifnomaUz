@@ -111,7 +111,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (!createError && createdProfile) {
               setProfile(createdProfile);
             } else {
-              console.error("Error creating profile:", createError);
+              console.error("Error creating profile:", {
+                error: createError,
+                message: createError?.message,
+                details: createError?.details,
+                hint: createError?.hint,
+                code: createError?.code
+              });
               setProfile(null);
             }
           }

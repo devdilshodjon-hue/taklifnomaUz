@@ -52,8 +52,9 @@ export default function InvitationView() {
         .single();
 
       if (error) {
-        console.error('Taklifnoma topilmadi:', error);
-        // Mock data for demo
+        console.error('Supabase xatoligi:', error.message || error);
+        // Demo ma'lumotlar bilan ishlash (ma'lumotlar bazasi hali to'liq konfiguratsiya qilinmagan bo'lishi mumkin)
+        console.log('Demo ma\'lumotlar ishlatilmoqda...');
         setInvitation({
           id: invitationId,
           groom_name: "Jahongir",
@@ -70,7 +71,20 @@ export default function InvitationView() {
         setInvitation(data);
       }
     } catch (error) {
-      console.error('Xatolik:', error);
+      console.error('Umumiy xatolik:', error);
+      // Har qanday holda ham demo ma'lumotlarni ko'rsatish
+      setInvitation({
+        id: invitationId,
+        groom_name: "Jahongir",
+        bride_name: "Sarvinoz",
+        wedding_date: "2024-06-15",
+        wedding_time: "16:00",
+        venue: "Atirgul Bog'i",
+        address: "Toshkent sh., Yunusobod t., Bog' ko'chasi 123",
+        city: "Toshkent",
+        custom_message: "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
+        template_id: "classic",
+      });
     } finally {
       setLoading(false);
     }

@@ -21,6 +21,7 @@ interface Guest {
 
 export default function CreateInvitation() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [guests, setGuests] = useState<Guest[]>([]);

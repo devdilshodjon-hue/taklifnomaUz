@@ -14,7 +14,8 @@ export default function Privacy() {
             Maxfiylik Siyosati
           </h1>
           <p className="text-lg text-muted-foreground">
-            TaklifNoma xizmati foydalanuvchilarining maxfiyligini himoya qilish bo'yicha siyosati
+            TaklifNoma xizmati foydalanuvchilarining maxfiyligini himoya qilish
+            bo'yicha siyosati
           </p>
         </div>
 
@@ -126,7 +127,8 @@ export default function Privacy() {
               <li>Manzil: Toshkent sh., Yunusobod t., IT Park</li>
             </ul>
             <p className="text-sm text-muted-foreground mt-6">
-              Oxirgi yangilanish: 2024 yil dekabr. Bu siyosat vaqti-vaqti bilan yangilanishi mumkin.
+              Oxirgi yangilanish: 2024 yil dekabr. Bu siyosat vaqti-vaqti bilan
+              yangilanishi mumkin.
             </p>
           </div>
         </div>

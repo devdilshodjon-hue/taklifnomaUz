@@ -7,13 +7,16 @@ interface NavigationProps {
   className?: string;
 }
 
-export default function Navigation({ showBackButton = false, className = "" }: NavigationProps) {
+export default function Navigation({
+  showBackButton = false,
+  className = "",
+}: NavigationProps) {
   const location = useLocation();
 
   const navLinks = [
     { href: "/#features", label: "Imkoniyatlar", isAnchor: true },
     { href: "/templates", label: "Shablonlar", isAnchor: false },
-    { href: "/pricing", label: "Narxlar", isAnchor: false }
+    { href: "/pricing", label: "Narxlar", isAnchor: false },
   ];
 
   const isCurrentPage = (href: string) => {
@@ -22,7 +25,9 @@ export default function Navigation({ showBackButton = false, className = "" }: N
   };
 
   return (
-    <nav className={`bg-card border-b border-border p-4 sticky top-0 z-50 ${className}`}>
+    <nav
+      className={`bg-card border-b border-border p-4 sticky top-0 z-50 ${className}`}
+    >
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-4">
           {showBackButton && (
@@ -37,13 +42,15 @@ export default function Navigation({ showBackButton = false, className = "" }: N
             <div className="w-6 h-6 bg-primary rounded-lg flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
-            <span className="font-heading text-xl font-bold text-foreground">TaklifNoma</span>
+            <span className="font-heading text-xl font-bold text-foreground">
+              TaklifNoma
+            </span>
           </Link>
         </div>
 
         {/* Main Navigation Links */}
         <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
+          {navLinks.map((link) =>
             link.isAnchor ? (
               <a
                 key={link.href}
@@ -64,8 +71,8 @@ export default function Navigation({ showBackButton = false, className = "" }: N
               >
                 {link.label}
               </Link>
-            )
-          ))}
+            ),
+          )}
         </div>
 
         <div className="flex items-center gap-3">

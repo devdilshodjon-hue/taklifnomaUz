@@ -2,20 +2,28 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Eye, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { weddingTemplates, templateCategories, getTemplatesByCategory, type TemplateData } from "@/lib/templates";
+import {
+  weddingTemplates,
+  templateCategories,
+  getTemplatesByCategory,
+  type TemplateData,
+} from "@/lib/templates";
 import TemplateRenderer from "@/components/TemplateRenderer";
 import Navigation from "@/components/Navigation";
 
 export default function Templates() {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [filteredTemplates, setFilteredTemplates] = useState<TemplateData[]>(weddingTemplates);
-  const [previewTemplate, setPreviewTemplate] = useState<TemplateData | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [filteredTemplates, setFilteredTemplates] =
+    useState<TemplateData[]>(weddingTemplates);
+  const [previewTemplate, setPreviewTemplate] = useState<TemplateData | null>(
+    null,
+  );
   const [showPreview, setShowPreview] = useState(false);
 
   // Template kategoriya filter
   const handleCategoryChange = (categoryId: string) => {
     setSelectedCategory(categoryId);
-    if (categoryId === 'all') {
+    if (categoryId === "all") {
       setFilteredTemplates(weddingTemplates);
     } else {
       const filtered = getTemplatesByCategory(categoryId);
@@ -31,16 +39,17 @@ export default function Templates() {
 
   // Mock invitation data for preview
   const getMockInvitationData = (template: TemplateData) => ({
-    id: 'preview',
-    groom_name: 'Jahongir',
-    bride_name: 'Sarvinoz', 
-    wedding_date: '2024-06-15',
-    wedding_time: '16:00',
-    venue: 'Atirgul Bog\'i',
-    address: 'Toshkent sh., Yunusobod t., Bog\' ko\'chasi 123',
-    city: 'Toshkent',
-    custom_message: 'Bizning sevgi va baxt to\'la kunimizni birga nishonlash uchun sizni taklif qilamiz.',
-    template_id: template.id
+    id: "preview",
+    groom_name: "Jahongir",
+    bride_name: "Sarvinoz",
+    wedding_date: "2024-06-15",
+    wedding_time: "16:00",
+    venue: "Atirgul Bog'i",
+    address: "Toshkent sh., Yunusobod t., Bog' ko'chasi 123",
+    city: "Toshkent",
+    custom_message:
+      "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
+    template_id: template.id,
   });
 
   return (
@@ -54,7 +63,8 @@ export default function Templates() {
             Taklifnoma Shablonlari
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-            15+ professional shablon har qanday uslub uchun. Klassik, zamonaviy, hashamatli va rustic dizaynlar orasidan tanlang.
+            15+ professional shablon har qanday uslub uchun. Klassik, zamonaviy,
+            hashamatli va rustic dizaynlar orasidan tanlang.
           </p>
 
           {/* Statistics */}
@@ -63,11 +73,15 @@ export default function Templates() {
               { number: "15+", label: "Professional Shablonlar" },
               { number: "10K+", label: "Yaratilgan Taklifnomalar" },
               { number: "6", label: "Turli Kategoriyalar" },
-              { number: "100%", label: "Mobil Mos" }
+              { number: "100%", label: "Mobil Mos" },
             ].map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-3xl font-bold text-primary mb-1">{stat.number}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div className="text-3xl font-bold text-primary mb-1">
+                  {stat.number}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
@@ -79,7 +93,9 @@ export default function Templates() {
             {templateCategories.map((category) => (
               <Button
                 key={category.id}
-                variant={selectedCategory === category.id ? "default" : "outline"}
+                variant={
+                  selectedCategory === category.id ? "default" : "outline"
+                }
                 onClick={() => handleCategoryChange(category.id)}
                 className="font-medium"
               >
@@ -97,25 +113,36 @@ export default function Templates() {
               className="group card-modern p-6 hover:shadow-lg transition-all duration-300"
             >
               {/* Template Preview */}
-              <div className="aspect-[3/4] mb-4 rounded-lg overflow-hidden border-2 border-border relative"
-                   style={{ backgroundColor: template.colors.background }}>
+              <div
+                className="aspect-[3/4] mb-4 rounded-lg overflow-hidden border-2 border-border relative"
+                style={{ backgroundColor: template.colors.background }}
+              >
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <div className="text-6xl mb-2">{template.preview}</div>
                     <div className="px-4">
-                      <h3 className="text-lg font-bold mb-1" style={{ color: template.colors.primary }}>
+                      <h3
+                        className="text-lg font-bold mb-1"
+                        style={{ color: template.colors.primary }}
+                      >
                         Jahongir & Sarvinoz
                       </h3>
-                      <p className="text-sm opacity-75" style={{ color: template.colors.text }}>
+                      <p
+                        className="text-sm opacity-75"
+                        style={{ color: template.colors.text }}
+                      >
                         15 Iyun 2024
                       </p>
-                      <p className="text-xs mt-2 opacity-60" style={{ color: template.colors.text }}>
+                      <p
+                        className="text-xs mt-2 opacity-60"
+                        style={{ color: template.colors.text }}
+                      >
                         Atirgul Bog'i
                       </p>
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <Button
@@ -139,14 +166,22 @@ export default function Templates() {
 
                 {/* Color Palette */}
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs text-muted-foreground">Ranglar:</span>
+                  <span className="text-xs text-muted-foreground">
+                    Ranglar:
+                  </span>
                   <div className="flex gap-1">
-                    <div className="w-4 h-4 rounded-full border border-border" 
-                         style={{ backgroundColor: template.colors.primary }}></div>
-                    <div className="w-4 h-4 rounded-full border border-border" 
-                         style={{ backgroundColor: template.colors.accent }}></div>
-                    <div className="w-4 h-4 rounded-full border border-border" 
-                         style={{ backgroundColor: template.colors.secondary }}></div>
+                    <div
+                      className="w-4 h-4 rounded-full border border-border"
+                      style={{ backgroundColor: template.colors.primary }}
+                    ></div>
+                    <div
+                      className="w-4 h-4 rounded-full border border-border"
+                      style={{ backgroundColor: template.colors.accent }}
+                    ></div>
+                    <div
+                      className="w-4 h-4 rounded-full border border-border"
+                      style={{ backgroundColor: template.colors.secondary }}
+                    ></div>
                   </div>
                 </div>
 
@@ -161,7 +196,10 @@ export default function Templates() {
                     Ko'rish
                   </Button>
                   <Button asChild className="flex-1">
-                    <Link to="/create" state={{ selectedTemplate: template.id }}>
+                    <Link
+                      to="/create"
+                      state={{ selectedTemplate: template.id }}
+                    >
                       Tanlash
                     </Link>
                   </Button>
@@ -178,7 +216,8 @@ export default function Templates() {
               Barcha Shablonlarda Mavjud Imkoniyatlar
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Har bir shablon professional darajada yaratilgan va barcha zamonaviy imkoniyatlarni o'z ichiga oladi
+              Har bir shablon professional darajada yaratilgan va barcha
+              zamonaviy imkoniyatlarni o'z ichiga oladi
             </p>
           </div>
 
@@ -187,33 +226,37 @@ export default function Templates() {
               {
                 icon: "🎨",
                 title: "Maxsus Rang Palitralari",
-                description: "Har bir shablon o'ziga xos professional rang kombinatsiyasiga ega"
+                description:
+                  "Har bir shablon o'ziga xos professional rang kombinatsiyasiga ega",
               },
               {
                 icon: "📱",
                 title: "Responsiv Dizayn",
-                description: "Barcha qurilmalarda mukammal ko'rinish - telefon, planshet, kompyuter"
+                description:
+                  "Barcha qurilmalarda mukammal ko'rinish - telefon, planshet, kompyuter",
               },
               {
                 icon: "✏️",
                 title: "Oson Tahrirlash",
-                description: "Barcha matn va ma'lumotlarni osongina o'zgartirish mumkin"
+                description:
+                  "Barcha matn va ma'lumotlarni osongina o'zgartirish mumkin",
               },
               {
                 icon: "🔗",
                 title: "QR Kod Integratsiyasi",
-                description: "Har bir taklifnomada avtomatik QR kod yaratiladi"
+                description: "Har bir taklifnomada avtomatik QR kod yaratiladi",
               },
               {
                 icon: "📤",
                 title: "Ijtimoiy Ulashish",
-                description: "WhatsApp, Telegram, Facebook orqali bir bosishda ulashish"
+                description:
+                  "WhatsApp, Telegram, Facebook orqali bir bosishda ulashish",
               },
               {
                 icon: "🎯",
                 title: "RSVP Funksiyasi",
-                description: "Mehmonlar to'g'ridan-to'g'ri javob bera olishadi"
-              }
+                description: "Mehmonlar to'g'ridan-to'g'ri javob bera olishadi",
+              },
             ].map((feature, index) => (
               <div key={index} className="card-modern p-6 text-center">
                 <div className="text-4xl mb-4">{feature.icon}</div>
@@ -243,33 +286,36 @@ export default function Templates() {
                 name: "Klassik",
                 description: "An'anaviy va nafis dizaynlar",
                 count: "5 ta shablon",
-                color: "bg-rose-100 text-rose-800"
+                color: "bg-rose-100 text-rose-800",
               },
               {
                 category: "modern",
                 name: "Zamonaviy",
                 description: "Minimal va zamonaviy uslublar",
                 count: "4 ta shablon",
-                color: "bg-blue-100 text-blue-800"
+                color: "bg-blue-100 text-blue-800",
               },
               {
                 category: "elegant",
                 name: "Nafis",
                 description: "Hashamatli va chiroyli dizaynlar",
                 count: "6 ta shablon",
-                color: "bg-purple-100 text-purple-800"
-              }
+                color: "bg-purple-100 text-purple-800",
+              },
             ].map((cat, index) => (
-              <div key={index} className="card-modern p-8 text-center hover:shadow-lg transition-all duration-300">
-                <div className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-4 ${cat.color}`}>
+              <div
+                key={index}
+                className="card-modern p-8 text-center hover:shadow-lg transition-all duration-300"
+              >
+                <div
+                  className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-4 ${cat.color}`}
+                >
                   {cat.count}
                 </div>
                 <h3 className="font-heading text-xl font-bold text-foreground mb-3">
                   {cat.name}
                 </h3>
-                <p className="text-muted-foreground mb-6">
-                  {cat.description}
-                </p>
+                <p className="text-muted-foreground mb-6">{cat.description}</p>
                 <Button
                   variant="outline"
                   onClick={() => handleCategoryChange(cat.category)}
@@ -292,10 +338,14 @@ export default function Templates() {
               O'zingizning Maxsus Shablonngizni Yarating
             </h2>
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Bizning shablon yaratuvchi vositasi bilan o'zingizning noyob dizayningizni yarating.
-              Ranglarni, shriftlarni va tartibni o'zingiz tanlang.
+              Bizning shablon yaratuvchi vositasi bilan o'zingizning noyob
+              dizayningizni yarating. Ranglarni, shriftlarni va tartibni
+              o'zingiz tanlang.
             </p>
-            <Button asChild className="primary-gradient px-8 py-4 text-lg rounded-xl hover-lift">
+            <Button
+              asChild
+              className="primary-gradient px-8 py-4 text-lg rounded-xl hover-lift"
+            >
               <Link to="/template-builder">
                 <Sparkles className="w-5 h-5 mr-2" />
                 Shablon Yaratish
@@ -310,19 +360,27 @@ export default function Templates() {
             O'zingizning taklifnomangizni yaratishga tayyormisiz?
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Yuqoridagi shablonlardan birini tanlab, bir necha daqiqada chiroyli taklifnoma yarating.
+            Yuqoridagi shablonlardan birini tanlab, bir necha daqiqada chiroyli
+            taklifnoma yarating.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild className="primary-gradient px-8 py-4 text-lg rounded-xl">
+            <Button
+              size="lg"
+              asChild
+              className="primary-gradient px-8 py-4 text-lg rounded-xl"
+            >
               <Link to="/create">
                 Hoziroq Boshlash
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="px-8 py-4 text-lg rounded-xl">
-              <Link to="/pricing">
-                Narxlarni Ko'rish
-              </Link>
+            <Button
+              size="lg"
+              variant="outline"
+              asChild
+              className="px-8 py-4 text-lg rounded-xl"
+            >
+              <Link to="/pricing">Narxlarni Ko'rish</Link>
             </Button>
           </div>
         </div>
@@ -345,7 +403,10 @@ export default function Templates() {
                   </div>
                   <div className="flex gap-2">
                     <Button asChild>
-                      <Link to="/create" state={{ selectedTemplate: previewTemplate.id }}>
+                      <Link
+                        to="/create"
+                        state={{ selectedTemplate: previewTemplate.id }}
+                      >
                         Bu Shablonni Tanlash
                       </Link>
                     </Button>
@@ -358,9 +419,9 @@ export default function Templates() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="p-6">
-                <TemplateRenderer 
+                <TemplateRenderer
                   invitation={getMockInvitationData(previewTemplate)}
                   guestName="Hurmatli Mehmon"
                 />

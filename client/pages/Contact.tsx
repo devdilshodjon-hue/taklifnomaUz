@@ -15,7 +15,8 @@ export default function Contact() {
             Biz Bilan Bog'laning
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Savollaringiz bormi? Yordam kerakmi? Biz sizga yordam berishga doimo tayyormiz!
+            Savollaringiz bormi? Yordam kerakmi? Biz sizga yordam berishga doimo
+            tayyormiz!
           </p>
         </div>
 
@@ -56,7 +57,7 @@ export default function Contact() {
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Xabar matni
                 </label>
-                <Textarea 
+                <Textarea
                   placeholder="Xabaringizni batafsil yozing..."
                   className="min-h-32"
                 />
@@ -79,8 +80,12 @@ export default function Contact() {
                     <Mail className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground mb-1">Email</h3>
-                    <p className="text-muted-foreground">support@taklifnoma.uz</p>
+                    <h3 className="font-semibold text-foreground mb-1">
+                      Email
+                    </h3>
+                    <p className="text-muted-foreground">
+                      support@taklifnoma.uz
+                    </p>
                     <p className="text-muted-foreground">info@taklifnoma.uz</p>
                   </div>
                 </div>
@@ -90,7 +95,9 @@ export default function Contact() {
                     <Phone className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground mb-1">Telefon</h3>
+                    <h3 className="font-semibold text-foreground mb-1">
+                      Telefon
+                    </h3>
                     <p className="text-muted-foreground">+998 90 123 45 67</p>
                     <p className="text-muted-foreground">+998 91 234 56 78</p>
                   </div>
@@ -101,7 +108,9 @@ export default function Contact() {
                     <MessageCircle className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground mb-1">Telegram</h3>
+                    <h3 className="font-semibold text-foreground mb-1">
+                      Telegram
+                    </h3>
                     <p className="text-muted-foreground">@taklifnoma_support</p>
                     <p className="text-muted-foreground">@taklifnoma_uz</p>
                   </div>
@@ -112,9 +121,12 @@ export default function Contact() {
                     <MapPin className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground mb-1">Manzil</h3>
+                    <h3 className="font-semibold text-foreground mb-1">
+                      Manzil
+                    </h3>
                     <p className="text-muted-foreground">
-                      Toshkent sh., Yunusobod tumani<br />
+                      Toshkent sh., Yunusobod tumani
+                      <br />
                       IT Park, 2-qavat, 205-xona
                     </p>
                   </div>
@@ -125,10 +137,14 @@ export default function Contact() {
                     <Clock className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground mb-1">Ish vaqti</h3>
+                    <h3 className="font-semibold text-foreground mb-1">
+                      Ish vaqti
+                    </h3>
                     <p className="text-muted-foreground">
-                      Dushanba - Juma: 9:00 - 18:00<br />
-                      Shanba: 10:00 - 15:00<br />
+                      Dushanba - Juma: 9:00 - 18:00
+                      <br />
+                      Shanba: 10:00 - 15:00
+                      <br />
                       Yakshanba: Dam olish kuni
                     </p>
                   </div>
@@ -143,7 +159,8 @@ export default function Contact() {
               </h3>
               <div className="space-y-3">
                 <p className="text-sm text-muted-foreground">
-                  Ko'plab savollar allaqachon javoblanган. Avval FAQ bo'limini tekshiring:
+                  Ko'plab savollar allaqachon javoblanган. Avval FAQ bo'limini
+                  tekshiring:
                 </p>
                 <Button variant="outline" className="w-full" asChild>
                   <a href="/pricing#faq">FAQ Bo'limiga O'tish</a>
@@ -157,10 +174,15 @@ export default function Contact() {
                 Tezkor Yordam
               </h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Darhol yordam kerakmi? Bizning Telegram botimiz orqali 24/7 yordam oling.
+                Darhol yordam kerakmi? Bizning Telegram botimiz orqali 24/7
+                yordam oling.
               </p>
               <Button className="w-full primary-gradient" asChild>
-                <a href="https://t.me/taklifnoma_bot" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://t.me/taklifnoma_bot"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Telegram Botni Ochish
                 </a>
               </Button>

@@ -21,7 +21,8 @@ export default function Terms() {
               1. Umumiy Qoidalar
             </h2>
             <p className="text-muted-foreground mb-4">
-              TaklifNoma xizmatidan foydalangan holda, siz ushbu shartlarni to'liq qabul qilasiz.
+              TaklifNoma xizmatidan foydalangan holda, siz ushbu shartlarni
+              to'liq qabul qilasiz.
             </p>
             <ul className="list-disc list-inside text-muted-foreground space-y-2">
               <li>Xizmat 18 yoshdan katta foydalanuvchilar uchun</li>
@@ -51,9 +52,7 @@ export default function Terms() {
             <h2 className="font-heading text-2xl font-bold text-foreground mb-4">
               3. To'lov va Rad Etish
             </h2>
-            <p className="text-muted-foreground mb-4">
-              To'lov shartlari:
-            </p>
+            <p className="text-muted-foreground mb-4">To'lov shartlari:</p>
             <ul className="list-disc list-inside text-muted-foreground space-y-2">
               <li>Premium xizmatlar uchun oylik/yillik to'lov</li>
               <li>Avtomatik yangilanish</li>
@@ -97,8 +96,9 @@ export default function Terms() {
               6. Shartlarni O'zgartirish
             </h2>
             <p className="text-muted-foreground">
-              Biz ushbu shartlarni oldindan ogohlantirish bilan o'zgartirish huquqini saqlab qolamiz. 
-              Davom etgan foydalanish yangi shartlarni qabul qilganingizni bildiradi.
+              Biz ushbu shartlarni oldindan ogohlantirish bilan o'zgartirish
+              huquqini saqlab qolamiz. Davom etgan foydalanish yangi shartlarni
+              qabul qilganingizni bildiradi.
             </p>
           </div>
         </div>

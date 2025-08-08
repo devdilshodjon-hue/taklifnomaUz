@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -61,7 +61,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -70,7 +71,8 @@
 }
 
 @keyframes shake {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0);
   }
   25% {
@@ -82,7 +84,8 @@
 }
 
 @keyframes glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 5px rgba(99, 102, 241, 0.3);
   }
   50% {
@@ -91,7 +94,8 @@
 }
 
 @keyframes bounce-soft {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -311,39 +315,52 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Poppins', sans-serif;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Poppins", sans-serif;
     @apply font-semibold;
   }
 }
 
 @layer components {
   .modern-gradient {
-    background: linear-gradient(135deg,
+    background: linear-gradient(
+      135deg,
       hsl(var(--background)) 0%,
-      hsl(var(--theme-gray-light)) 100%);
+      hsl(var(--theme-gray-light)) 100%
+    );
   }
 
   .hero-gradient {
-    background: linear-gradient(135deg,
+    background: linear-gradient(
+      135deg,
       hsl(var(--background)) 0%,
       hsl(var(--theme-primary) / 0.05) 50%,
-      hsl(var(--background)) 100%);
+      hsl(var(--background)) 100%
+    );
   }
 
   .primary-gradient {
-    background: linear-gradient(135deg,
+    background: linear-gradient(
+      135deg,
       hsl(var(--theme-primary)) 0%,
-      hsl(var(--theme-primary-dark)) 100%);
+      hsl(var(--theme-primary-dark)) 100%
+    );
   }
 
   .text-gradient {
-    background: linear-gradient(135deg,
+    background: linear-gradient(
+      135deg,
       hsl(var(--theme-primary)) 0%,
-      hsl(var(--theme-primary-light)) 100%);
+      hsl(var(--theme-primary-light)) 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

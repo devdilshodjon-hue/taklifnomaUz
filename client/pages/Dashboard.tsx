@@ -2,7 +2,20 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
-import { PlusCircle, Eye, Edit, Trash2, Users, Calendar, Share2, MoreVertical, LogOut, User, Settings, Loader2 } from "lucide-react";
+import {
+  PlusCircle,
+  Eye,
+  Edit,
+  Trash2,
+  Users,
+  Calendar,
+  Share2,
+  MoreVertical,
+  LogOut,
+  User,
+  Settings,
+  Loader2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -50,10 +63,10 @@ export default function Dashboard() {
 
     try {
       const { data, error } = await supabase
-        .from('invitations')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+        .from("invitations")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
 
@@ -64,25 +77,25 @@ export default function Dashboard() {
       for (const invitation of data || []) {
         // Get RSVP count
         const { count: rsvpCount } = await supabase
-          .from('rsvps')
-          .select('*', { count: 'exact', head: true })
-          .eq('invitation_id', invitation.id);
+          .from("rsvps")
+          .select("*", { count: "exact", head: true })
+          .eq("invitation_id", invitation.id);
 
-        // Get guests count  
+        // Get guests count
         const { count: guestCount } = await supabase
-          .from('guests')
-          .select('*', { count: 'exact', head: true })
-          .eq('invitation_id', invitation.id);
+          .from("guests")
+          .select("*", { count: "exact", head: true })
+          .eq("invitation_id", invitation.id);
 
         statsData[invitation.id] = {
           views: Math.floor(Math.random() * 100), // For demo - would need view tracking
           rsvps: rsvpCount || 0,
-          guests: guestCount || 0
+          guests: guestCount || 0,
         };
       }
       setStats(statsData);
     } catch (error) {
-      console.error('Error loading invitations:', error);
+      console.error("Error loading invitations:", error);
     } finally {
       setLoading(false);
     }
@@ -94,9 +107,13 @@ export default function Dashboard() {
 
   const getStatusBadge = (isActive: boolean) => {
     return isActive ? (
-      <Badge className="bg-green-100 text-green-800 animate-scale-in">Faol</Badge>
+      <Badge className="bg-green-100 text-green-800 animate-scale-in">
+        Faol
+      </Badge>
     ) : (
-      <Badge variant="secondary" className="animate-scale-in">Noaktiv</Badge>
+      <Badge variant="secondary" className="animate-scale-in">
+        Noaktiv
+      </Badge>
     );
   };
 
@@ -106,10 +123,10 @@ export default function Dashboard() {
       return {
         views: acc.views + invStats.views,
         rsvps: acc.rsvps + invStats.rsvps,
-        guests: acc.guests + invStats.guests
+        guests: acc.guests + invStats.guests,
       };
     },
-    { views: 0, rsvps: 0, guests: 0 }
+    { views: 0, rsvps: 0, guests: 0 },
   );
 
   return (
@@ -123,7 +140,9 @@ export default function Dashboard() {
                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                   <Calendar className="w-5 h-5 text-white" />
                 </div>
-                <span className="font-heading text-xl font-bold text-foreground">TaklifNoma</span>
+                <span className="font-heading text-xl font-bold text-foreground">
+                  TaklifNoma
+                </span>
               </Link>
 
               <div className="flex items-center gap-4">
@@ -136,9 +155,15 @@ export default function Dashboard() {
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-10 w-10 rounded-full hover-scale">
+                    <Button
+                      variant="ghost"
+                      className="relative h-10 w-10 rounded-full hover-scale"
+                    >
                       <Avatar className="h-10 w-10">
-                        <AvatarImage src={profile?.avatar_url || ""} alt={profile?.first_name || ""} />
+                        <AvatarImage
+                          src={profile?.avatar_url || ""}
+                          alt={profile?.first_name || ""}
+                        />
                         <AvatarFallback className="bg-primary text-white">
                           {profile?.first_name?.[0] || user?.email?.[0] || "U"}
                         </AvatarFallback>
@@ -182,7 +207,8 @@ export default function Dashboard() {
               Salom, {profile?.first_name || "Foydalanuvchi"}! 👋
             </h1>
             <p className="text-lg text-muted-foreground">
-              Taklifnomalaringizni boshqaring va mehmonlar statistikasini kuzatib boring
+              Taklifnomalaringizni boshqaring va mehmonlar statistikasini
+              kuzatib boring
             </p>
           </div>
 
@@ -190,7 +216,9 @@ export default function Dashboard() {
             <div className="flex items-center justify-center py-12">
               <div className="flex items-center gap-2 animate-fade-in">
                 <Loader2 className="w-6 h-6 animate-spin text-primary" />
-                <span className="text-muted-foreground">Taklifnomalar yuklanmoqda...</span>
+                <span className="text-muted-foreground">
+                  Taklifnomalar yuklanmoqda...
+                </span>
               </div>
             </div>
           ) : (
@@ -200,7 +228,9 @@ export default function Dashboard() {
                 <div className="card-modern p-6 hover-lift animate-slide-up">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-muted-foreground">Jami Taklifnomalar</p>
+                      <p className="text-sm text-muted-foreground">
+                        Jami Taklifnomalar
+                      </p>
                       <p className="text-3xl font-bold text-foreground animate-scale-in">
                         {invitations.length}
                       </p>
@@ -210,11 +240,13 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="card-modern p-6 hover-lift animate-slide-up delay-100">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-muted-foreground">Jami Ko'rishlar</p>
+                      <p className="text-sm text-muted-foreground">
+                        Jami Ko'rishlar
+                      </p>
                       <p className="text-3xl font-bold text-foreground animate-scale-in">
                         {totalStats.views}
                       </p>
@@ -224,7 +256,7 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="card-modern p-6 hover-lift animate-slide-up delay-200">
                   <div className="flex items-center justify-between">
                     <div>
@@ -247,7 +279,11 @@ export default function Dashboard() {
                     Sizning Taklifnomalaringiz
                   </h2>
                   {invitations.map((invitation, index) => {
-                    const invStats = stats[invitation.id] || { views: 0, rsvps: 0, guests: 0 };
+                    const invStats = stats[invitation.id] || {
+                      views: 0,
+                      rsvps: 0,
+                      guests: 0,
+                    };
                     return (
                       <div
                         key={invitation.id}
@@ -258,41 +294,68 @@ export default function Dashboard() {
                           <div className="flex-1">
                             <div className="flex items-center gap-4 mb-3">
                               <h3 className="font-heading text-xl font-semibold text-foreground">
-                                {invitation.groom_name} & {invitation.bride_name}
+                                {invitation.groom_name} &{" "}
+                                {invitation.bride_name}
                               </h3>
                               {getStatusBadge(invitation.is_active)}
                             </div>
                             <div className="grid md:grid-cols-4 gap-4 text-sm text-muted-foreground">
                               <div>
-                                <p className="font-medium text-foreground">Sana:</p>
-                                <p>{new Date(invitation.wedding_date).toLocaleDateString('uz-UZ')}</p>
+                                <p className="font-medium text-foreground">
+                                  Sana:
+                                </p>
+                                <p>
+                                  {new Date(
+                                    invitation.wedding_date,
+                                  ).toLocaleDateString("uz-UZ")}
+                                </p>
                               </div>
                               <div>
-                                <p className="font-medium text-foreground">Joy:</p>
+                                <p className="font-medium text-foreground">
+                                  Joy:
+                                </p>
                                 <p>{invitation.venue}</p>
                               </div>
                               <div>
-                                <p className="font-medium text-foreground">Shablon:</p>
-                                <p className="capitalize">{invitation.template_id}</p>
+                                <p className="font-medium text-foreground">
+                                  Shablon:
+                                </p>
+                                <p className="capitalize">
+                                  {invitation.template_id}
+                                </p>
                               </div>
                               <div>
-                                <p className="font-medium text-foreground">Statistika:</p>
-                                <p>{invStats.views} ko'rish, {invStats.rsvps} RSVP</p>
+                                <p className="font-medium text-foreground">
+                                  Statistika:
+                                </p>
+                                <p>
+                                  {invStats.views} ko'rish, {invStats.rsvps}{" "}
+                                  RSVP
+                                </p>
                               </div>
                             </div>
                           </div>
-                          
+
                           <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm" asChild className="hover-scale">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              asChild
+                              className="hover-scale"
+                            >
                               <Link to={`/invitation/${invitation.id}`}>
                                 <Eye className="w-4 h-4 mr-1" />
                                 Ko'rish
                               </Link>
                             </Button>
-                            
+
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm" className="hover-scale">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="hover-scale"
+                                >
                                   <MoreVertical className="w-4 h-4" />
                                 </Button>
                               </DropdownMenuTrigger>
@@ -327,10 +390,14 @@ export default function Dashboard() {
                     Hali taklifnomalar yo'q
                   </h3>
                   <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-                    Birinchi taklifnomangizni yaratib, mehmonlarni taklif qilishni boshlang. 
-                    Bu juda oson va faqat bir necha daqiqa vaqt oladi!
+                    Birinchi taklifnomangizni yaratib, mehmonlarni taklif
+                    qilishni boshlang. Bu juda oson va faqat bir necha daqiqa
+                    vaqt oladi!
                   </p>
-                  <Button asChild className="button-modern hover-lift primary-gradient">
+                  <Button
+                    asChild
+                    className="button-modern hover-lift primary-gradient"
+                  >
                     <Link to="/create">
                       <PlusCircle className="w-5 h-5 mr-2" />
                       Birinchi Taklifnomani Yaratish

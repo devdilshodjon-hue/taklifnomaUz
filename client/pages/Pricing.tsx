@@ -250,7 +250,7 @@ export default function Pricing() {
 
         {/* Pricing Plans */}
         <div className="grid md:grid-cols-3 gap-8 mb-20">
-          {plans.map((plan) => {
+          {plans.map((plan, index) => {
             const Icon = plan.icon;
             const price = isYearly ? plan.price.yearly : plan.price.monthly;
             const originalPrice = isYearly ? plan.price.monthly * 12 : null;
@@ -258,9 +258,10 @@ export default function Pricing() {
             return (
               <div
                 key={plan.id}
-                className={`relative card-modern p-8 ${
-                  plan.popular ? "ring-2 ring-primary shadow-xl scale-105" : ""
+                className={`relative card-modern p-8 hover-lift transition-all duration-300 animate-slide-up ${
+                  plan.popular ? "ring-2 ring-primary shadow-xl scale-105 hover:scale-110" : "hover:scale-105"
                 }`}
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
@@ -272,7 +273,7 @@ export default function Pricing() {
 
                 <div className="text-center mb-6">
                   <div
-                    className={`w-12 h-12 ${plan.color} rounded-xl flex items-center justify-center mb-4 mx-auto`}
+                    className={`w-12 h-12 ${plan.color} rounded-xl flex items-center justify-center mb-4 mx-auto hover-scale transition-transform`}
                   >
                     <Icon className="w-6 h-6 text-white" />
                   </div>
@@ -337,7 +338,9 @@ export default function Pricing() {
                 )}
 
                 <Button
-                  className={`w-full ${plan.popular ? "primary-gradient" : ""}`}
+                  className={`w-full hover-lift transition-all ${
+                    plan.popular ? "primary-gradient animate-glow" : "hover:border-primary hover:text-primary"
+                  }`}
                   variant={plan.popular ? "default" : "outline"}
                   asChild
                 >

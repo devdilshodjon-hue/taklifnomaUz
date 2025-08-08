@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Heart, Mail, Lock, Eye, EyeOff, User, Check } from "lucide-react";
+import { Sparkles, Mail, Lock, Eye, EyeOff, User, Check, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,45 +44,56 @@ export default function Register() {
 
     setIsLoading(true);
     
-    // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
-      // Redirect to dashboard after "successful" registration
       navigate("/dashboard");
     }, 2000);
   };
 
   const handleGoogleSignUp = () => {
-    // Simulate Google OAuth
     setTimeout(() => {
       navigate("/dashboard");
     }, 1000);
   };
 
   return (
-    <div className="min-h-screen wedding-gradient flex items-center justify-center px-6 py-12">
-      <div className="max-w-md w-full">
+    <div className="min-h-screen bg-background flex items-center justify-center px-6 py-12">
+      <div className="w-full max-w-md">
+        {/* Back to home */}
+        <div className="mb-8">
+          <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-foreground">
+            <Link to="/">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to home
+            </Link>
+          </Button>
+        </div>
+
+        {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6 hover:scale-105 transition-transform">
-            <Heart className="w-6 h-6 text-wedding-rose" />
-            <span className="font-script text-2xl text-wedding-rose">ForeverTogether</span>
+            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+              <Sparkles className="w-6 h-6 text-white" />
+            </div>
+            <span className="font-heading text-2xl font-bold text-foreground">InviteNow</span>
           </Link>
-          <h1 className="font-serif text-3xl text-foreground mb-2">Create Your Account</h1>
-          <p className="text-foreground/70">Start creating beautiful wedding invitations</p>
+          <h1 className="font-heading text-3xl font-bold text-foreground mb-2">Create your account</h1>
+          <p className="text-muted-foreground">Start creating beautiful invitations today</p>
         </div>
         
-        <div className="bg-card p-8 rounded-2xl shadow-lg border border-wedding-blush/20 backdrop-blur-sm">
+        {/* Form */}
+        <div className="card-modern p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firstName" className="text-foreground/80">First Name</Label>
+                <Label htmlFor="firstName" className="text-foreground font-medium">First Name</Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-foreground/40" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input
                     id="firstName"
                     type="text"
                     placeholder="John"
-                    className="pl-10 h-12 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                    className="input-modern pl-11 h-12"
                     value={formData.firstName}
                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                     required
@@ -92,12 +103,12 @@ export default function Register() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="lastName" className="text-foreground/80">Last Name</Label>
+                <Label htmlFor="lastName" className="text-foreground font-medium">Last Name</Label>
                 <Input
                   id="lastName"
                   type="text"
                   placeholder="Doe"
-                  className="h-12 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                  className="input-modern h-12"
                   value={formData.lastName}
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                   required
@@ -107,14 +118,14 @@ export default function Register() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-foreground/80">Email Address</Label>
+              <Label htmlFor="email" className="text-foreground font-medium">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-foreground/40" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
                   placeholder="john@example.com"
-                  className="pl-10 h-12 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                  className="input-modern pl-11 h-12"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
@@ -124,14 +135,14 @@ export default function Register() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-foreground/80">Password</Label>
+              <Label htmlFor="password" className="text-foreground font-medium">Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-foreground/40" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a strong password"
-                  className="pl-10 pr-10 h-12 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                  className="input-modern pl-11 pr-11 h-12"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   required
@@ -139,23 +150,23 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-foreground/40 hover:text-foreground/60"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
               {errors.password && <p className="text-destructive text-sm">{errors.password}</p>}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-foreground/80">Confirm Password</Label>
+              <Label htmlFor="confirmPassword" className="text-foreground font-medium">Confirm Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-foreground/40" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
                   id="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm your password"
-                  className="pl-10 pr-10 h-12 border-wedding-blush/30 focus:border-wedding-rose focus:ring-wedding-rose/20"
+                  className="input-modern pl-11 pr-11 h-12"
                   value={formData.confirmPassword}
                   onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                   required
@@ -163,16 +174,16 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-foreground/40 hover:text-foreground/60"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
               {errors.confirmPassword && <p className="text-destructive text-sm">{errors.confirmPassword}</p>}
             </div>
 
             <div className="space-y-2">
-              <label className="flex items-start gap-3 text-sm text-foreground/70 cursor-pointer">
+              <label className="flex items-start gap-3 text-sm text-muted-foreground cursor-pointer">
                 <div className="relative flex-shrink-0 mt-0.5">
                   <input 
                     type="checkbox" 
@@ -180,15 +191,15 @@ export default function Register() {
                     checked={formData.agreeToTerms}
                     onChange={(e) => setFormData({ ...formData, agreeToTerms: e.target.checked })}
                   />
-                  <div className="w-5 h-5 border-2 border-wedding-blush/50 rounded peer-checked:bg-wedding-rose peer-checked:border-wedding-rose transition-colors flex items-center justify-center">
+                  <div className="w-5 h-5 border-2 border-border rounded peer-checked:bg-primary peer-checked:border-primary transition-colors flex items-center justify-center">
                     {formData.agreeToTerms && <Check className="w-3 h-3 text-white" />}
                   </div>
                 </div>
                 <span>
                   I agree to the{" "}
-                  <Link to="/terms" className="text-wedding-rose hover:underline">Terms of Service</Link>
+                  <Link to="/terms" className="text-primary hover:underline font-medium">Terms of Service</Link>
                   {" "}and{" "}
-                  <Link to="/privacy" className="text-wedding-rose hover:underline">Privacy Policy</Link>
+                  <Link to="/privacy" className="text-primary hover:underline font-medium">Privacy Policy</Link>
                 </span>
               </label>
               {errors.agreeToTerms && <p className="text-destructive text-sm">{errors.agreeToTerms}</p>}
@@ -196,7 +207,7 @@ export default function Register() {
 
             <Button 
               type="submit" 
-              className="w-full bg-wedding-rose hover:bg-wedding-rose/90 text-white h-12 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+              className="w-full button-modern h-12"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -213,17 +224,17 @@ export default function Register() {
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-wedding-blush/30" />
+                <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-card px-4 text-foreground/60">Or sign up with</span>
+                <span className="bg-card px-4 text-muted-foreground">Or sign up with</span>
               </div>
             </div>
 
             <Button
               type="button"
               variant="outline"
-              className="w-full mt-4 h-12 border-wedding-blush/30 hover:bg-wedding-blush/10 rounded-xl"
+              className="w-full mt-4 h-12 border-border hover:bg-theme-gray-light/50"
               onClick={handleGoogleSignUp}
             >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
@@ -232,14 +243,14 @@ export default function Register() {
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Sign up with Google
+              Continue with Google
             </Button>
           </div>
         </div>
 
-        <p className="text-center mt-6 text-foreground/60">
+        <p className="text-center mt-6 text-muted-foreground">
           Already have an account?{" "}
-          <Link to="/login" className="text-wedding-rose hover:text-wedding-rose/80 hover:underline font-medium">
+          <Link to="/login" className="text-primary hover:text-primary/80 hover:underline font-medium">
             Sign in here
           </Link>
         </p>

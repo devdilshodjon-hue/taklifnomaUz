@@ -16,14 +16,32 @@ export default function DatabaseSetupGuide({
 
   if (!isVisible) return null;
 
-  const sqlScript = `-- TaklifNoma database schema
+  const sqlScript = `-- TaklifNoma Complete Database Schema
+-- =====================================
+-- Yuklab oling: database-setup-complete.sql
+-- Supabase SQL Editor da ishga tushiring
+
+-- Enable necessary extensions
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pg_stat_statements";
+
+-- CORE TABLES
+-- =====================================
+
+-- User Profiles (extends Supabase auth.users)
 CREATE TABLE IF NOT EXISTS public.profiles (
-    id UUID REFERENCES auth.users(id) PRIMARY KEY,
+    id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     first_name TEXT,
     last_name TEXT,
     email TEXT,
-    avatar_url TEXT
+    avatar_url TEXT,
+    phone TEXT,
+    company_name TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
+    settings JSONB DEFAULT '{}'::jsonb,
+    metadata JSONB DEFAULT '{}'::jsonb
 );
 
 CREATE TABLE IF NOT EXISTS public.invitations (

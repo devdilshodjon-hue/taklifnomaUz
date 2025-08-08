@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import CreateInvitation from "./pages/CreateInvitation";
 import InvitationView from "./pages/InvitationView";
 import Templates from "./pages/Templates";
+import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/create" element={<CreateInvitation />} />
           <Route path="/templates" element={<Templates />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="/invitation/:id" element={<InvitationView />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

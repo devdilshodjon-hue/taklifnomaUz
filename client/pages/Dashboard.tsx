@@ -65,6 +65,7 @@ export default function Dashboard() {
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [stats, setStats] = useState<Record<string, InvitationStats>>({});
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -97,6 +98,7 @@ export default function Dashboard() {
       if (testError) {
         console.error("Database connection test failed:", testError);
         clearTimeout(timeoutId);
+        setError("Ma'lumotlar bazasiga ulanishda xatolik. Iltimos, internetni tekshiring.");
         setLoading(false);
         return;
       }
@@ -113,6 +115,7 @@ export default function Dashboard() {
 
       if (error) {
         console.error("Error loading invitations:", error);
+        setError("Taklifnomalarni yuklanishda xatolik. Iltimos, qayta urinib ko'ring.");
         setInvitations([]);
         setLoading(false);
         return;
@@ -166,6 +169,7 @@ export default function Dashboard() {
       console.log("Stats loaded successfully");
     } catch (error) {
       console.error("Error in loadInvitations:", error);
+      setError("Kutilmagan xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
       setInvitations([]);
       setStats({});
     } finally {
@@ -295,6 +299,21 @@ export default function Dashboard() {
                 <span className="text-muted-foreground">
                   Taklifnomalar yuklanmoqda...
                 </span>
+              </div>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+                <p className="text-red-800 mb-4">{error}</p>
+                <Button
+                  onClick={() => {
+                    setError(null);
+                    loadInvitations();
+                  }}
+                  className="button-modern"
+                >
+                  Qayta urinish
+                </Button>
               </div>
             </div>
           ) : (

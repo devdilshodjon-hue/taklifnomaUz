@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface NavigationProps {
   showBackButton?: boolean;

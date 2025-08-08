@@ -99,6 +99,19 @@ export default function InvitationView() {
           setShowDatabaseSetup(true);
         }
 
+        // Supabase xatoligi bo'lsa, localStorage dan olishga harakat qilamiz
+        const storedData = localStorage.getItem(`invitation_${invitationId}`);
+        if (storedData) {
+          try {
+            const parsedData = JSON.parse(storedData);
+            console.log('Supabase ishlamadi, localStorage dan ma\'lumot olindi:', parsedData);
+            setInvitation(parsedData);
+            return;
+          } catch (error) {
+            console.error('localStorage ma\'lumotlarini parse qilishda xatolik:', error);
+          }
+        }
+
         // Fallback: demo ma'lumotlar
         console.log('Demo ma\'lumotlarga o\'tkazilmoqda...');
         setInvitation({
@@ -114,6 +127,8 @@ export default function InvitationView() {
           template_id: "classic",
         });
       } else {
+        // Supabase muvaffaqiyatli bo'lsa, localStorage ga backup yaratamiz
+        localStorage.setItem(`invitation_${invitationId}`, JSON.stringify(data));
         setInvitation(data);
       }
     } catch (error) {

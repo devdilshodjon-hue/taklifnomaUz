@@ -677,6 +677,52 @@ export default function CreateInvitation() {
           </div>
         </div>
       </div>
+
+      {/* Template Preview Modal */}
+      {showPreview && previewTemplate && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+          <div className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-card rounded-2xl shadow-2xl border border-border">
+              <div className="p-6 border-b border-border">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-heading text-xl font-bold text-foreground">
+                      {previewTemplate.name}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {previewTemplate.description}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setFormData({ ...formData, selectedTemplate: previewTemplate.id });
+                        setShowPreview(false);
+                      }}
+                    >
+                      Bu Shablonni Tanlash
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={() => setShowPreview(false)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6">
+                <TemplateRenderer
+                  invitation={getMockInvitationData()}
+                  guestName="Hurmatli Mehmon"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

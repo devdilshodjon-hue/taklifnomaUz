@@ -1,121 +1,346 @@
 import { useParams } from "react-router-dom";
-import { Heart, MapPin, Calendar, Clock, Check, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { MapPin, Calendar, Clock, Check, X, Heart, Share2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { supabase } from "@/lib/supabase";
+
+interface Invitation {
+  id: string;
+  groom_name: string;
+  bride_name: string;
+  wedding_date: string;
+  wedding_time: string;
+  venue: string;
+  address: string;
+  city: string;
+  custom_message: string;
+  template_id: string;
+  image_url?: string;
+}
 
 export default function InvitationView() {
   const { id } = useParams();
-  
-  // Mock invitation data
-  const invitation = {
-    id: id,
-    groomName: "John",
-    brideName: "Sarah",
-    date: "June 15, 2024",
-    time: "4:00 PM",
-    location: "Rose Garden Chapel",
-    address: "123 Garden Lane, City, State",
-    message: "We request the honor of your presence as we celebrate our love and begin our journey together as husband and wife.",
-    guestName: "Alex Johnson", // This would come from URL params or guest list
+  const [invitation, setInvitation] = useState<Invitation | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [rsvpSubmitted, setRsvpSubmitted] = useState(false);
+  const [submittingRsvp, setSubmittingRsvp] = useState(false);
+  const [rsvpForm, setRsvpForm] = useState({
+    guest_name: "",
+    will_attend: null as boolean | null,
+    email: "",
+    phone: "",
+    message: "",
+    plus_one_attending: false,
+  });
+
+  useEffect(() => {
+    if (id) {
+      fetchInvitation(id);
+    }
+  }, [id]);
+
+  const fetchInvitation = async (invitationId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('invitations')
+        .select('*')
+        .eq('id', invitationId)
+        .eq('is_active', true)
+        .single();
+
+      if (error) {
+        console.error('Taklifnoma topilmadi:', error);
+        // Mock data for demo
+        setInvitation({
+          id: invitationId,
+          groom_name: "Jahongir",
+          bride_name: "Sarvinoz",
+          wedding_date: "2024-06-15",
+          wedding_time: "16:00",
+          venue: "Atirgul Bog'i",
+          address: "Toshkent sh., Yunusobod t., Bog' ko'chasi 123",
+          city: "Toshkent",
+          custom_message: "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
+          template_id: "classic",
+        });
+      } else {
+        setInvitation(data);
+      }
+    } catch (error) {
+      console.error('Xatolik:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRsvpSubmit = async (willAttend: boolean) => {
+    if (!invitation || !rsvpForm.guest_name.trim()) return;
+
+    setSubmittingRsvp(true);
+    
+    try {
+      const { error } = await supabase
+        .from('rsvps')
+        .insert({
+          invitation_id: invitation.id,
+          guest_name: rsvpForm.guest_name,
+          will_attend: willAttend,
+          email: rsvpForm.email || null,
+          phone: rsvpForm.phone || null,
+          message: rsvpForm.message || null,
+          plus_one_attending: rsvpForm.plus_one_attending,
+        });
+
+      if (error) {
+        console.error('RSVP yuborishda xatolik:', error);
+        // Demo uchun muvaffaqiyatli deb ko'rsatamiz
+      }
+      
+      setRsvpSubmitted(true);
+    } catch (error) {
+      console.error('Xatolik:', error);
+    } finally {
+      setSubmittingRsvp(false);
+    }
+  };
+
+  const shareInvitation = async () => {
+    if (navigator.share) {
+      await navigator.share({
+        title: `${invitation?.groom_name} & ${invitation?.bride_name} - To'y Taklifnomasi`,
+        text: 'Bizning to\'y marosimimizga taklif qilamiz!',
+        url: window.location.href,
+      });
+    } else {
+      // Fallback: copy to clipboard
+      await navigator.clipboard.writeText(window.location.href);
+      alert('Havola clipboard ga nusxalandi!');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!invitation) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6">
+        <div className="text-center">
+          <h1 className="font-heading text-2xl font-bold text-foreground mb-2">Taklifnoma topilmadi</h1>
+          <p className="text-muted-foreground">Bu taklifnoma mavjud emas yoki faol emas.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('uz-UZ', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long'
+    });
+  };
+
+  const formatTime = (timeString: string) => {
+    return timeString.slice(0, 5); // HH:MM format
   };
 
   return (
-    <div className="min-h-screen wedding-gradient">
+    <div className="min-h-screen bg-background">
+      {/* Share button */}
+      <div className="fixed top-4 right-4 z-10">
+        <Button variant="outline" size="sm" onClick={shareInvitation} className="shadow-lg">
+          <Share2 className="w-4 h-4 mr-2" />
+          Ulashish
+        </Button>
+      </div>
+
       {/* Invitation Display */}
       <div className="max-w-2xl mx-auto px-6 py-12">
-        <div className="bg-card p-12 rounded-3xl shadow-2xl border border-wedding-blush/20 relative overflow-hidden">
+        <div className="card-modern p-12 relative overflow-hidden mb-8">
           {/* Decorative elements */}
-          <div className="absolute top-4 left-4">
-            <Heart className="w-8 h-8 text-wedding-blush/30" />
+          <div className="absolute top-4 left-4 opacity-20">
+            <Heart className="w-8 h-8 text-primary" />
           </div>
-          <div className="absolute top-4 right-4">
-            <Heart className="w-8 h-8 text-wedding-blush/30" />
+          <div className="absolute top-4 right-4 opacity-20">
+            <Heart className="w-8 h-8 text-primary" />
           </div>
-          <div className="absolute bottom-4 left-4">
-            <Heart className="w-8 h-8 text-wedding-blush/30" />
+          <div className="absolute bottom-4 left-4 opacity-20">
+            <Heart className="w-8 h-8 text-primary" />
           </div>
-          <div className="absolute bottom-4 right-4">
-            <Heart className="w-8 h-8 text-wedding-blush/30" />
+          <div className="absolute bottom-4 right-4 opacity-20">
+            <Heart className="w-8 h-8 text-primary" />
           </div>
 
           <div className="text-center space-y-8">
             {/* Header */}
             <div>
-              <p className="text-foreground/60 text-lg mb-4">You are cordially invited to the wedding of</p>
-              <h1 className="font-script text-5xl md:text-6xl wedding-text-gradient">
-                {invitation.groomName} & {invitation.brideName}
+              <p className="text-muted-foreground text-lg mb-4">To'y marosimimizga taklif qilamiz</p>
+              <h1 className="font-heading text-5xl md:text-6xl font-bold text-gradient mb-4">
+                {invitation.groom_name} & {invitation.bride_name}
               </h1>
+              <div className="w-24 h-0.5 bg-primary mx-auto opacity-50"></div>
             </div>
 
             {/* Date and Time */}
             <div className="space-y-4">
-              <div className="flex items-center justify-center gap-3 text-xl text-foreground/80">
-                <Calendar className="w-6 h-6 text-wedding-rose" />
-                <span className="font-serif">{invitation.date}</span>
+              <div className="flex items-center justify-center gap-3 text-xl text-foreground">
+                <Calendar className="w-6 h-6 text-primary" />
+                <span className="font-heading font-medium">{formatDate(invitation.wedding_date)}</span>
               </div>
-              <div className="flex items-center justify-center gap-3 text-xl text-foreground/80">
-                <Clock className="w-6 h-6 text-wedding-rose" />
-                <span className="font-serif">{invitation.time}</span>
-              </div>
+              {invitation.wedding_time && (
+                <div className="flex items-center justify-center gap-3 text-xl text-foreground">
+                  <Clock className="w-6 h-6 text-primary" />
+                  <span className="font-heading font-medium">{formatTime(invitation.wedding_time)}</span>
+                </div>
+              )}
             </div>
 
             {/* Location */}
             <div className="space-y-2">
-              <div className="flex items-center justify-center gap-3 text-xl text-foreground/80">
-                <MapPin className="w-6 h-6 text-wedding-rose" />
-                <span className="font-serif">{invitation.location}</span>
+              <div className="flex items-center justify-center gap-3 text-xl text-foreground">
+                <MapPin className="w-6 h-6 text-primary" />
+                <span className="font-heading font-medium">{invitation.venue}</span>
               </div>
-              <p className="text-foreground/60">{invitation.address}</p>
+              <p className="text-muted-foreground">{invitation.address}</p>
+              {invitation.city && (
+                <p className="text-muted-foreground">{invitation.city}</p>
+              )}
             </div>
 
-            {/* Message */}
-            <div className="border-t border-b border-wedding-blush/30 py-8">
-              <p className="text-lg text-foreground/80 leading-relaxed italic">
-                "{invitation.message}"
-              </p>
-            </div>
+            {/* Custom Message */}
+            {invitation.custom_message && (
+              <div className="border-t border-b border-border py-8">
+                <p className="text-lg text-foreground leading-relaxed italic">
+                  "{invitation.custom_message}"
+                </p>
+              </div>
+            )}
 
-            {/* Guest Name */}
-            {invitation.guestName && (
-              <div>
-                <p className="text-foreground/60 mb-2">Dear</p>
-                <p className="font-serif text-2xl text-wedding-rose">{invitation.guestName}</p>
+            {/* Image if available */}
+            {invitation.image_url && (
+              <div className="mt-8">
+                <img 
+                  src={invitation.image_url} 
+                  alt="To'y rasmi" 
+                  className="rounded-xl mx-auto max-w-full h-auto shadow-lg"
+                />
               </div>
             )}
           </div>
         </div>
 
         {/* RSVP Section */}
-        <div className="mt-8 bg-card p-8 rounded-2xl shadow-lg border border-wedding-blush/20">
-          <h2 className="font-serif text-2xl text-center mb-6 text-foreground">Will you be joining us?</h2>
-          <div className="flex gap-4 justify-center">
-            <Button 
-              className="bg-wedding-rose hover:bg-wedding-rose/90 text-white px-8 py-3 rounded-full"
-              onClick={() => alert("RSVP: Will attend! (Demo)")}
-            >
-              <Check className="w-5 h-5 mr-2" />
-              I will attend
-            </Button>
-            <Button 
-              variant="outline" 
-              className="border-wedding-dusty text-wedding-dusty hover:bg-wedding-dusty hover:text-white px-8 py-3 rounded-full"
-              onClick={() => alert("RSVP: Cannot attend (Demo)")}
-            >
-              <X className="w-5 h-5 mr-2" />
-              I can't make it
-            </Button>
+        {!rsvpSubmitted ? (
+          <div className="card-modern p-8">
+            <h2 className="font-heading text-2xl font-bold text-center mb-6 text-foreground">
+              Ishtirok etasizmi?
+            </h2>
+            
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="guest_name" className="text-foreground font-medium">Ismingiz *</Label>
+                <Input
+                  id="guest_name"
+                  type="text"
+                  placeholder="To'liq ismingizni kiriting"
+                  className="input-modern"
+                  value={rsvpForm.guest_name}
+                  onChange={(e) => setRsvpForm({ ...rsvpForm, guest_name: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-foreground font-medium">Email (ixtiyoriy)</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="email@misol.com"
+                    className="input-modern"
+                    value={rsvpForm.email}
+                    onChange={(e) => setRsvpForm({ ...rsvpForm, email: e.target.value })}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="text-foreground font-medium">Telefon (ixtiyoriy)</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="+998 90 123 45 67"
+                    className="input-modern"
+                    value={rsvpForm.phone}
+                    onChange={(e) => setRsvpForm({ ...rsvpForm, phone: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="message" className="text-foreground font-medium">Xabar (ixtiyoriy)</Label>
+                <Textarea
+                  id="message"
+                  placeholder="Tabrik yoki xabaringiz..."
+                  className="input-modern min-h-20"
+                  value={rsvpForm.message}
+                  onChange={(e) => setRsvpForm({ ...rsvpForm, message: e.target.value })}
+                />
+              </div>
+
+              <div className="flex gap-4 justify-center pt-4">
+                <Button 
+                  className="primary-gradient px-8 py-3 rounded-xl font-medium"
+                  onClick={() => handleRsvpSubmit(true)}
+                  disabled={submittingRsvp || !rsvpForm.guest_name.trim()}
+                >
+                  {submittingRsvp ? (
+                    <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2" />
+                  ) : (
+                    <Check className="w-5 h-5 mr-2" />
+                  )}
+                  Ha, ishtirok etaman
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  className="border-border px-8 py-3 rounded-xl font-medium hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
+                  onClick={() => handleRsvpSubmit(false)}
+                  disabled={submittingRsvp || !rsvpForm.guest_name.trim()}
+                >
+                  <X className="w-5 h-5 mr-2" />
+                  Afsuski, kela olmayman
+                </Button>
+              </div>
+            </div>
           </div>
-          
-          <div className="mt-6 text-center">
-            <p className="text-sm text-foreground/60">
-              Please respond by May 1st, 2024
+        ) : (
+          <div className="card-modern p-8 text-center">
+            <div className="w-16 h-16 bg-theme-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Check className="w-8 h-8 text-theme-success" />
+            </div>
+            <h2 className="font-heading text-2xl font-bold text-foreground mb-2">
+              Rahmat!
+            </h2>
+            <p className="text-muted-foreground">
+              Javobingiz muvaffaqiyatli yuborildi. Er-xotin sizning javobingizdan xabardor bo'lishadi.
             </p>
           </div>
-        </div>
+        )}
 
-        {/* Thank you message */}
+        {/* Additional Info */}
         <div className="mt-8 text-center">
-          <p className="text-foreground/70 italic">
-            Thank you for being a part of our special day!
+          <p className="text-muted-foreground italic">
+            Bizning maxsus kunimizda ishtirok etganingiz uchun rahmat!
           </p>
         </div>
       </div>

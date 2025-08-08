@@ -340,7 +340,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log("Profile created successfully:", createdProfile);
       return createdProfile;
     } else {
-      console.error("Error creating profile:", {
+      console.error("Error creating profile:", createError?.message || createError, {
         error: createError,
         message: createError?.message,
         details: createError?.details,

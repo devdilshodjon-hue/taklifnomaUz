@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { supabase } from "@/lib/supabase";
+import { supabase, isTableNotFoundError } from "@/lib/supabase";
+import DatabaseSetupGuide from "@/components/DatabaseSetupGuide";
 
 interface Invitation {
   id: string;

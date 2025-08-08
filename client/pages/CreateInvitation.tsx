@@ -481,6 +481,24 @@ export default function CreateInvitation() {
           </div>
         </div>
 
+        {/* Error/Success Display */}
+        {error && (
+          <Alert className="mb-6 border-red-200 bg-red-50">
+            <X className="h-4 w-4 text-red-600" />
+            <AlertDescription className="text-red-800">
+              {error}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {success && (
+          <Alert className="mb-6 border-green-200 bg-green-50">
+            <AlertDescription className="text-green-800">
+              Taklifnoma muvaffaqiyatli yaratildi!
+            </AlertDescription>
+          </Alert>
+        )}
+
         <div className="card-modern p-8">
           {/* Step 1: Asosiy Ma'lumotlar */}
           {currentStep === 1 && (

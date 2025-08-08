@@ -138,58 +138,15 @@ export default function AdminDashboard() {
 
   const loadStats = async () => {
     try {
-      // Add timeout to prevent hanging
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Stats loading timeout")), 5000)
-      );
-
-      // Get total users
-      const usersPromise = supabase
+      // First test if tables exist with a quick query
+      const { error: testError } = await supabase
         .from("profiles")
-        .select("*", { count: "exact", head: true });
+        .select("id")
+        .limit(1);
 
-      const { count: usersCount, error: usersError } = await Promise.race([
-        usersPromise,
-        timeoutPromise,
-      ]) as any;
-
-      // Get total invitations
-      const { count: invitationsCount, error: invitationsError } =
-        await supabase
-          .from("invitations")
-          .select("*", { count: "exact", head: true });
-
-      // Get total subscriptions
-      const { count: subscriptionsCount, error: subscriptionsError } =
-        await supabase
-          .from("user_subscriptions")
-          .select("*", { count: "exact", head: true });
-
-      // Get pending purchase requests
-      const { count: pendingCount, error: pendingError } = await supabase
-        .from("purchase_requests")
-        .select("*", { count: "exact", head: true })
-        .eq("status", "pending");
-
-      // Get active subscriptions
-      const { count: activeCount, error: activeError } = await supabase
-        .from("user_subscriptions")
-        .select("*", { count: "exact", head: true })
-        .eq("status", "active");
-
-      // Check if any major errors indicate missing tables
-      const hasTableErrors = [
-        usersError,
-        invitationsError,
-        subscriptionsError,
-        pendingError,
-        activeError,
-      ].some((error) => error && error.message.includes("does not exist"));
-
-      if (hasTableErrors) {
+      if (testError && testError.message.includes("does not exist")) {
         console.log("Database tables not found, using demo data");
         setShowDatabaseGuide(true);
-        // Set demo/default stats
         setStats({
           totalUsers: 0,
           totalInvitations: parseInt(
@@ -200,16 +157,44 @@ export default function AdminDashboard() {
           activeSubscriptions: 0,
           monthlyRevenue: 0,
         });
-      } else {
-        setStats({
-          totalUsers: usersCount || 0,
-          totalInvitations: invitationsCount || 0,
-          totalSubscriptions: subscriptionsCount || 0,
-          pendingRequests: pendingCount || 0,
-          activeSubscriptions: activeCount || 0,
-          monthlyRevenue: 0, // Calculate from subscriptions if needed
-        });
+        return;
       }
+
+      // If tables exist, load real data
+      const [
+        { count: usersCount },
+        { count: invitationsCount },
+        { count: subscriptionsCount },
+        { count: pendingCount },
+        { count: activeCount },
+      ] = await Promise.all([
+        supabase
+          .from("profiles")
+          .select("*", { count: "exact", head: true }),
+        supabase
+          .from("invitations")
+          .select("*", { count: "exact", head: true }),
+        supabase
+          .from("user_subscriptions")
+          .select("*", { count: "exact", head: true }),
+        supabase
+          .from("purchase_requests")
+          .select("*", { count: "exact", head: true })
+          .eq("status", "pending"),
+        supabase
+          .from("user_subscriptions")
+          .select("*", { count: "exact", head: true })
+          .eq("status", "active"),
+      ]);
+
+      setStats({
+        totalUsers: usersCount || 0,
+        totalInvitations: invitationsCount || 0,
+        totalSubscriptions: subscriptionsCount || 0,
+        pendingRequests: pendingCount || 0,
+        activeSubscriptions: activeCount || 0,
+        monthlyRevenue: 0,
+      });
     } catch (error) {
       console.error("Error loading stats:", error);
       // Set demo/fallback stats on error

@@ -67,18 +67,18 @@ const ClassicTemplate: React.FC<any> = ({ template, invitation, guestName, forma
          backgroundColor: template.colors.background,
          fontFamily: template.fonts.body 
        }}>
-    {/* Decorative roses */}
+    {/* Decorative hearts */}
     <div className="absolute top-4 left-4 opacity-20">
-      <Rose className="w-8 h-8" style={{ color: template.colors.primary }} />
+      <Heart className="w-8 h-8" style={{ color: template.colors.primary }} />
     </div>
     <div className="absolute top-4 right-4 opacity-20">
-      <Rose className="w-8 h-8" style={{ color: template.colors.primary }} />
+      <Heart className="w-8 h-8" style={{ color: template.colors.primary }} />
     </div>
     <div className="absolute bottom-4 left-4 opacity-20">
-      <Rose className="w-8 h-8" style={{ color: template.colors.primary }} />
+      <Heart className="w-8 h-8" style={{ color: template.colors.primary }} />
     </div>
     <div className="absolute bottom-4 right-4 opacity-20">
-      <Rose className="w-8 h-8" style={{ color: template.colors.primary }} />
+      <Heart className="w-8 h-8" style={{ color: template.colors.primary }} />
     </div>
 
     <div className="text-center space-y-8">

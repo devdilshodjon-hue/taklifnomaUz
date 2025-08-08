@@ -22,6 +22,7 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Contact from "./pages/Contact";
 import Help from "./pages/Help";
+import Purchase from "./pages/Purchase";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -55,6 +56,7 @@ function App() {
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/help" element={<Help />} />
+                  <Route path="/purchase" element={<Purchase />} />
                   <Route path="/invitation/:id" element={<InvitationView />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />

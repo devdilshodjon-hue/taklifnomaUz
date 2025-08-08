@@ -348,7 +348,9 @@ export default function Pricing() {
                   variant={plan.popular ? "default" : "outline"}
                   asChild
                 >
-                  <Link to="/register">{plan.buttonText}</Link>
+                  <Link to={plan.id === "basic" ? "/register" : `/purchase?plan=${plan.id}`}>
+                    {plan.buttonText}
+                  </Link>
                 </Button>
               </div>
             );

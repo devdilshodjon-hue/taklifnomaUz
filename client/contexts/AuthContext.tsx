@@ -65,13 +65,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     testDatabaseConnection();
 
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        loadProfile(session.user.id);
+    // Get initial session and validate it
+    supabase.auth.getSession().then(async ({ data: { session }, error }) => {
+      if (error) {
+        console.error("Session error on load:", error);
+        setSession(null);
+        setUser(null);
+        setProfile(null);
+        setLoading(false);
+        return;
+      }
+
+      if (session) {
+        // Validate session by refreshing it
+        const { data: { session: refreshedSession }, error: refreshError } = await supabase.auth.refreshSession();
+
+        if (refreshError || !refreshedSession) {
+          console.log("Session invalid, signing out...");
+          await supabase.auth.signOut();
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+          setLoading(false);
+          return;
+        }
+
+        setSession(refreshedSession);
+        setUser(refreshedSession.user);
+        loadProfile(refreshedSession.user.id);
       } else {
+        setSession(null);
+        setUser(null);
+        setProfile(null);
         setLoading(false);
       }
     });

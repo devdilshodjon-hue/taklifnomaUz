@@ -55,6 +55,26 @@ export default function CreateInvitation() {
     }
   };
 
+  // Template preview
+  const handlePreviewTemplate = (template: TemplateData) => {
+    setPreviewTemplate(template);
+    setShowPreview(true);
+  };
+
+  // Mock invitation data for preview
+  const getMockInvitationData = () => ({
+    id: 'preview',
+    groom_name: formData.groomName || 'Jahongir',
+    bride_name: formData.brideName || 'Sarvinoz',
+    wedding_date: formData.weddingDate || '2024-06-15',
+    wedding_time: formData.weddingTime || '16:00',
+    venue: formData.venue || 'Atirgul Bog\'i',
+    address: formData.address || 'Toshkent sh., Yunusobod t., Bog\' ko\'chasi 123',
+    city: formData.city || 'Toshkent',
+    custom_message: formData.customMessage || 'Bizning sevgi va baxt to\'la kunimizni birga nishonlash uchun sizni taklif qilamiz.',
+    template_id: previewTemplate?.id || 'classic-rose'
+  });
+
   const addGuest = () => {
     if (newGuest.name.trim()) {
       const guest: Guest = {

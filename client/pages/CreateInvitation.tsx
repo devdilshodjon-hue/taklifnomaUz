@@ -1,14 +1,17 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Sparkles, ArrowLeft, Save, Eye, Calendar, MapPin, Clock, Upload, Users, Plus, X, Filter } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Sparkles, ArrowLeft, Save, Eye, Calendar, MapPin, Clock, Upload, Users, Plus, X, Filter, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { supabase } from "@/lib/supabase";
 import { generateDemoUUID, generateUUIDFromSlug } from "@/lib/utils";
 import { weddingTemplates, templateCategories, getTemplatesByCategory, type TemplateData } from "@/lib/templates";
 import TemplateRenderer from "@/components/TemplateRenderer";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface Guest {
   id: string;
@@ -20,6 +23,7 @@ interface Guest {
 // Template interface endi templates.tsx dan import qilinadi
 
 export default function CreateInvitation() {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +32,8 @@ export default function CreateInvitation() {
   const [newGuest, setNewGuest] = useState({ name: "", email: "", phone: "" });
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [filteredTemplates, setFilteredTemplates] = useState<TemplateData[]>(weddingTemplates);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   // Templates loaded
   useEffect(() => {

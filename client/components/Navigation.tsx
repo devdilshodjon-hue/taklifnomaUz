@@ -25,6 +25,10 @@ export default function Navigation({
     return location.pathname === href;
   };
 
+  // Smart logic: don't show back button if we're on a main nav page or home page
+  const isMainNavPage = navLinks.some(link => link.href === location.pathname) || location.pathname === "/";
+  const shouldShowBackButton = showBackButton && !isMainNavPage;
+
   return (
     <nav
       className={`bg-card border-b border-border p-4 sticky top-0 z-50 ${className}`}

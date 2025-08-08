@@ -474,6 +474,14 @@ export default function CreateInvitation() {
                   <Label className="text-foreground font-medium mb-4 block">
                     Shablon Tanlang ({filteredTemplates.length} ta mavjud)
                   </Label>
+
+                  {/* Debug info */}
+                  <div className="mb-4 p-2 bg-gray-100 rounded text-xs">
+                    <p>Debug: weddingTemplates.length = {weddingTemplates.length}</p>
+                    <p>Debug: filteredTemplates.length = {filteredTemplates.length}</p>
+                    <p>Debug: selectedCategory = {selectedCategory}</p>
+                  </div>
+
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {filteredTemplates.map((template) => (
                       <div

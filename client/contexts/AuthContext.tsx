@@ -136,7 +136,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setProfile(data);
       }
     } catch (error) {
-      console.error("Error in loadProfile:", error);
+      console.error("Error in loadProfile:", {
+        error: error,
+        message: error?.message,
+        stack: error?.stack
+      });
       setProfile(null);
     } finally {
       setLoading(false);

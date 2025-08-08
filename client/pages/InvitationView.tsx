@@ -1,13 +1,29 @@
-import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { MapPin, Calendar, Clock, Check, X, Heart, Share2, Download } from "lucide-react";
+import { useParams, Link } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
+import { 
+  Share2, 
+  Calendar, 
+  MapPin, 
+  Clock, 
+  Heart, 
+  Copy,
+  Download,
+  ArrowLeft,
+  CheckCircle,
+  XCircle,
+  Loader2,
+  MessageCircle,
+  Phone,
+  Mail,
+  QrCode
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { supabase, isTableNotFoundError } from "@/lib/supabase";
-import { isDemoId, isValidUUID } from "@/lib/utils";
-import DatabaseSetupGuide from "@/components/DatabaseSetupGuide";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import TemplateRenderer from "@/components/TemplateRenderer";
 
 interface Invitation {
@@ -15,456 +31,482 @@ interface Invitation {
   groom_name: string;
   bride_name: string;
   wedding_date: string;
-  wedding_time: string;
+  wedding_time: string | null;
   venue: string;
   address: string;
-  city: string;
-  custom_message: string;
+  city: string | null;
+  custom_message: string | null;
   template_id: string;
-  image_url?: string;
+  is_active: boolean;
+  slug: string;
+  created_at: string;
+}
+
+interface RSVPData {
+  guest_name: string;
+  will_attend: boolean;
+  plus_one_attending: boolean | null;
+  message: string | null;
+  email: string | null;
+  phone: string | null;
 }
 
 export default function InvitationView() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const [invitation, setInvitation] = useState<Invitation | null>(null);
   const [loading, setLoading] = useState(true);
-  const [rsvpSubmitted, setRsvpSubmitted] = useState(false);
-  const [submittingRsvp, setSubmittingRsvp] = useState(false);
-  const [showDatabaseSetup, setShowDatabaseSetup] = useState(false);
-  const [rsvpForm, setRsvpForm] = useState({
+  const [rsvpLoading, setRsvpLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [showRSVP, setShowRSVP] = useState(false);
+  const [guestName, setGuestName] = useState("");
+
+  const [rsvpData, setRsvpData] = useState<RSVPData>({
     guest_name: "",
-    will_attend: null as boolean | null,
-    email: "",
-    phone: "",
+    will_attend: true,
+    plus_one_attending: null,
     message: "",
-    plus_one_attending: false,
+    email: "",
+    phone: ""
   });
 
   useEffect(() => {
     if (id) {
-      fetchInvitation(id);
+      loadInvitation();
     }
   }, [id]);
 
-  const fetchInvitation = async (invitationId: string) => {
+  const loadInvitation = async () => {
+    if (!id) return;
+
     try {
-      // Agar ID demo format bo'lsa yoki UUID format emas bo'lsa, localStorage dan olishga harakat qilamiz
-      if (isDemoId(invitationId) || !isValidUUID(invitationId)) {
-        console.log('Demo ID aniqlandi, localStorage dan ma\'lumot izlanmoqda...', invitationId);
-
-        // localStorage dan real ma'lumotlarni olishga harakat qilamiz
-        const storedData = localStorage.getItem(`invitation_${invitationId}`);
-        if (storedData) {
-          try {
-            const parsedData = JSON.parse(storedData);
-            console.log('localStorage dan real ma\'lumotlar topildi:', parsedData);
-            setInvitation(parsedData);
-            return;
-          } catch (error) {
-            console.error('localStorage ma\'lumotlarini parse qilishda xatolik:', error);
-          }
-        }
-
-        // Agar localStorage da topilmasa, default demo ma'lumotlarni ko'rsatamiz
-        console.log('localStorage da ma\'lumot topilmadi, default demo ma\'lumotlar ishlatilmoqda');
-        setInvitation({
-          id: invitationId,
-          groom_name: "Jahongir",
-          bride_name: "Sarvinoz",
-          wedding_date: "2024-06-15",
-          wedding_time: "16:00",
-          venue: "Atirgul Bog'i",
-          address: "Toshkent sh., Yunusobod t., Bog' ko'chasi 123",
-          city: "Toshkent",
-          custom_message: "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
-          template_id: "classic",
-        });
-        return;
-      }
-
-      // To'g'ri UUID format bo'lsa, Supabase dan so'raymiz
+      setLoading(true);
+      
+      // First try to load from Supabase
       const { data, error } = await supabase
         .from('invitations')
         .select('*')
-        .eq('id', invitationId)
-        .eq('is_active', true)
+        .eq('id', id)
         .single();
 
       if (error) {
-        console.error('Supabase xatoligi:', error.message || error);
-
-        // Jadvallar mavjud emasligini tekshirish
-        if (isTableNotFoundError(error)) {
-          console.log('Database jadvallar topilmadi - setup guide ko\'rsatilmoqda');
-          setShowDatabaseSetup(true);
+        // Fallback to localStorage
+        const localData = localStorage.getItem(`invitation_${id}`);
+        if (localData) {
+          const parsedData = JSON.parse(localData);
+          setInvitation(parsedData);
+        } else {
+          throw new Error('Taklifnoma topilmadi');
         }
-
-        // Supabase xatoligi bo'lsa, localStorage dan olishga harakat qilamiz
-        const storedData = localStorage.getItem(`invitation_${invitationId}`);
-        if (storedData) {
-          try {
-            const parsedData = JSON.parse(storedData);
-            console.log('Supabase ishlamadi, localStorage dan ma\'lumot olindi:', parsedData);
-            setInvitation(parsedData);
-            return;
-          } catch (error) {
-            console.error('localStorage ma\'lumotlarini parse qilishda xatolik:', error);
-          }
-        }
-
-        // Fallback: demo ma'lumotlar
-        console.log('Demo ma\'lumotlarga o\'tkazilmoqda...');
-        setInvitation({
-          id: invitationId,
-          groom_name: "Jahongir",
-          bride_name: "Sarvinoz",
-          wedding_date: "2024-06-15",
-          wedding_time: "16:00",
-          venue: "Atirgul Bog'i",
-          address: "Toshkent sh., Yunusobod t., Bog' ko'chasi 123",
-          city: "Toshkent",
-          custom_message: "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
-          template_id: "classic",
-        });
       } else {
-        // Supabase muvaffaqiyatli bo'lsa, localStorage ga backup yaratamiz
-        localStorage.setItem(`invitation_${invitationId}`, JSON.stringify(data));
         setInvitation(data);
       }
-    } catch (error) {
-      console.error('Taklifnoma olishda umumiy xatolik:', error);
-      // Har qanday holda ham demo ma'lumotlarni ko'rsatish
-      setInvitation({
-        id: invitationId,
-        groom_name: "Jahongir",
-        bride_name: "Sarvinoz",
-        wedding_date: "2024-06-15",
-        wedding_time: "16:00",
-        venue: "Atirgul Bog'i",
-        address: "Toshkent sh., Yunusobod t., Bog' ko'chasi 123",
-        city: "Toshkent",
-        custom_message: "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
-        template_id: "classic",
-      });
+
+      // Track view (increment view count)
+      // In a real app, you'd want to track unique views
+      // await supabase.rpc('increment_views', { invitation_id: id });
+
+    } catch (error: any) {
+      console.error('Error loading invitation:', error);
+      setError(error.message || 'Taklifnomani yuklashda xatolik yuz berdi');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleRsvpSubmit = async (willAttend: boolean) => {
-    if (!invitation || !rsvpForm.guest_name.trim()) return;
+  const handleRSVPSubmit = async (willAttend: boolean) => {
+    if (!invitation || !guestName.trim()) {
+      setError("Iltimos, ismingizni kiriting");
+      return;
+    }
 
-    setSubmittingRsvp(true);
+    setRsvpLoading(true);
+    setError("");
 
     try {
+      const rsvpSubmission = {
+        invitation_id: invitation.id,
+        guest_name: guestName,
+        will_attend: willAttend,
+        plus_one_attending: rsvpData.plus_one_attending,
+        message: rsvpData.message || null,
+        email: rsvpData.email || null,
+        phone: rsvpData.phone || null
+      };
+
       const { error } = await supabase
         .from('rsvps')
-        .insert({
-          invitation_id: invitation.id,
-          guest_name: rsvpForm.guest_name,
-          will_attend: willAttend,
-          email: rsvpForm.email || null,
-          phone: rsvpForm.phone || null,
-          message: rsvpForm.message || null,
-          plus_one_attending: rsvpForm.plus_one_attending,
-        });
+        .insert([rsvpSubmission]);
 
       if (error) {
-        console.log('RSVP Supabase xatoligi:', error.message || error);
-        console.log('Demo rejimida RSVP muvaffaqiyatli yuborildi');
-      } else {
-        console.log('RSVP muvaffaqiyatli yuborildi');
+        // Fallback to localStorage
+        const existingRSVPs = JSON.parse(localStorage.getItem(`rsvps_${invitation.id}`) || '[]');
+        existingRSVPs.push({
+          ...rsvpSubmission,
+          id: Date.now().toString(),
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem(`rsvps_${invitation.id}`, JSON.stringify(existingRSVPs));
       }
 
-      setRsvpSubmitted(true);
-    } catch (error) {
-      console.error('RSVP yuborishda umumiy xatolik:', error);
-      // Demo rejimida ham muvaffaqiyatli ko'rsatish
-      setRsvpSubmitted(true);
+      setSuccess(willAttend 
+        ? "Rahmat! Sizning ishtirokingiz tasdiqlandi 🎉" 
+        : "Rahmat! Sizning javobingiz qabul qilindi"
+      );
+      setShowRSVP(false);
+      setGuestName("");
+      setRsvpData({
+        guest_name: "",
+        will_attend: true,
+        plus_one_attending: null,
+        message: "",
+        email: "",
+        phone: ""
+      });
+
+    } catch (error: any) {
+      setError(error.message || 'RSVP yuborishda xatolik yuz berdi');
     } finally {
-      setSubmittingRsvp(false);
+      setRsvpLoading(false);
     }
   };
 
   const shareInvitation = async () => {
-    const shareData = {
-      title: `${invitation?.groom_name} & ${invitation?.bride_name} - To'y Taklifnomasi`,
-      text: `${invitation?.groom_name} va ${invitation?.bride_name}ning to'y marosimimizga taklif qilamiz! ${formatDate(invitation?.wedding_date || '')} sanasida ${invitation?.venue}da.`,
-      url: window.location.href,
-    };
+    const url = window.location.href;
+    const text = `${invitation?.groom_name} & ${invitation?.bride_name} to'y taklifnomasi`;
 
     if (navigator.share) {
       try {
-        await navigator.share(shareData);
-      } catch (err) {
-        // User cancelled or error occurred, fallback to clipboard
-        copyToClipboard();
+        await navigator.share({
+          title: text,
+          text: `Sizni ${invitation?.groom_name} va ${invitation?.bride_name}ning to'y marosimiga taklif qilamiz!`,
+          url: url
+        });
+      } catch (error) {
+        copyToClipboard(url);
       }
     } else {
-      // Fallback: copy to clipboard
-      copyToClipboard();
+      copyToClipboard(url);
     }
   };
 
-  const copyToClipboard = async () => {
+  const copyToClipboard = async (text: string) => {
     try {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(window.location.href);
-        alert('Havola clipboard ga nusxalandi! Endi uni ulashishingiz mumkin.');
-      } else {
-        // Fallback method
-        const textArea = document.createElement('textarea');
-        textArea.value = window.location.href;
-        textArea.style.position = 'fixed';
-        textArea.style.left = '-999999px';
-        textArea.style.top = '-999999px';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-
-        try {
-          document.execCommand('copy');
-          alert('Havola nusxalandi! Endi uni ulashishingiz mumkin.');
-        } finally {
-          document.body.removeChild(textArea);
-        }
-      }
-    } catch (err) {
-      alert('Ulashish uchun: ' + window.location.href);
+      await navigator.clipboard.writeText(text);
+      setSuccess("Havola nusxalandi!");
+    } catch (error) {
+      setError("Havolani nusxalashda xatolik");
     }
+  };
+
+  const shareOnWhatsApp = () => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(`Sizni ${invitation?.groom_name} va ${invitation?.bride_name}ning to'y marosimiga taklif qilamiz! 💒✨`);
+    window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
+  };
+
+  const shareOnTelegram = () => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(`${invitation?.groom_name} & ${invitation?.bride_name} to'y taklifnomasi`);
+    window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+  };
+
+  const downloadAsPDF = () => {
+    // In a real implementation, you'd generate a PDF
+    setSuccess("PDF yuklab olish funksiyasi tez orada qo'shiladi!");
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (!invitation) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6">
-        <div className="text-center">
-          <h1 className="font-heading text-2xl font-bold text-foreground mb-2">Taklifnoma topilmadi</h1>
-          <p className="text-muted-foreground">Bu taklifnoma mavjud emas yoki faol emas.</p>
+      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-purple-50/30 flex items-center justify-center">
+        <div className="text-center animate-fade-in">
+          <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-muted-foreground">Taklifnoma yuklanmoqda...</p>
         </div>
       </div>
     );
   }
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('uz-UZ', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      weekday: 'long'
-    });
-  };
+  if (error && !invitation) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-purple-50/30 flex items-center justify-center p-6">
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <XCircle className="w-8 h-8 text-red-600" />
+          </div>
+          <h1 className="font-heading text-2xl font-bold text-foreground mb-4">
+            Taklifnoma Topilmadi
+          </h1>
+          <p className="text-muted-foreground mb-6">{error}</p>
+          <Button asChild>
+            <Link to="/">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Bosh Sahifaga Qaytish
+            </Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
-  const formatTime = (timeString: string) => {
-    return timeString.slice(0, 5); // HH:MM format
-  };
+  if (!invitation) return null;
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Database Setup Guide */}
-      <DatabaseSetupGuide
-        isVisible={showDatabaseSetup}
-        onDismiss={() => setShowDatabaseSetup(false)}
-      />
-
-      {/* Share button */}
-      <div className="fixed top-4 right-4 z-10 flex gap-2">
-        <Button variant="outline" size="sm" onClick={shareInvitation} className="shadow-lg">
-          <Share2 className="w-4 h-4 mr-2" />
-          Ulashish
-        </Button>
-        <Button variant="outline" size="sm" onClick={copyToClipboard} className="shadow-lg">
-          <Download className="w-4 h-4 mr-2" />
-          Nusxalash
-        </Button>
-      </div>
-
-      {/* Invitation Display */}
-      <div className="max-w-2xl mx-auto px-6 py-12">
-        <div className="mb-8">
-          <TemplateRenderer
-            invitation={invitation}
-            guestName={rsvpForm.guest_name || "Hurmatli Mehmon"}
-          />
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-purple-50/30">
+      {/* Header */}
+      <nav className="bg-card/80 backdrop-blur-md border-b border-border p-4 sticky top-0 z-50">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Bosh sahifaga qaytish
+            </Link>
+          </Button>
+          
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={shareInvitation}>
+              <Share2 className="w-4 h-4 mr-2" />
+              Ulashish
+            </Button>
+            <Button variant="outline" size="sm" onClick={downloadAsPDF}>
+              <Download className="w-4 h-4 mr-2" />
+              PDF
+            </Button>
+          </div>
         </div>
+      </nav>
 
-        {/* RSVP Section */}
-        {!rsvpSubmitted ? (
-          <div className="card-modern p-8">
-            <h2 className="font-heading text-2xl font-bold text-center mb-6 text-foreground">
-              Ishtirok etasizmi?
-            </h2>
-            
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="guest_name" className="text-foreground font-medium">Ismingiz *</Label>
-                <Input
-                  id="guest_name"
-                  type="text"
-                  placeholder="To'liq ismingizni kiriting"
-                  className="input-modern"
-                  value={rsvpForm.guest_name}
-                  onChange={(e) => setRsvpForm({ ...rsvpForm, guest_name: e.target.value })}
-                  required
-                />
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-foreground font-medium">Email (ixtiyoriy)</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="email@misol.com"
-                    className="input-modern"
-                    value={rsvpForm.email}
-                    onChange={(e) => setRsvpForm({ ...rsvpForm, email: e.target.value })}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-foreground font-medium">Telefon (ixtiyoriy)</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="+998 90 123 45 67"
-                    className="input-modern"
-                    value={rsvpForm.phone}
-                    onChange={(e) => setRsvpForm({ ...rsvpForm, phone: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="message" className="text-foreground font-medium">Xabar (ixtiyoriy)</Label>
-                <Textarea
-                  id="message"
-                  placeholder="Tabrik yoki xabaringiz..."
-                  className="input-modern min-h-20"
-                  value={rsvpForm.message}
-                  onChange={(e) => setRsvpForm({ ...rsvpForm, message: e.target.value })}
-                />
-              </div>
-
-              <div className="flex gap-4 justify-center pt-4">
-                <Button 
-                  className="primary-gradient px-8 py-3 rounded-xl font-medium"
-                  onClick={() => handleRsvpSubmit(true)}
-                  disabled={submittingRsvp || !rsvpForm.guest_name.trim()}
-                >
-                  {submittingRsvp ? (
-                    <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2" />
-                  ) : (
-                    <Check className="w-5 h-5 mr-2" />
-                  )}
-                  Ha, ishtirok etaman
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  className="border-border px-8 py-3 rounded-xl font-medium hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
-                  onClick={() => handleRsvpSubmit(false)}
-                  disabled={submittingRsvp || !rsvpForm.guest_name.trim()}
-                >
-                  <X className="w-5 h-5 mr-2" />
-                  Afsuski, kela olmayman
-                </Button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="card-modern p-8 text-center">
-            <div className="w-16 h-16 bg-theme-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Check className="w-8 h-8 text-theme-success" />
-            </div>
-            <h2 className="font-heading text-2xl font-bold text-foreground mb-2">
-              Rahmat!
-            </h2>
-            <p className="text-muted-foreground">
-              Javobingiz muvaffaqiyatli yuborildi. Er-xotin sizning javobingizdan xabardor bo'lishadi.
-            </p>
-          </div>
+      <div className="max-w-4xl mx-auto p-6">
+        {/* Success/Error Messages */}
+        {success && (
+          <Alert className="mb-6 border-green-200 bg-green-50/50 animate-fade-in">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            <AlertDescription className="text-green-800">{success}</AlertDescription>
+          </Alert>
         )}
 
-        {/* Sharing Section */}
-        <div className="card-modern p-6 text-center mt-8">
-          <h3 className="font-heading text-lg font-semibold text-foreground mb-4">
-            Bu taklifnomani ulashing
-          </h3>
-          <p className="text-muted-foreground mb-4 text-sm">
-            Do'stlaringiz va oilangizga ham ulashing
-          </p>
+        {error && (
+          <Alert className="mb-6 border-red-200 bg-red-50/50 animate-shake">
+            <XCircle className="h-4 w-4 text-red-600" />
+            <AlertDescription className="text-red-800">{error}</AlertDescription>
+          </Alert>
+        )}
 
-          <div className="flex flex-wrap justify-center gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                const text = `${invitation?.groom_name} va ${invitation?.bride_name}ning to'y marosimi`;
-                const url = `https://web.telegram.org/a/#?startattach=&text=${encodeURIComponent(text + ' ' + window.location.href)}`;
-                window.open(url, '_blank');
-              }}
-              className="text-blue-600 hover:bg-blue-50"
-            >
-              📱 Telegram
-            </Button>
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Invitation Display */}
+          <div className="space-y-6">
+            <div className="card-modern overflow-hidden">
+              <TemplateRenderer 
+                invitation={invitation}
+                guestName={guestName || "Hurmatli Mehmon"}
+              />
+            </div>
 
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                const text = `${invitation?.groom_name} va ${invitation?.bride_name}ning to'y marosimi`;
-                const url = `https://wa.me/?text=${encodeURIComponent(text + ' ' + window.location.href)}`;
-                window.open(url, '_blank');
-              }}
-              className="text-green-600 hover:bg-green-50"
-            >
-              💬 WhatsApp
-            </Button>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                const text = `${invitation?.groom_name} va ${invitation?.bride_name}ning to'y marosimi`;
-                const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(text)}`;
-                window.open(url, '_blank');
-              }}
-              className="text-blue-700 hover:bg-blue-50"
-            >
-              📘 Facebook
-            </Button>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={copyToClipboard}
-              className="text-gray-600 hover:bg-gray-50"
-            >
-              🔗 Havolani Nusxalash
-            </Button>
+            {/* Share Buttons */}
+            <div className="card-modern p-6">
+              <h3 className="font-heading text-lg font-semibold text-foreground mb-4">
+                Taklifnomani Ulashing
+              </h3>
+              <div className="grid grid-cols-2 gap-3">
+                <Button onClick={shareOnWhatsApp} className="bg-green-600 hover:bg-green-700 text-white">
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  WhatsApp
+                </Button>
+                <Button onClick={shareOnTelegram} className="bg-blue-500 hover:bg-blue-600 text-white">
+                  <Phone className="w-4 h-4 mr-2" />
+                  Telegram
+                </Button>
+                <Button onClick={() => copyToClipboard(window.location.href)} variant="outline">
+                  <Copy className="w-4 h-4 mr-2" />
+                  Havolani Nusxalash
+                </Button>
+                <Button onClick={downloadAsPDF} variant="outline">
+                  <QrCode className="w-4 h-4 mr-2" />
+                  QR Kod
+                </Button>
+              </div>
+            </div>
           </div>
 
-          <div className="mt-4 p-3 bg-muted rounded-lg">
-            <p className="text-xs text-muted-foreground">
-              Ushbu havola: <code className="bg-background px-2 py-1 rounded">{window.location.href}</code>
-            </p>
-          </div>
-        </div>
+          {/* Event Details & RSVP */}
+          <div className="space-y-6">
+            {/* Event Details */}
+            <div className="card-modern p-6">
+              <h3 className="font-heading text-xl font-bold text-foreground mb-6">
+                Tadbir Ma'lumotlari
+              </h3>
+              
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <Calendar className="w-5 h-5 text-primary mt-0.5" />
+                  <div>
+                    <p className="font-medium text-foreground">Sana va Vaqt</p>
+                    <p className="text-muted-foreground">
+                      {new Date(invitation.wedding_date).toLocaleDateString('uz-UZ', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </p>
+                    {invitation.wedding_time && (
+                      <p className="text-muted-foreground">
+                        Soat: {invitation.wedding_time}
+                      </p>
+                    )}
+                  </div>
+                </div>
 
-        {/* Additional Info */}
-        <div className="mt-8 text-center">
-          <p className="text-muted-foreground italic">
-            Bizning maxsus kunimizda ishtirok etganingiz uchun rahmat!
-          </p>
+                <div className="flex items-start gap-3">
+                  <MapPin className="w-5 h-5 text-primary mt-0.5" />
+                  <div>
+                    <p className="font-medium text-foreground">Joy</p>
+                    <p className="text-muted-foreground">{invitation.venue}</p>
+                    <p className="text-sm text-muted-foreground">{invitation.address}</p>
+                    {invitation.city && (
+                      <p className="text-sm text-muted-foreground">{invitation.city}</p>
+                    )}
+                  </div>
+                </div>
+
+                {invitation.custom_message && (
+                  <div className="flex items-start gap-3">
+                    <Heart className="w-5 h-5 text-primary mt-0.5" />
+                    <div>
+                      <p className="font-medium text-foreground">Maxsus Xabar</p>
+                      <p className="text-muted-foreground">{invitation.custom_message}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* RSVP Section */}
+            <div className="card-modern p-6">
+              <h3 className="font-heading text-xl font-bold text-foreground mb-6">
+                Ishtirok Tasdiqlash (RSVP)
+              </h3>
+
+              {!showRSVP ? (
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="guestName">Ismingiz</Label>
+                    <Input
+                      id="guestName"
+                      value={guestName}
+                      onChange={(e) => setGuestName(e.target.value)}
+                      placeholder="Ismingizni kiriting"
+                      className="mt-1"
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button 
+                      onClick={() => {
+                        if (guestName.trim()) {
+                          setRsvpData(prev => ({ ...prev, guest_name: guestName, will_attend: true }));
+                          setShowRSVP(true);
+                        } else {
+                          setError("Iltimos, ismingizni kiriting");
+                        }
+                      }}
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Kelaman
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        if (guestName.trim()) {
+                          handleRSVPSubmit(false);
+                        } else {
+                          setError("Iltimos, ismingizni kiriting");
+                        }
+                      }}
+                      variant="outline"
+                      className="border-red-200 text-red-600 hover:bg-red-50"
+                    >
+                      <XCircle className="w-4 h-4 mr-2" />
+                      Kela olmayman
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <p className="text-green-800 font-medium">
+                      ✅ Ajoyib! Siz kelishingizni tasdiqlayapsiz
+                    </p>
+                    <p className="text-green-600 text-sm mt-1">
+                      Qo'shimcha ma'lumotlarni to'ldiring:
+                    </p>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="email">Email (ixtiyoriy)</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={rsvpData.email}
+                      onChange={(e) => setRsvpData(prev => ({ ...prev, email: e.target.value }))}
+                      placeholder="example@email.com"
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="phone">Telefon (ixtiyoriy)</Label>
+                    <Input
+                      id="phone"
+                      value={rsvpData.phone}
+                      onChange={(e) => setRsvpData(prev => ({ ...prev, phone: e.target.value }))}
+                      placeholder="+998 90 123 45 67"
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="message">Xabar (ixtiyoriy)</Label>
+                    <Textarea
+                      id="message"
+                      value={rsvpData.message}
+                      onChange={(e) => setRsvpData(prev => ({ ...prev, message: e.target.value }))}
+                      placeholder="Tilaklar yoki savollaringiz..."
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button 
+                      onClick={() => handleRSVPSubmit(true)}
+                      disabled={rsvpLoading}
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      {rsvpLoading ? (
+                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                      ) : (
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                      )}
+                      Tasdiqlash
+                    </Button>
+                    <Button 
+                      onClick={() => setShowRSVP(false)}
+                      variant="outline"
+                    >
+                      Bekor qilish
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Status Badge */}
+            <div className="text-center">
+              <Badge variant={invitation.is_active ? "default" : "secondary"} className="text-sm">
+                {invitation.is_active ? "✨ Faol Taklifnoma" : "📋 Noaktiv"}
+              </Badge>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -16,6 +16,7 @@ export default function Navigation({
   const navLinks = [
     { href: "/#features", label: "Imkoniyatlar", isAnchor: true },
     { href: "/templates", label: "Shablonlar", isAnchor: false },
+    { href: "/template-builder", label: "Shablon Yaratish", isAnchor: false },
     { href: "/pricing", label: "Narxlar", isAnchor: false },
   ];
 

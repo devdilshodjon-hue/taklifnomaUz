@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
-import { 
-  ArrowLeft, 
-  Shield, 
-  Bell, 
-  Eye, 
-  Lock, 
-  Trash2, 
-  Download, 
-  Key, 
+import {
+  ArrowLeft,
+  Shield,
+  Bell,
+  Eye,
+  Lock,
+  Trash2,
+  Download,
+  Key,
   Smartphone,
   Mail,
   Globe,
@@ -22,7 +22,7 @@ import {
   AlertTriangle,
   Check,
   X,
-  Loader2
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +30,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { 
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -52,7 +52,7 @@ interface NotificationSettings {
 }
 
 interface PrivacySettings {
-  profileVisibility: 'public' | 'private';
+  profileVisibility: "public" | "private";
   showEmail: boolean;
   showPhone: boolean;
   allowSearchIndexing: boolean;
@@ -68,38 +68,38 @@ interface SecuritySettings {
 export default function Settings() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
-  
+
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
-  
+
   // Settings state
   const [notifications, setNotifications] = useState<NotificationSettings>({
     emailNotifications: true,
     smsNotifications: false,
     rsvpUpdates: true,
     marketingEmails: false,
-    weeklyReports: true
+    weeklyReports: true,
   });
-  
+
   const [privacy, setPrivacy] = useState<PrivacySettings>({
-    profileVisibility: 'private',
+    profileVisibility: "private",
     showEmail: false,
     showPhone: false,
     allowSearchIndexing: false,
-    dataProcessing: true
+    dataProcessing: true,
   });
-  
+
   const [security, setSecurity] = useState<SecuritySettings>({
     twoFactorEnabled: false,
     sessionTimeout: 30,
-    loginAlerts: true
+    loginAlerts: true,
   });
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system');
+  const [theme, setTheme] = useState<"light" | "dark" | "system">("system");
 
   useEffect(() => {
     loadSettings();
@@ -117,7 +117,7 @@ export default function Settings() {
 
     try {
       // In a real app, save to database
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
       setSuccess("Bildirishnoma sozlamalari saqlandi!");
     } catch (error: any) {
       setError("Sozlamalar saqlanishda xatolik yuz berdi");
@@ -133,7 +133,7 @@ export default function Settings() {
 
     try {
       // In a real app, save to database
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setSuccess("Maxfiylik sozlamalari saqlandi!");
     } catch (error: any) {
       setError("Sozlamalar saqlanishda xatolik yuz berdi");
@@ -159,7 +159,7 @@ export default function Settings() {
 
     try {
       const { error } = await supabase.auth.updateUser({
-        password: newPassword
+        password: newPassword,
       });
 
       if (error) throw error;
@@ -181,23 +181,17 @@ export default function Settings() {
       // First delete user data
       if (user) {
         // Delete user's invitations
-        await supabase
-          .from('invitations')
-          .delete()
-          .eq('user_id', user.id);
+        await supabase.from("invitations").delete().eq("user_id", user.id);
 
         // Delete profile
-        await supabase
-          .from('profiles')
-          .delete()
-          .eq('id', user.id);
+        await supabase.from("profiles").delete().eq("id", user.id);
       }
 
       // Then delete auth user
-      const { error } = await supabase.auth.admin.deleteUser(user?.id || '');
+      const { error } = await supabase.auth.admin.deleteUser(user?.id || "");
       if (error) throw error;
 
-      navigate('/');
+      navigate("/");
     } catch (error: any) {
       setError("Hisobni o'chirishda xatolik yuz berdi");
     } finally {
@@ -212,30 +206,30 @@ export default function Settings() {
 
       // Get user data
       const { data: invitations } = await supabase
-        .from('invitations')
-        .select('*')
-        .eq('user_id', user.id);
+        .from("invitations")
+        .select("*")
+        .eq("user_id", user.id);
 
       const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
         .single();
 
       const exportData = {
         profile,
         invitations,
-        exportDate: new Date().toISOString()
+        exportDate: new Date().toISOString(),
       };
 
       // Download as JSON
       const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-        type: 'application/json'
+        type: "application/json",
       });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = `taklifnoma-data-${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `taklifnoma-data-${new Date().toISOString().split("T")[0]}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -262,7 +256,9 @@ export default function Settings() {
                   Profilga qaytish
                 </Link>
               </Button>
-              <h1 className="font-heading text-xl font-bold text-foreground">Sozlamalar</h1>
+              <h1 className="font-heading text-xl font-bold text-foreground">
+                Sozlamalar
+              </h1>
             </div>
           </div>
         </nav>
@@ -272,14 +268,18 @@ export default function Settings() {
           {success && (
             <Alert className="mb-6 border-green-200 bg-green-50/50 animate-fade-in">
               <Check className="h-4 w-4 text-green-600" />
-              <AlertDescription className="text-green-800">{success}</AlertDescription>
+              <AlertDescription className="text-green-800">
+                {success}
+              </AlertDescription>
             </Alert>
           )}
 
           {error && (
             <Alert className="mb-6 border-red-200 bg-red-50/50 animate-shake">
               <X className="h-4 w-4 text-red-600" />
-              <AlertDescription className="text-red-800">{error}</AlertDescription>
+              <AlertDescription className="text-red-800">
+                {error}
+              </AlertDescription>
             </Alert>
           )}
 
@@ -305,82 +305,108 @@ export default function Settings() {
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label className="text-base font-medium">Email Bildirishnomalar</Label>
+                      <Label className="text-base font-medium">
+                        Email Bildirishnomalar
+                      </Label>
                       <p className="text-sm text-muted-foreground">
-                        Muhim yangilanishlar haqida email orqali xabardor bo'ling
+                        Muhim yangilanishlar haqida email orqali xabardor
+                        bo'ling
                       </p>
                     </div>
                     <Switch
                       checked={notifications.emailNotifications}
-                      onCheckedChange={(checked) => 
-                        setNotifications(prev => ({ ...prev, emailNotifications: checked }))
+                      onCheckedChange={(checked) =>
+                        setNotifications((prev) => ({
+                          ...prev,
+                          emailNotifications: checked,
+                        }))
                       }
                     />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label className="text-base font-medium">SMS Bildirishnomalar</Label>
+                      <Label className="text-base font-medium">
+                        SMS Bildirishnomalar
+                      </Label>
                       <p className="text-sm text-muted-foreground">
                         Tezkor xabarlar uchun SMS bildirishnomalar
                       </p>
                     </div>
                     <Switch
                       checked={notifications.smsNotifications}
-                      onCheckedChange={(checked) => 
-                        setNotifications(prev => ({ ...prev, smsNotifications: checked }))
+                      onCheckedChange={(checked) =>
+                        setNotifications((prev) => ({
+                          ...prev,
+                          smsNotifications: checked,
+                        }))
                       }
                     />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label className="text-base font-medium">RSVP Yangilanishlari</Label>
+                      <Label className="text-base font-medium">
+                        RSVP Yangilanishlari
+                      </Label>
                       <p className="text-sm text-muted-foreground">
                         Mehmonlar javob berganida xabardor bo'ling
                       </p>
                     </div>
                     <Switch
                       checked={notifications.rsvpUpdates}
-                      onCheckedChange={(checked) => 
-                        setNotifications(prev => ({ ...prev, rsvpUpdates: checked }))
+                      onCheckedChange={(checked) =>
+                        setNotifications((prev) => ({
+                          ...prev,
+                          rsvpUpdates: checked,
+                        }))
                       }
                     />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label className="text-base font-medium">Marketing Xabarlari</Label>
+                      <Label className="text-base font-medium">
+                        Marketing Xabarlari
+                      </Label>
                       <p className="text-sm text-muted-foreground">
                         Yangi imkoniyatlar va takliflar haqida xabarlar
                       </p>
                     </div>
                     <Switch
                       checked={notifications.marketingEmails}
-                      onCheckedChange={(checked) => 
-                        setNotifications(prev => ({ ...prev, marketingEmails: checked }))
+                      onCheckedChange={(checked) =>
+                        setNotifications((prev) => ({
+                          ...prev,
+                          marketingEmails: checked,
+                        }))
                       }
                     />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label className="text-base font-medium">Haftalik Hisobotlar</Label>
+                      <Label className="text-base font-medium">
+                        Haftalik Hisobotlar
+                      </Label>
                       <p className="text-sm text-muted-foreground">
                         Taklifnomalar statistikasi bo'yicha haftalik hisobot
                       </p>
                     </div>
                     <Switch
                       checked={notifications.weeklyReports}
-                      onCheckedChange={(checked) => 
-                        setNotifications(prev => ({ ...prev, weeklyReports: checked }))
+                      onCheckedChange={(checked) =>
+                        setNotifications((prev) => ({
+                          ...prev,
+                          weeklyReports: checked,
+                        }))
                       }
                     />
                   </div>
                 </div>
 
                 <div className="flex justify-end mt-6">
-                  <Button 
+                  <Button
                     onClick={saveNotificationSettings}
                     disabled={loading}
                     className="primary-gradient hover-lift"
@@ -409,67 +435,83 @@ export default function Settings() {
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label className="text-base font-medium">Email Ko'rsatish</Label>
+                      <Label className="text-base font-medium">
+                        Email Ko'rsatish
+                      </Label>
                       <p className="text-sm text-muted-foreground">
                         Boshqalar sizning email manzilingizni ko'ra olsinmi
                       </p>
                     </div>
                     <Switch
                       checked={privacy.showEmail}
-                      onCheckedChange={(checked) => 
-                        setPrivacy(prev => ({ ...prev, showEmail: checked }))
+                      onCheckedChange={(checked) =>
+                        setPrivacy((prev) => ({ ...prev, showEmail: checked }))
                       }
                     />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label className="text-base font-medium">Telefon Ko'rsatish</Label>
+                      <Label className="text-base font-medium">
+                        Telefon Ko'rsatish
+                      </Label>
                       <p className="text-sm text-muted-foreground">
                         Boshqalar sizning telefon raqamingizni ko'ra olsinmi
                       </p>
                     </div>
                     <Switch
                       checked={privacy.showPhone}
-                      onCheckedChange={(checked) => 
-                        setPrivacy(prev => ({ ...prev, showPhone: checked }))
+                      onCheckedChange={(checked) =>
+                        setPrivacy((prev) => ({ ...prev, showPhone: checked }))
                       }
                     />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label className="text-base font-medium">Qidiruv Indexlash</Label>
+                      <Label className="text-base font-medium">
+                        Qidiruv Indexlash
+                      </Label>
                       <p className="text-sm text-muted-foreground">
-                        Google kabi qidiruv tizimlarida ko'rinishga ruxsat bering
+                        Google kabi qidiruv tizimlarida ko'rinishga ruxsat
+                        bering
                       </p>
                     </div>
                     <Switch
                       checked={privacy.allowSearchIndexing}
-                      onCheckedChange={(checked) => 
-                        setPrivacy(prev => ({ ...prev, allowSearchIndexing: checked }))
+                      onCheckedChange={(checked) =>
+                        setPrivacy((prev) => ({
+                          ...prev,
+                          allowSearchIndexing: checked,
+                        }))
                       }
                     />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label className="text-base font-medium">Ma'lumotlar Qayta Ishlash</Label>
+                      <Label className="text-base font-medium">
+                        Ma'lumotlar Qayta Ishlash
+                      </Label>
                       <p className="text-sm text-muted-foreground">
-                        Xizmatni yaxshilash uchun ma'lumotlaringizni ishlatishga rozilik
+                        Xizmatni yaxshilash uchun ma'lumotlaringizni ishlatishga
+                        rozilik
                       </p>
                     </div>
                     <Switch
                       checked={privacy.dataProcessing}
-                      onCheckedChange={(checked) => 
-                        setPrivacy(prev => ({ ...prev, dataProcessing: checked }))
+                      onCheckedChange={(checked) =>
+                        setPrivacy((prev) => ({
+                          ...prev,
+                          dataProcessing: checked,
+                        }))
                       }
                     />
                   </div>
                 </div>
 
                 <div className="flex justify-end mt-6">
-                  <Button 
+                  <Button
                     onClick={savePrivacySettings}
                     disabled={loading}
                     className="primary-gradient hover-lift"
@@ -501,7 +543,7 @@ export default function Settings() {
                     <Key className="w-5 h-5" />
                     Parolni O'zgartirish
                   </h3>
-                  
+
                   <div className="grid md:grid-cols-3 gap-4 mb-4">
                     <div>
                       <Label htmlFor="currentPassword">Joriy parol</Label>
@@ -524,7 +566,9 @@ export default function Settings() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="confirmPassword">Parolni tasdiqlang</Label>
+                      <Label htmlFor="confirmPassword">
+                        Parolni tasdiqlang
+                      </Label>
                       <Input
                         id="confirmPassword"
                         type="password"
@@ -534,8 +578,8 @@ export default function Settings() {
                       />
                     </div>
                   </div>
-                  
-                  <Button 
+
+                  <Button
                     onClick={changePassword}
                     disabled={loading || !newPassword || !confirmPassword}
                     variant="outline"
@@ -553,15 +597,20 @@ export default function Settings() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label className="text-base font-medium">Kirish Ogohlantirishlari</Label>
+                      <Label className="text-base font-medium">
+                        Kirish Ogohlantirishlari
+                      </Label>
                       <p className="text-sm text-muted-foreground">
                         Yangi qurilmadan kirilganida xabardor bo'ling
                       </p>
                     </div>
                     <Switch
                       checked={security.loginAlerts}
-                      onCheckedChange={(checked) => 
-                        setSecurity(prev => ({ ...prev, loginAlerts: checked }))
+                      onCheckedChange={(checked) =>
+                        setSecurity((prev) => ({
+                          ...prev,
+                          loginAlerts: checked,
+                        }))
                       }
                     />
                   </div>
@@ -581,12 +630,14 @@ export default function Settings() {
 
                 <div className="space-y-6">
                   <div>
-                    <Label className="text-base font-medium mb-4 block">Mavzu</Label>
+                    <Label className="text-base font-medium mb-4 block">
+                      Mavzu
+                    </Label>
                     <div className="grid grid-cols-3 gap-4">
                       {[
-                        { value: 'light', label: 'Yorqin', icon: Sun },
-                        { value: 'dark', label: "Qorong'i", icon: Moon },
-                        { value: 'system', label: 'Avtomatik', icon: Monitor }
+                        { value: "light", label: "Yorqin", icon: Sun },
+                        { value: "dark", label: "Qorong'i", icon: Moon },
+                        { value: "system", label: "Avtomatik", icon: Monitor },
                       ].map((option) => {
                         const Icon = option.icon;
                         return (
@@ -595,12 +646,14 @@ export default function Settings() {
                             onClick={() => setTheme(option.value as any)}
                             className={`p-4 border-2 rounded-lg transition-all hover:border-primary/50 ${
                               theme === option.value
-                                ? 'border-primary bg-primary/5'
-                                : 'border-border'
+                                ? "border-primary bg-primary/5"
+                                : "border-border"
                             }`}
                           >
                             <Icon className="w-6 h-6 mx-auto mb-2" />
-                            <div className="text-sm font-medium">{option.label}</div>
+                            <div className="text-sm font-medium">
+                              {option.label}
+                            </div>
                           </button>
                         );
                       })}
@@ -628,9 +681,14 @@ export default function Settings() {
                       Ma'lumotlarni Yuklab Olish
                     </h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      Barcha shaxsiy ma'lumotlaringizni JSON formatda yuklab oling
+                      Barcha shaxsiy ma'lumotlaringizni JSON formatda yuklab
+                      oling
                     </p>
-                    <Button onClick={exportData} disabled={loading} variant="outline">
+                    <Button
+                      onClick={exportData}
+                      disabled={loading}
+                      variant="outline"
+                    >
                       {loading ? (
                         <Loader2 className="w-4 h-4 animate-spin mr-2" />
                       ) : (
@@ -647,9 +705,10 @@ export default function Settings() {
                       Xavfli Zona
                     </h3>
                     <p className="text-sm text-red-600 mb-4">
-                      Hisobingizni butunlay o'chirish. Bu amal qaytarib bo'lmaydi!
+                      Hisobingizni butunlay o'chirish. Bu amal qaytarib
+                      bo'lmaydi!
                     </p>
-                    
+
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button variant="destructive">
@@ -659,10 +718,13 @@ export default function Settings() {
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>Hisobni o'chirishni tasdiqlang</AlertDialogTitle>
+                          <AlertDialogTitle>
+                            Hisobni o'chirishni tasdiqlang
+                          </AlertDialogTitle>
                           <AlertDialogDescription>
-                            Bu amal qaytarib bo'lmaydi. Barcha ma'lumotlaringiz, taklifnomalaringiz 
-                            va mehmonlar ro'yxati butunlay yo'q qilinadi.
+                            Bu amal qaytarib bo'lmaydi. Barcha ma'lumotlaringiz,
+                            taklifnomalaringiz va mehmonlar ro'yxati butunlay
+                            yo'q qilinadi.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>

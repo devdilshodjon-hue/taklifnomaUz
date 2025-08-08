@@ -5,6 +5,7 @@ A comprehensive wedding invitation platform built with React, TypeScript, Supaba
 ## 🌟 Features
 
 ### ✅ **Complete Authentication System**
+
 - Google OAuth Sign-in
 - Email/Password authentication
 - Protected routes and pages
@@ -12,12 +13,14 @@ A comprehensive wedding invitation platform built with React, TypeScript, Supaba
 - Session persistence
 
 ### 🗄️ **Real Database Integration**
+
 - PostgreSQL database with Supabase
 - Real-time data synchronization
 - Secure Row Level Security (RLS)
 - Backup localStorage fallback
 
 ### 🎨 **Advanced Template System**
+
 - 15+ professional wedding templates
 - Custom template builder
 - Real-time design preview
@@ -25,6 +28,7 @@ A comprehensive wedding invitation platform built with React, TypeScript, Supaba
 - Public/private template sharing
 
 ### 📱 **Modern User Experience**
+
 - Fully responsive design
 - Beautiful animations throughout
 - Real-time form validation
@@ -32,6 +36,7 @@ A comprehensive wedding invitation platform built with React, TypeScript, Supaba
 - Success feedback
 
 ### 💌 **Invitation Management**
+
 - Create and customize invitations
 - Real-time RSVP tracking
 - Guest list management
@@ -39,6 +44,7 @@ A comprehensive wedding invitation platform built with React, TypeScript, Supaba
 - PDF export functionality
 
 ### ⚙️ **Complete Settings System**
+
 - Comprehensive user profiles
 - Privacy and security settings
 - Notification preferences
@@ -47,21 +53,21 @@ A comprehensive wedding invitation platform built with React, TypeScript, Supaba
 
 ## 🚀 **Pages & Features**
 
-| Page | Status | Features |
-|------|--------|----------|
-| **Home** | ✅ Complete | Landing page, features overview, pricing preview |
-| **Login/Register** | ✅ Complete | Google OAuth, email auth, password validation |
-| **Dashboard** | ✅ Complete | User stats, invitation management, profile access |
-| **Profile** | ✅ Complete | Personal info, avatar upload, statistics, achievements |
-| **Settings** | ✅ Complete | Notifications, privacy, security, account management |
-| **Templates** | ✅ Complete | Template gallery, filtering, preview, selection |
-| **Template Builder** | ✅ Complete | Custom template creation, real-time preview |
-| **Create Invitation** | ✅ Complete | Multi-step wizard, guest management, Supabase saving |
-| **Invitation View** | ✅ Complete | Template rendering, RSVP system, sharing |
-| **Pricing** | ✅ Complete | Multiple plans, feature comparison, FAQ |
-| **Contact** | ✅ Complete | Contact form, support information |
-| **Help** | �� Complete | FAQ, tutorials, support resources |
-| **Privacy/Terms** | ✅ Complete | Legal documents, privacy policy |
+| Page                  | Status      | Features                                               |
+| --------------------- | ----------- | ------------------------------------------------------ |
+| **Home**              | ✅ Complete | Landing page, features overview, pricing preview       |
+| **Login/Register**    | ✅ Complete | Google OAuth, email auth, password validation          |
+| **Dashboard**         | ✅ Complete | User stats, invitation management, profile access      |
+| **Profile**           | ✅ Complete | Personal info, avatar upload, statistics, achievements |
+| **Settings**          | ✅ Complete | Notifications, privacy, security, account management   |
+| **Templates**         | ✅ Complete | Template gallery, filtering, preview, selection        |
+| **Template Builder**  | ✅ Complete | Custom template creation, real-time preview            |
+| **Create Invitation** | ✅ Complete | Multi-step wizard, guest management, Supabase saving   |
+| **Invitation View**   | ✅ Complete | Template rendering, RSVP system, sharing               |
+| **Pricing**           | ✅ Complete | Multiple plans, feature comparison, FAQ                |
+| **Contact**           | ✅ Complete | Contact form, support information                      |
+| **Help**              | �� Complete | FAQ, tutorials, support resources                      |
+| **Privacy/Terms**     | ✅ Complete | Legal documents, privacy policy                        |
 
 ## 🛠️ **Technical Stack**
 
@@ -76,6 +82,7 @@ A comprehensive wedding invitation platform built with React, TypeScript, Supaba
 ## 📊 **Database Schema**
 
 ### Tables Created:
+
 - `profiles` - User profile information
 - `invitations` - Wedding invitation data
 - `guests` - Guest list management
@@ -83,6 +90,7 @@ A comprehensive wedding invitation platform built with React, TypeScript, Supaba
 - `custom_templates` - User-created templates
 
 ### Security:
+
 - Row Level Security (RLS) enabled
 - User-specific data isolation
 - Secure authentication policies
@@ -90,11 +98,13 @@ A comprehensive wedding invitation platform built with React, TypeScript, Supaba
 ## 🎯 **Key Functionalities**
 
 ### Authentication Flow:
+
 1. **Register/Login** - Google OAuth or email/password
 2. **Profile Setup** - Complete user profile
 3. **Dashboard Access** - Manage invitations and view stats
 
 ### Invitation Creation:
+
 1. **Template Selection** - Choose from 15+ templates or create custom
 2. **Information Input** - Couple names, date, venue, message
 3. **Guest Management** - Add guests with contact information
@@ -102,6 +112,7 @@ A comprehensive wedding invitation platform built with React, TypeScript, Supaba
 5. **Sharing & RSVP** - Multiple sharing options with tracking
 
 ### Template Builder:
+
 1. **Color Customization** - Full color palette control
 2. **Font Selection** - Multiple typography options
 3. **Layout Controls** - Spacing, borders, shadows
@@ -167,6 +178,7 @@ A comprehensive wedding invitation platform built with React, TypeScript, Supaba
 All core features are implemented and tested. The platform provides a complete, professional wedding invitation service with real authentication, database persistence, and beautiful user experience.
 
 ### **Key Achievements:**
+
 ✅ Google OAuth Integration  
 ✅ Real Supabase Database  
 ✅ Custom Template Builder  
@@ -174,4 +186,4 @@ All core features are implemented and tested. The platform provides a complete, 
 ✅ Beautiful Animations  
 ✅ Complete RSVP System  
 ✅ Multi-language Support (Uzbek)  
-✅ Professional UI/UX Design  
+✅ Professional UI/UX Design

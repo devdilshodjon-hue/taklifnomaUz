@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
-import { 
-  User, 
-  Mail, 
-  Calendar, 
-  MapPin, 
-  Phone, 
-  Edit, 
-  Save, 
-  Upload, 
+import {
+  User,
+  Mail,
+  Calendar,
+  MapPin,
+  Phone,
+  Edit,
+  Save,
+  Upload,
   Camera,
   Shield,
   Bell,
@@ -23,7 +23,7 @@ import {
   ArrowLeft,
   Loader2,
   Check,
-  X
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -66,7 +66,7 @@ export default function Profile() {
     totalInvitations: 0,
     totalViews: 0,
     totalRsvps: 0,
-    totalGuests: 0
+    totalGuests: 0,
   });
   const [recentInvitations, setRecentInvitations] = useState<Invitation[]>([]);
 
@@ -79,7 +79,7 @@ export default function Profile() {
     bio: "",
     location: "",
     website: "",
-    birth_date: ""
+    birth_date: "",
   });
 
   useEffect(() => {
@@ -92,7 +92,7 @@ export default function Profile() {
         bio: "",
         location: "",
         website: "",
-        birth_date: ""
+        birth_date: "",
       });
     }
     loadUserStats();
@@ -105,38 +105,46 @@ export default function Profile() {
     try {
       // Get total invitations
       const { count: invitationCount } = await supabase
-        .from('invitations')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id);
+        .from("invitations")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id);
 
       // Get total RSVPs
       const { count: rsvpCount } = await supabase
-        .from('rsvps')
-        .select('*', { count: 'exact', head: true })
-        .in('invitation_id', (await supabase
-          .from('invitations')
-          .select('id')
-          .eq('user_id', user.id)
-        ).data?.map(inv => inv.id) || []);
+        .from("rsvps")
+        .select("*", { count: "exact", head: true })
+        .in(
+          "invitation_id",
+          (
+            await supabase
+              .from("invitations")
+              .select("id")
+              .eq("user_id", user.id)
+          ).data?.map((inv) => inv.id) || [],
+        );
 
       // Get total guests
       const { count: guestCount } = await supabase
-        .from('guests')
-        .select('*', { count: 'exact', head: true })
-        .in('invitation_id', (await supabase
-          .from('invitations')
-          .select('id')
-          .eq('user_id', user.id)
-        ).data?.map(inv => inv.id) || []);
+        .from("guests")
+        .select("*", { count: "exact", head: true })
+        .in(
+          "invitation_id",
+          (
+            await supabase
+              .from("invitations")
+              .select("id")
+              .eq("user_id", user.id)
+          ).data?.map((inv) => inv.id) || [],
+        );
 
       setStats({
         totalInvitations: invitationCount || 0,
         totalViews: Math.floor(Math.random() * 500) + 100, // Demo data for views
         totalRsvps: rsvpCount || 0,
-        totalGuests: guestCount || 0
+        totalGuests: guestCount || 0,
       });
     } catch (error) {
-      console.error('Error loading stats:', error);
+      console.error("Error loading stats:", error);
     }
   };
 
@@ -145,24 +153,24 @@ export default function Profile() {
 
     try {
       const { data, error } = await supabase
-        .from('invitations')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
+        .from("invitations")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
         .limit(5);
 
       if (error) throw error;
 
       setRecentInvitations(data || []);
     } catch (error) {
-      console.error('Error loading recent invitations:', error);
+      console.error("Error loading recent invitations:", error);
     }
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -175,7 +183,7 @@ export default function Profile() {
       const { error } = await updateProfile({
         first_name: formData.first_name,
         last_name: formData.last_name,
-        email: formData.email
+        email: formData.email,
       });
 
       if (error) throw error;
@@ -189,25 +197,25 @@ export default function Profile() {
     }
   };
 
-  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file || !user) return;
 
     setUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
+      const fileExt = file.name.split(".").pop();
       const fileName = `${user.id}.${fileExt}`;
       const filePath = `avatars/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('avatars')
+        .from("avatars")
         .upload(filePath, file, { upsert: true });
 
       if (uploadError) throw uploadError;
 
-      const { data } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
+      const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
 
       await updateProfile({ avatar_url: data.publicUrl });
       setSuccess("Profil rasmi yangilandi!");
@@ -219,10 +227,30 @@ export default function Profile() {
   };
 
   const achievements = [
-    { icon: Calendar, title: "Birinchi Taklifnoma", description: "Birinchi taklifnomangizni yaratdingiz", earned: stats.totalInvitations > 0 },
-    { icon: Users, title: "Mehmon Mag'nit", description: "50+ mehmon taklif qildingiz", earned: stats.totalGuests >= 50 },
-    { icon: Heart, title: "Sevimli Yaratuvchi", description: "10+ taklifnoma yaratdingiz", earned: stats.totalInvitations >= 10 },
-    { icon: TrendingUp, title: "Popular Taklifnoma", description: "100+ ko'rish olganingiz", earned: stats.totalViews >= 100 }
+    {
+      icon: Calendar,
+      title: "Birinchi Taklifnoma",
+      description: "Birinchi taklifnomangizni yaratdingiz",
+      earned: stats.totalInvitations > 0,
+    },
+    {
+      icon: Users,
+      title: "Mehmon Mag'nit",
+      description: "50+ mehmon taklif qildingiz",
+      earned: stats.totalGuests >= 50,
+    },
+    {
+      icon: Heart,
+      title: "Sevimli Yaratuvchi",
+      description: "10+ taklifnoma yaratdingiz",
+      earned: stats.totalInvitations >= 10,
+    },
+    {
+      icon: TrendingUp,
+      title: "Popular Taklifnoma",
+      description: "100+ ko'rish olganingiz",
+      earned: stats.totalViews >= 100,
+    },
   ];
 
   return (
@@ -238,7 +266,9 @@ export default function Profile() {
                   Dashboard
                 </Link>
               </Button>
-              <h1 className="font-heading text-xl font-bold text-foreground">Mening Profilim</h1>
+              <h1 className="font-heading text-xl font-bold text-foreground">
+                Mening Profilim
+              </h1>
             </div>
             <div className="flex items-center gap-3">
               <Button variant="outline" asChild>
@@ -256,14 +286,18 @@ export default function Profile() {
           {success && (
             <Alert className="mb-6 border-green-200 bg-green-50/50 animate-fade-in">
               <Check className="h-4 w-4 text-green-600" />
-              <AlertDescription className="text-green-800">{success}</AlertDescription>
+              <AlertDescription className="text-green-800">
+                {success}
+              </AlertDescription>
             </Alert>
           )}
 
           {error && (
             <Alert className="mb-6 border-red-200 bg-red-50/50 animate-shake">
               <X className="h-4 w-4 text-red-600" />
-              <AlertDescription className="text-red-800">{error}</AlertDescription>
+              <AlertDescription className="text-red-800">
+                {error}
+              </AlertDescription>
             </Alert>
           )}
 
@@ -310,7 +344,9 @@ export default function Profile() {
                       <Input
                         id="firstName"
                         value={formData.first_name}
-                        onChange={(e) => handleInputChange('first_name', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("first_name", e.target.value)
+                        }
                         disabled={!editMode}
                         className="mt-1"
                       />
@@ -321,7 +357,9 @@ export default function Profile() {
                       <Input
                         id="lastName"
                         value={formData.last_name}
-                        onChange={(e) => handleInputChange('last_name', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("last_name", e.target.value)
+                        }
                         disabled={!editMode}
                         className="mt-1"
                       />
@@ -333,7 +371,9 @@ export default function Profile() {
                         id="email"
                         type="email"
                         value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("email", e.target.value)
+                        }
                         disabled={!editMode}
                         className="mt-1"
                       />
@@ -344,7 +384,9 @@ export default function Profile() {
                       <Input
                         id="phone"
                         value={formData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("phone", e.target.value)
+                        }
                         disabled={!editMode}
                         placeholder="+998 90 123 45 67"
                         className="mt-1"
@@ -356,7 +398,9 @@ export default function Profile() {
                       <Textarea
                         id="bio"
                         value={formData.bio}
-                        onChange={(e) => handleInputChange('bio', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("bio", e.target.value)
+                        }
                         disabled={!editMode}
                         placeholder="O'zingiz haqingizda qisqacha ma'lumot..."
                         className="mt-1"
@@ -368,7 +412,9 @@ export default function Profile() {
                       <Input
                         id="location"
                         value={formData.location}
-                        onChange={(e) => handleInputChange('location', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("location", e.target.value)
+                        }
                         disabled={!editMode}
                         placeholder="Toshkent, O'zbekiston"
                         className="mt-1"
@@ -380,7 +426,9 @@ export default function Profile() {
                       <Input
                         id="website"
                         value={formData.website}
-                        onChange={(e) => handleInputChange('website', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("website", e.target.value)
+                        }
                         disabled={!editMode}
                         placeholder="https://example.com"
                         className="mt-1"
@@ -417,15 +465,18 @@ export default function Profile() {
                   <h3 className="font-heading text-lg font-semibold text-foreground mb-6">
                     Profil Rasmi
                   </h3>
-                  
+
                   <div className="relative inline-block mb-6">
                     <Avatar className="w-32 h-32 mx-auto">
-                      <AvatarImage src={profile?.avatar_url || ""} alt={profile?.first_name || ""} />
+                      <AvatarImage
+                        src={profile?.avatar_url || ""}
+                        alt={profile?.first_name || ""}
+                      />
                       <AvatarFallback className="bg-primary text-white text-3xl">
                         {profile?.first_name?.[0] || user?.email?.[0] || "U"}
                       </AvatarFallback>
                     </Avatar>
-                    
+
                     <label
                       htmlFor="avatar-upload"
                       className="absolute bottom-0 right-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/80 transition-colors"
@@ -453,7 +504,10 @@ export default function Profile() {
                     </div>
                     <div className="flex items-center justify-center gap-2">
                       <Calendar className="w-4 h-4" />
-                      Ro'yxatdan o'tgan: {new Date(user?.created_at || '').toLocaleDateString('uz-UZ')}
+                      Ro'yxatdan o'tgan:{" "}
+                      {new Date(user?.created_at || "").toLocaleDateString(
+                        "uz-UZ",
+                      )}
                     </div>
                   </div>
                 </div>
@@ -470,7 +524,9 @@ export default function Profile() {
                   <div className="text-3xl font-bold text-foreground mb-2">
                     {stats.totalInvitations}
                   </div>
-                  <div className="text-sm text-muted-foreground">Taklifnomalar</div>
+                  <div className="text-sm text-muted-foreground">
+                    Taklifnomalar
+                  </div>
                 </div>
 
                 <div className="card-modern p-6 text-center animate-slide-up delay-100">
@@ -480,7 +536,9 @@ export default function Profile() {
                   <div className="text-3xl font-bold text-foreground mb-2">
                     {stats.totalViews}
                   </div>
-                  <div className="text-sm text-muted-foreground">Ko'rishlar</div>
+                  <div className="text-sm text-muted-foreground">
+                    Ko'rishlar
+                  </div>
                 </div>
 
                 <div className="card-modern p-6 text-center animate-slide-up delay-200">
@@ -490,7 +548,9 @@ export default function Profile() {
                   <div className="text-3xl font-bold text-foreground mb-2">
                     {stats.totalRsvps}
                   </div>
-                  <div className="text-sm text-muted-foreground">RSVP Javoblar</div>
+                  <div className="text-sm text-muted-foreground">
+                    RSVP Javoblar
+                  </div>
                 </div>
 
                 <div className="card-modern p-6 text-center animate-slide-up delay-300">
@@ -511,7 +571,7 @@ export default function Profile() {
                 <h3 className="font-heading text-xl font-bold text-foreground mb-6">
                   So'nggi Taklifnomalar
                 </h3>
-                
+
                 {recentInvitations.length > 0 ? (
                   <div className="space-y-4">
                     {recentInvitations.map((invitation, index) => (
@@ -525,9 +585,17 @@ export default function Profile() {
                             {invitation.groom_name} & {invitation.bride_name}
                           </h4>
                           <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
-                            <span>{new Date(invitation.wedding_date).toLocaleDateString('uz-UZ')}</span>
+                            <span>
+                              {new Date(
+                                invitation.wedding_date,
+                              ).toLocaleDateString("uz-UZ")}
+                            </span>
                             <span>{invitation.venue}</span>
-                            <Badge variant={invitation.is_active ? "default" : "secondary"}>
+                            <Badge
+                              variant={
+                                invitation.is_active ? "default" : "secondary"
+                              }
+                            >
                               {invitation.is_active ? "Faol" : "Noaktiv"}
                             </Badge>
                           </div>
@@ -558,7 +626,7 @@ export default function Profile() {
                 <h3 className="font-heading text-xl font-bold text-foreground mb-6">
                   Yutuqlar va Mukofotlar
                 </h3>
-                
+
                 <div className="grid md:grid-cols-2 gap-6">
                   {achievements.map((achievement, index) => {
                     const Icon = achievement.icon;
@@ -567,17 +635,19 @@ export default function Profile() {
                         key={index}
                         className={`p-6 border-2 rounded-lg transition-all duration-300 animate-slide-up ${
                           achievement.earned
-                            ? 'border-primary bg-primary/5 hover:bg-primary/10'
-                            : 'border-border bg-muted/30'
+                            ? "border-primary bg-primary/5 hover:bg-primary/10"
+                            : "border-border bg-muted/30"
                         }`}
                         style={{ animationDelay: `${index * 0.1}s` }}
                       >
                         <div className="flex items-start gap-4">
-                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                            achievement.earned
-                              ? 'bg-primary text-white'
-                              : 'bg-muted text-muted-foreground'
-                          }`}>
+                          <div
+                            className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                              achievement.earned
+                                ? "bg-primary text-white"
+                                : "bg-muted text-muted-foreground"
+                            }`}
+                          >
                             <Icon className="w-6 h-6" />
                           </div>
                           <div className="flex-1">

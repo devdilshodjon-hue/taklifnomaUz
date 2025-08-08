@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
-import { 
-  Share2, 
-  Calendar, 
-  MapPin, 
-  Clock, 
-  Heart, 
+import {
+  Share2,
+  Calendar,
+  MapPin,
+  Clock,
+  Heart,
   Copy,
   Download,
   ArrowLeft,
@@ -16,7 +16,7 @@ import {
   MessageCircle,
   Phone,
   Mail,
-  QrCode
+  QrCode,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,7 +67,7 @@ export default function InvitationView() {
     plus_one_attending: null,
     message: "",
     email: "",
-    phone: ""
+    phone: "",
   });
 
   useEffect(() => {
@@ -81,12 +81,12 @@ export default function InvitationView() {
 
     try {
       setLoading(true);
-      
+
       // First try to load from Supabase
       const { data, error } = await supabase
-        .from('invitations')
-        .select('*')
-        .eq('id', id)
+        .from("invitations")
+        .select("*")
+        .eq("id", id)
         .single();
 
       if (error) {
@@ -96,7 +96,7 @@ export default function InvitationView() {
           const parsedData = JSON.parse(localData);
           setInvitation(parsedData);
         } else {
-          throw new Error('Taklifnoma topilmadi');
+          throw new Error("Taklifnoma topilmadi");
         }
       } else {
         setInvitation(data);
@@ -105,10 +105,9 @@ export default function InvitationView() {
       // Track view (increment view count)
       // In a real app, you'd want to track unique views
       // await supabase.rpc('increment_views', { invitation_id: id });
-
     } catch (error: any) {
-      console.error('Error loading invitation:', error);
-      setError(error.message || 'Taklifnomani yuklashda xatolik yuz berdi');
+      console.error("Error loading invitation:", error);
+      setError(error.message || "Taklifnomani yuklashda xatolik yuz berdi");
     } finally {
       setLoading(false);
     }
@@ -131,27 +130,31 @@ export default function InvitationView() {
         plus_one_attending: rsvpData.plus_one_attending,
         message: rsvpData.message || null,
         email: rsvpData.email || null,
-        phone: rsvpData.phone || null
+        phone: rsvpData.phone || null,
       };
 
-      const { error } = await supabase
-        .from('rsvps')
-        .insert([rsvpSubmission]);
+      const { error } = await supabase.from("rsvps").insert([rsvpSubmission]);
 
       if (error) {
         // Fallback to localStorage
-        const existingRSVPs = JSON.parse(localStorage.getItem(`rsvps_${invitation.id}`) || '[]');
+        const existingRSVPs = JSON.parse(
+          localStorage.getItem(`rsvps_${invitation.id}`) || "[]",
+        );
         existingRSVPs.push({
           ...rsvpSubmission,
           id: Date.now().toString(),
-          created_at: new Date().toISOString()
+          created_at: new Date().toISOString(),
         });
-        localStorage.setItem(`rsvps_${invitation.id}`, JSON.stringify(existingRSVPs));
+        localStorage.setItem(
+          `rsvps_${invitation.id}`,
+          JSON.stringify(existingRSVPs),
+        );
       }
 
-      setSuccess(willAttend 
-        ? "Rahmat! Sizning ishtirokingiz tasdiqlandi 🎉" 
-        : "Rahmat! Sizning javobingiz qabul qilindi"
+      setSuccess(
+        willAttend
+          ? "Rahmat! Sizning ishtirokingiz tasdiqlandi 🎉"
+          : "Rahmat! Sizning javobingiz qabul qilindi",
       );
       setShowRSVP(false);
       setGuestName("");
@@ -161,11 +164,10 @@ export default function InvitationView() {
         plus_one_attending: null,
         message: "",
         email: "",
-        phone: ""
+        phone: "",
       });
-
     } catch (error: any) {
-      setError(error.message || 'RSVP yuborishda xatolik yuz berdi');
+      setError(error.message || "RSVP yuborishda xatolik yuz berdi");
     } finally {
       setRsvpLoading(false);
     }
@@ -180,7 +182,7 @@ export default function InvitationView() {
         await navigator.share({
           title: text,
           text: `Sizni ${invitation?.groom_name} va ${invitation?.bride_name}ning to'y marosimiga taklif qilamiz!`,
-          url: url
+          url: url,
         });
       } catch (error) {
         copyToClipboard(url);
@@ -201,14 +203,18 @@ export default function InvitationView() {
 
   const shareOnWhatsApp = () => {
     const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent(`Sizni ${invitation?.groom_name} va ${invitation?.bride_name}ning to'y marosimiga taklif qilamiz! 💒✨`);
-    window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
+    const text = encodeURIComponent(
+      `Sizni ${invitation?.groom_name} va ${invitation?.bride_name}ning to'y marosimiga taklif qilamiz! 💒✨`,
+    );
+    window.open(`https://wa.me/?text=${text}%20${url}`, "_blank");
   };
 
   const shareOnTelegram = () => {
     const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent(`${invitation?.groom_name} & ${invitation?.bride_name} to'y taklifnomasi`);
-    window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+    const text = encodeURIComponent(
+      `${invitation?.groom_name} & ${invitation?.bride_name} to'y taklifnomasi`,
+    );
+    window.open(`https://t.me/share/url?url=${url}&text=${text}`, "_blank");
   };
 
   const downloadAsPDF = () => {
@@ -262,7 +268,7 @@ export default function InvitationView() {
               Bosh sahifaga qaytish
             </Link>
           </Button>
-          
+
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={shareInvitation}>
               <Share2 className="w-4 h-4 mr-2" />
@@ -281,14 +287,18 @@ export default function InvitationView() {
         {success && (
           <Alert className="mb-6 border-green-200 bg-green-50/50 animate-fade-in">
             <CheckCircle className="h-4 w-4 text-green-600" />
-            <AlertDescription className="text-green-800">{success}</AlertDescription>
+            <AlertDescription className="text-green-800">
+              {success}
+            </AlertDescription>
           </Alert>
         )}
 
         {error && (
           <Alert className="mb-6 border-red-200 bg-red-50/50 animate-shake">
             <XCircle className="h-4 w-4 text-red-600" />
-            <AlertDescription className="text-red-800">{error}</AlertDescription>
+            <AlertDescription className="text-red-800">
+              {error}
+            </AlertDescription>
           </Alert>
         )}
 
@@ -296,7 +306,7 @@ export default function InvitationView() {
           {/* Invitation Display */}
           <div className="space-y-6">
             <div className="card-modern overflow-hidden">
-              <TemplateRenderer 
+              <TemplateRenderer
                 invitation={invitation}
                 guestName={guestName || "Hurmatli Mehmon"}
               />
@@ -308,15 +318,24 @@ export default function InvitationView() {
                 Taklifnomani Ulashing
               </h3>
               <div className="grid grid-cols-2 gap-3">
-                <Button onClick={shareOnWhatsApp} className="bg-green-600 hover:bg-green-700 text-white">
+                <Button
+                  onClick={shareOnWhatsApp}
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                >
                   <MessageCircle className="w-4 h-4 mr-2" />
                   WhatsApp
                 </Button>
-                <Button onClick={shareOnTelegram} className="bg-blue-500 hover:bg-blue-600 text-white">
+                <Button
+                  onClick={shareOnTelegram}
+                  className="bg-blue-500 hover:bg-blue-600 text-white"
+                >
                   <Phone className="w-4 h-4 mr-2" />
                   Telegram
                 </Button>
-                <Button onClick={() => copyToClipboard(window.location.href)} variant="outline">
+                <Button
+                  onClick={() => copyToClipboard(window.location.href)}
+                  variant="outline"
+                >
                   <Copy className="w-4 h-4 mr-2" />
                   Havolani Nusxalash
                 </Button>
@@ -335,19 +354,22 @@ export default function InvitationView() {
               <h3 className="font-heading text-xl font-bold text-foreground mb-6">
                 Tadbir Ma'lumotlari
               </h3>
-              
+
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <Calendar className="w-5 h-5 text-primary mt-0.5" />
                   <div>
                     <p className="font-medium text-foreground">Sana va Vaqt</p>
                     <p className="text-muted-foreground">
-                      {new Date(invitation.wedding_date).toLocaleDateString('uz-UZ', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
+                      {new Date(invitation.wedding_date).toLocaleDateString(
+                        "uz-UZ",
+                        {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        },
+                      )}
                     </p>
                     {invitation.wedding_time && (
                       <p className="text-muted-foreground">
@@ -362,9 +384,13 @@ export default function InvitationView() {
                   <div>
                     <p className="font-medium text-foreground">Joy</p>
                     <p className="text-muted-foreground">{invitation.venue}</p>
-                    <p className="text-sm text-muted-foreground">{invitation.address}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {invitation.address}
+                    </p>
                     {invitation.city && (
-                      <p className="text-sm text-muted-foreground">{invitation.city}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {invitation.city}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -373,8 +399,12 @@ export default function InvitationView() {
                   <div className="flex items-start gap-3">
                     <Heart className="w-5 h-5 text-primary mt-0.5" />
                     <div>
-                      <p className="font-medium text-foreground">Maxsus Xabar</p>
-                      <p className="text-muted-foreground">{invitation.custom_message}</p>
+                      <p className="font-medium text-foreground">
+                        Maxsus Xabar
+                      </p>
+                      <p className="text-muted-foreground">
+                        {invitation.custom_message}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -399,12 +429,16 @@ export default function InvitationView() {
                       className="mt-1"
                     />
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-3">
-                    <Button 
+                    <Button
                       onClick={() => {
                         if (guestName.trim()) {
-                          setRsvpData(prev => ({ ...prev, guest_name: guestName, will_attend: true }));
+                          setRsvpData((prev) => ({
+                            ...prev,
+                            guest_name: guestName,
+                            will_attend: true,
+                          }));
                           setShowRSVP(true);
                         } else {
                           setError("Iltimos, ismingizni kiriting");
@@ -415,7 +449,7 @@ export default function InvitationView() {
                       <CheckCircle className="w-4 h-4 mr-2" />
                       Kelaman
                     </Button>
-                    <Button 
+                    <Button
                       onClick={() => {
                         if (guestName.trim()) {
                           handleRSVPSubmit(false);
@@ -448,7 +482,12 @@ export default function InvitationView() {
                       id="email"
                       type="email"
                       value={rsvpData.email}
-                      onChange={(e) => setRsvpData(prev => ({ ...prev, email: e.target.value }))}
+                      onChange={(e) =>
+                        setRsvpData((prev) => ({
+                          ...prev,
+                          email: e.target.value,
+                        }))
+                      }
                       placeholder="example@email.com"
                       className="mt-1"
                     />
@@ -459,7 +498,12 @@ export default function InvitationView() {
                     <Input
                       id="phone"
                       value={rsvpData.phone}
-                      onChange={(e) => setRsvpData(prev => ({ ...prev, phone: e.target.value }))}
+                      onChange={(e) =>
+                        setRsvpData((prev) => ({
+                          ...prev,
+                          phone: e.target.value,
+                        }))
+                      }
                       placeholder="+998 90 123 45 67"
                       className="mt-1"
                     />
@@ -470,14 +514,19 @@ export default function InvitationView() {
                     <Textarea
                       id="message"
                       value={rsvpData.message}
-                      onChange={(e) => setRsvpData(prev => ({ ...prev, message: e.target.value }))}
+                      onChange={(e) =>
+                        setRsvpData((prev) => ({
+                          ...prev,
+                          message: e.target.value,
+                        }))
+                      }
                       placeholder="Tilaklar yoki savollaringiz..."
                       className="mt-1"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <Button 
+                    <Button
                       onClick={() => handleRSVPSubmit(true)}
                       disabled={rsvpLoading}
                       className="bg-green-600 hover:bg-green-700 text-white"
@@ -489,7 +538,7 @@ export default function InvitationView() {
                       )}
                       Tasdiqlash
                     </Button>
-                    <Button 
+                    <Button
                       onClick={() => setShowRSVP(false)}
                       variant="outline"
                     >
@@ -502,7 +551,10 @@ export default function InvitationView() {
 
             {/* Status Badge */}
             <div className="text-center">
-              <Badge variant={invitation.is_active ? "default" : "secondary"} className="text-sm">
+              <Badge
+                variant={invitation.is_active ? "default" : "secondary"}
+                className="text-sm"
+              >
                 {invitation.is_active ? "✨ Faol Taklifnoma" : "📋 Noaktiv"}
               </Badge>
             </div>

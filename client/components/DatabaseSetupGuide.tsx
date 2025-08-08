@@ -73,11 +73,39 @@ ALTER TABLE public.rsvps ENABLE ROW LEVEL SECURITY;`;
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(sqlScript);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      // Birinchi Clipboard API dan foydalanishga harakat qilamiz
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(sqlScript);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+        return;
+      }
+
+      // Fallback: eski execCommand usuli
+      const textArea = document.createElement('textarea');
+      textArea.value = sqlScript;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        } else {
+          throw new Error('execCommand nusxalash muvaffaqiyatsiz');
+        }
+      } finally {
+        document.body.removeChild(textArea);
+      }
     } catch (err) {
       console.error('Clipboard ga nusxalashda xatolik:', err);
+      // Foydalanuvchiga manual copy ni taklif qilamiz
+      alert('Avtomatik nusxalash ishlamadi. Iltimos, matnni qo\'lda belgilab nusxalang.');
     }
   };
 

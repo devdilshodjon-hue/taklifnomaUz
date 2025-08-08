@@ -39,7 +39,7 @@ class ErrorBoundary extends React.Component<
             >
               Sahifani yangilash
             </button>
-            {process.env.NODE_ENV === 'development' && (
+            {process.env.NODE_ENV === "development" && (
               <details className="mt-4 text-left">
                 <summary className="cursor-pointer text-sm text-muted-foreground">
                   Xatolik tafsilotlari (development)

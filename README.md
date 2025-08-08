@@ -7,6 +7,7 @@ Create a **professional wedding invitation platform** called "TaklifNoma" (Uzbek
 ### 🚀 CORE FUNCTIONALITY REQUIREMENTS
 
 A modern, beautiful wedding invitation platform where users can:
+
 - ✅ **Create digital wedding invitations** with professional templates
 - ✅ **Build custom templates** with real-time preview
 - ✅ **Manage guest lists** and track RSVP responses
@@ -19,6 +20,7 @@ A modern, beautiful wedding invitation platform where users can:
 ### 🛠 TECHNICAL STACK
 
 **Frontend Technologies:**
+
 ```json
 {
   "framework": "React 18 with TypeScript",
@@ -34,6 +36,7 @@ A modern, beautiful wedding invitation platform where users can:
 ```
 
 **Backend & Database:**
+
 ```json
 {
   "database": "Supabase PostgreSQL",
@@ -90,85 +93,131 @@ taklifnoma/
 ### 🎨 DESIGN SYSTEM
 
 **Color Palette (CSS Custom Properties):**
+
 ```css
 :root {
-  --primary: 220 91% 56%;        /* Blue #4285f4 */
-  --background: 0 0% 100%;       /* White */
-  --foreground: 224 71% 4%;      /* Near Black */
-  --card: 0 0% 100%;             /* White */
-  --border: 220 13% 91%;         /* Light Gray */
-  --muted: 220 14% 96%;          /* Very Light Gray */
+  --primary: 220 91% 56%; /* Blue #4285f4 */
+  --background: 0 0% 100%; /* White */
+  --foreground: 224 71% 4%; /* Near Black */
+  --card: 0 0% 100%; /* White */
+  --border: 220 13% 91%; /* Light Gray */
+  --muted: 220 14% 96%; /* Very Light Gray */
 }
 
 .dark {
-  --background: 224 71% 4%;      /* Dark Blue */
-  --foreground: 0 0% 100%;       /* White */
-  --card: 224 71% 6%;            /* Slightly Lighter Dark */
-  --border: 215 28% 17%;         /* Dark Gray */
-  --muted: 215 28% 17%;          /* Dark Gray */
+  --background: 224 71% 4%; /* Dark Blue */
+  --foreground: 0 0% 100%; /* White */
+  --card: 224 71% 6%; /* Slightly Lighter Dark */
+  --border: 215 28% 17%; /* Dark Gray */
+  --muted: 215 28% 17%; /* Dark Gray */
 }
 ```
 
 **Typography System:**
+
 ```css
 /* Font Imports */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap");
 
 /* Font Applications */
-body { font-family: "Inter", sans-serif; }
-h1, h2, h3, h4, h5, h6 { font-family: "Poppins", sans-serif; }
-.font-accent { font-family: "Playfair Display", serif; }
+body {
+  font-family: "Inter", sans-serif;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppins", sans-serif;
+}
+.font-accent {
+  font-family: "Playfair Display", serif;
+}
 ```
 
 **Animation System:**
+
 ```css
 /* Keyframe Definitions */
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes scale-in {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes glow {
-  0%, 100% { box-shadow: 0 0 5px rgba(99, 102, 241, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.6); }
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(99, 102, 241, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+  }
 }
 
 /* Animation Classes */
-.animate-fade-in { animation: fade-in 0.6s ease-out; }
-.animate-slide-up { animation: slide-up 0.8s ease-out; }
-.animate-scale-in { animation: scale-in 0.5s ease-out; }
-.animate-glow { animation: glow 2s ease-in-out infinite; }
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out;
+}
+.animate-slide-up {
+  animation: slide-up 0.8s ease-out;
+}
+.animate-scale-in {
+  animation: scale-in 0.5s ease-out;
+}
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
 
 /* Hover Effects */
-.hover-lift { 
-  transition: all 0.3s ease; 
+.hover-lift {
+  transition: all 0.3s ease;
 }
-.hover-lift:hover { 
-  transform: translateY(-2px); 
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); 
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-.hover-scale { 
-  transition: transform 0.3s ease; 
+.hover-scale {
+  transition: transform 0.3s ease;
 }
-.hover-scale:hover { 
-  transform: scale(1.05); 
+.hover-scale:hover {
+  transform: scale(1.05);
 }
 ```
 
 ### 🗄 DATABASE SCHEMA
 
 **Complete SQL Setup:**
+
 ```sql
 -- 1. Profiles table (user information)
 CREATE TABLE IF NOT EXISTS public.profiles (
@@ -287,6 +336,7 @@ CREATE INDEX IF NOT EXISTS idx_custom_templates_public ON public.custom_template
 ### 📱 PAGE SPECIFICATIONS
 
 #### **1. Index.tsx (Landing Page)**
+
 ```tsx
 // Key Features:
 - Animated hero section with call-to-action
@@ -304,6 +354,7 @@ CREATE INDEX IF NOT EXISTS idx_custom_templates_public ON public.custom_template
 ```
 
 #### **2. Authentication (Login.tsx & Register.tsx)**
+
 ```tsx
 // Login Features:
 - Email/password authentication
@@ -321,6 +372,7 @@ CREATE INDEX IF NOT EXISTS idx_custom_templates_public ON public.custom_template
 ```
 
 #### **3. Dashboard.tsx (User Dashboard)**
+
 ```tsx
 // Key Components:
 - Welcome message with user's name
@@ -336,6 +388,7 @@ CREATE INDEX IF NOT EXISTS idx_custom_templates_public ON public.custom_template
 ```
 
 #### **4. Profile.tsx (4-Tab Profile System)**
+
 ```tsx
 // Tab 1: Profile Information
 - Personal details form (name, email, phone, bio, location)
@@ -363,6 +416,7 @@ CREATE INDEX IF NOT EXISTS idx_custom_templates_public ON public.custom_template
 ```
 
 #### **5. Settings.tsx (5-Tab Settings System)**
+
 ```tsx
 // Tab 1: Notifications
 - Email notification preferences
@@ -401,6 +455,7 @@ CREATE INDEX IF NOT EXISTS idx_custom_templates_public ON public.custom_template
 ```
 
 #### **6. CreateInvitation.tsx (Multi-Step Creator)**
+
 ```tsx
 // Step 1: Basic Information
 - Groom and bride names
@@ -434,6 +489,7 @@ CREATE INDEX IF NOT EXISTS idx_custom_templates_public ON public.custom_template
 ```
 
 #### **7. TemplateBuilder.tsx (Advanced Template Creator)**
+
 ```tsx
 // Left Panel - Controls:
 - Template information form
@@ -458,6 +514,7 @@ CREATE INDEX IF NOT EXISTS idx_custom_templates_public ON public.custom_template
 ```
 
 #### **8. InvitationView.tsx (Public Invitation Display)**
+
 ```tsx
 // Core Features:
 - Beautiful invitation rendering
@@ -478,6 +535,7 @@ CREATE INDEX IF NOT EXISTS idx_custom_templates_public ON public.custom_template
 ### 🔧 KEY COMPONENT SPECIFICATIONS
 
 #### **Navigation.tsx (Smart Navigation)**
+
 ```tsx
 interface NavigationProps {
   showBackButton?: boolean;
@@ -493,6 +551,7 @@ interface NavigationProps {
 ```
 
 #### **TemplateRenderer.tsx (Universal Template Engine)**
+
 ```tsx
 // Capabilities:
 - Renders built-in templates
@@ -510,6 +569,7 @@ interface NavigationProps {
 ```
 
 #### **AuthContext.tsx (Enhanced Authentication)**
+
 ```tsx
 // Features:
 - Session validation and recovery
@@ -528,6 +588,7 @@ interface NavigationProps {
 ```
 
 #### **ErrorBoundary.tsx (Error Recovery)**
+
 ```tsx
 // Capabilities:
 - Catches React component errors
@@ -541,6 +602,7 @@ interface NavigationProps {
 ### 🎯 UZBEK LANGUAGE IMPLEMENTATION
 
 **Primary Language Content:**
+
 ```typescript
 // Navigation & UI
 const translations = {
@@ -549,9 +611,9 @@ const translations = {
     templates: "Shablonlar",
     pricing: "Narxlar",
     login: "Kirish",
-    register: "Ro'yxatdan o'tish"
+    register: "Ro'yxatdan o'tish",
   },
-  
+
   // Invitation Content
   invitation: {
     groomBride: "Kuyov & Kelin",
@@ -560,9 +622,9 @@ const translations = {
     time: "Vaqt",
     address: "Manzil",
     message: "Maxsus xabar",
-    rsvp: "Javob berish"
+    rsvp: "Javob berish",
   },
-  
+
   // Common Actions
   actions: {
     save: "Saqlash",
@@ -570,20 +632,21 @@ const translations = {
     create: "Yaratish",
     edit: "Tahrirlash",
     delete: "O'chirish",
-    share: "Ulashish"
-  }
+    share: "Ulashish",
+  },
 };
 ```
 
 **Date and Time Formatting:**
+
 ```typescript
 // Uzbek date formatting
 const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString('uz-UZ', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    weekday: 'long'
+  return new Date(date).toLocaleDateString("uz-UZ", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    weekday: "long",
   });
 };
 
@@ -595,6 +658,7 @@ const formatDate = (date: string) => {
 ### 💼 BUSINESS LOGIC SPECIFICATIONS
 
 #### **Template System:**
+
 ```typescript
 // Built-in Templates
 - Classic Rose (Klassik Atirgul)
@@ -612,6 +676,7 @@ const formatDate = (date: string) => {
 ```
 
 #### **Pricing Structure:**
+
 ```typescript
 const plans = [
   {
@@ -619,21 +684,21 @@ const plans = [
     price: { monthly: 0, yearly: 0 },
     features: [
       "3 ta taklifnoma",
-      "5 ta asosiy shablon", 
+      "5 ta asosiy shablon",
       "50 ta mehmon",
-      "Asosiy ulashish"
-    ]
+      "Asosiy ulashish",
+    ],
   },
   {
-    name: "Premium", 
+    name: "Premium",
     price: { monthly: 29000, yearly: 290000 },
     features: [
       "Cheksiz taklifnoma",
       "15+ premium shablon",
       "Cheksiz mehmon",
       "QR kod yaratish",
-      "PDF yuklab olish"
-    ]
+      "PDF yuklab olish",
+    ],
   },
   {
     name: "Biznes",
@@ -642,15 +707,16 @@ const plans = [
       "Premium + barcha imkoniyatlar",
       "Maxsus domen",
       "API kirish",
-      "Prioritetli yordam"
-    ]
-  }
+      "Prioritetli yordam",
+    ],
+  },
 ];
 ```
 
 ### 🚀 DEVELOPMENT SETUP
 
 **Environment Variables:**
+
 ```env
 # Supabase Configuration
 VITE_SUPABASE_URL=your_supabase_project_url
@@ -662,6 +728,7 @@ VITE_APP_URL=http://localhost:5173
 ```
 
 **Package.json Scripts:**
+
 ```json
 {
   "scripts": {
@@ -674,6 +741,7 @@ VITE_APP_URL=http://localhost:5173
 ```
 
 **Installation Commands:**
+
 ```bash
 # Install dependencies
 npm install
@@ -692,6 +760,7 @@ npm run dev
 ### 🎨 VISUAL DESIGN PRINCIPLES
 
 **Color Usage:**
+
 - **Primary Blue (#4285f4)**: Main actions, links, active states
 - **Secondary Colors**: Supporting elements, inactive states
 - **Success Green**: Confirmations, completed actions
@@ -699,6 +768,7 @@ npm run dev
 - **Error Red**: Validation errors, destructive actions
 
 **Typography Hierarchy:**
+
 - **Page Titles**: text-4xl to text-6xl (Poppins)
 - **Section Headers**: text-2xl to text-3xl (Poppins)
 - **Body Text**: text-base to text-lg (Inter)
@@ -706,6 +776,7 @@ npm run dev
 - **Accent Text**: Dancing Script, Playfair Display
 
 **Spacing System:**
+
 ```css
 /* Tailwind spacing scale */
 .space-1  /* 4px */
@@ -721,17 +792,31 @@ npm run dev
 ### 📱 RESPONSIVE DESIGN
 
 **Breakpoints:**
+
 ```css
 /* Mobile First Approach */
-.mobile { min-width: 320px; }   /* Small phones */
-.sm     { min-width: 640px; }   /* Large phones */
-.md     { min-width: 768px; }   /* Tablets */
-.lg     { min-width: 1024px; }  /* Laptops */
-.xl     { min-width: 1280px; }  /* Desktops */
-.2xl    { min-width: 1536px; }  /* Large screens */
+.mobile {
+  min-width: 320px;
+} /* Small phones */
+.sm {
+  min-width: 640px;
+} /* Large phones */
+.md {
+  min-width: 768px;
+} /* Tablets */
+.lg {
+  min-width: 1024px;
+} /* Laptops */
+.xl {
+  min-width: 1280px;
+} /* Desktops */
+.2xl {
+  min-width: 1536px;
+} /* Large screens */
 ```
 
 **Mobile Adaptations:**
+
 - Collapsible navigation menu
 - Touch-friendly button sizes (min 44px)
 - Stacked layouts for mobile
@@ -741,21 +826,23 @@ npm run dev
 ### 🔒 SECURITY IMPLEMENTATION
 
 **Row Level Security (RLS):**
+
 ```sql
 -- Users can only access their own data
-CREATE POLICY "Users own data only" ON profiles 
+CREATE POLICY "Users own data only" ON profiles
   FOR ALL USING (auth.uid() = id);
 
 -- Public invitations are viewable by anyone
-CREATE POLICY "Public invitations" ON invitations 
+CREATE POLICY "Public invitations" ON invitations
   FOR SELECT USING (is_active = true);
 
 -- Users can manage their own invitations
-CREATE POLICY "User invitations" ON invitations 
+CREATE POLICY "User invitations" ON invitations
   FOR ALL USING (auth.uid() = user_id);
 ```
 
 **Authentication Security:**
+
 - JWT token validation
 - Session refresh mechanisms
 - CSRF protection
@@ -765,17 +852,18 @@ CREATE POLICY "User invitations" ON invitations
 ### 📈 PERFORMANCE OPTIMIZATION
 
 **Frontend Optimization:**
+
 ```typescript
 // Code splitting
-const Dashboard = lazy(() => import('./pages/Dashboard'));
-const Profile = lazy(() => import('./pages/Profile'));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Profile = lazy(() => import("./pages/Profile"));
 
 // Image optimization
 const optimizedImage = {
   width: 800,
   height: 600,
   quality: 85,
-  format: 'webp'
+  format: "webp",
 };
 
 // Caching strategy
@@ -790,6 +878,7 @@ const queryClient = new QueryClient({
 ```
 
 **Database Optimization:**
+
 - Proper indexing on foreign keys
 - Query optimization with select specific fields
 - Connection pooling
@@ -798,6 +887,7 @@ const queryClient = new QueryClient({
 ### 🧪 QUALITY ASSURANCE
 
 **Testing Checklist:**
+
 ```typescript
 // Authentication Flow
 ✅ User registration with email/password
@@ -831,12 +921,14 @@ const queryClient = new QueryClient({
 ### 🌐 DEPLOYMENT SPECIFICATIONS
 
 **Hosting Requirements:**
+
 - **Frontend**: Netlify, Vercel, or similar static hosting
 - **Database**: Supabase cloud (or self-hosted PostgreSQL)
 - **Storage**: Supabase Storage (or AWS S3)
 - **CDN**: Automatic with hosting provider
 
 **Environment Setup:**
+
 ```bash
 # Production build
 npm run build
@@ -850,6 +942,7 @@ VITE_APP_URL=https://your-domain.com
 ### 📞 CONTACT & SUPPORT
 
 **Developer Contact:**
+
 - **Name**: Dilshodjon Haydarov
 - **Email**: dev.dilshodjon@gmail.com
 - **Phone**: +998 99 534 03 13, +998 33 143 20 03
@@ -857,6 +950,7 @@ VITE_APP_URL=https://your-domain.com
 - **Address**: Farg'ona viloyati, O'zbekiston tumani, Davlatbotir MFY, Maorif qishlog'i, Yangi hayot ko'chasi, 14-uy
 
 **Support Channels:**
+
 - **Technical Issues**: dev.dilshodjon@gmail.com
 - **Feature Requests**: via Telegram @torex_dev
 - **Bug Reports**: Include screenshots and steps to reproduce
@@ -864,6 +958,7 @@ VITE_APP_URL=https://your-domain.com
 ### 🎯 SUCCESS METRICS
 
 **Platform Goals:**
+
 1. **User Experience**: Intuitive interface allowing invitation creation in under 3 minutes
 2. **Technical Performance**: Page load times under 2 seconds, 99.9% uptime
 3. **Mobile Experience**: Full functionality on all devices with touch optimization
@@ -873,19 +968,24 @@ VITE_APP_URL=https://your-domain.com
 ### 🚀 ADVANCED FEATURES
 
 **Real-time Capabilities:**
+
 ```typescript
 // Live RSVP updates
 useEffect(() => {
   const subscription = supabase
-    .channel('rsvp_updates')
-    .on('postgres_changes', {
-      event: 'INSERT',
-      schema: 'public',
-      table: 'rsvps',
-      filter: `invitation_id=eq.${invitationId}`
-    }, (payload) => {
-      setRsvps(prev => [...prev, payload.new]);
-    })
+    .channel("rsvp_updates")
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "rsvps",
+        filter: `invitation_id=eq.${invitationId}`,
+      },
+      (payload) => {
+        setRsvps((prev) => [...prev, payload.new]);
+      },
+    )
     .subscribe();
 
   return () => supabase.removeChannel(subscription);
@@ -893,39 +993,41 @@ useEffect(() => {
 ```
 
 **Advanced Analytics:**
+
 ```typescript
 // User engagement tracking
 const analytics = {
-  pageViews: useAnalytics('page_view'),
-  invitationCreated: useAnalytics('invitation_created'),
-  templateUsage: useAnalytics('template_used'),
-  rsvpResponse: useAnalytics('rsvp_submitted')
+  pageViews: useAnalytics("page_view"),
+  invitationCreated: useAnalytics("invitation_created"),
+  templateUsage: useAnalytics("template_used"),
+  rsvpResponse: useAnalytics("rsvp_submitted"),
 };
 ```
 
 ### 🔧 CUSTOMIZATION OPTIONS
 
 **Theme Customization:**
+
 ```typescript
 // Custom theme implementation
 const customTheme = {
   colors: {
-    primary: 'hsl(220, 91%, 56%)',
-    secondary: 'hsl(220, 14%, 96%)',
-    accent: 'hsl(47, 96%, 89%)',
-    background: 'hsl(0, 0%, 100%)',
-    foreground: 'hsl(224, 71%, 4%)'
+    primary: "hsl(220, 91%, 56%)",
+    secondary: "hsl(220, 14%, 96%)",
+    accent: "hsl(47, 96%, 89%)",
+    background: "hsl(0, 0%, 100%)",
+    foreground: "hsl(224, 71%, 4%)",
   },
   fonts: {
     heading: '"Poppins", sans-serif',
     body: '"Inter", sans-serif',
-    accent: '"Playfair Display", serif'
+    accent: '"Playfair Display", serif',
   },
   animations: {
-    fast: '150ms',
-    normal: '300ms',
-    slow: '500ms'
-  }
+    fast: "150ms",
+    normal: "300ms",
+    slow: "500ms",
+  },
 };
 ```
 
@@ -934,6 +1036,7 @@ const customTheme = {
 ## 📋 IMPLEMENTATION CHECKLIST
 
 **Phase 1: Foundation (Week 1)**
+
 - [ ] Setup Vite + React + TypeScript
 - [ ] Install and configure Tailwind CSS
 - [ ] Setup Supabase project and authentication
@@ -941,6 +1044,7 @@ const customTheme = {
 - [ ] Implement authentication flow
 
 **Phase 2: Core Features (Week 2-3)**
+
 - [ ] Build landing page with animations
 - [ ] Create dashboard with real data
 - [ ] Implement invitation creation flow
@@ -948,6 +1052,7 @@ const customTheme = {
 - [ ] Add guest management functionality
 
 **Phase 3: Advanced Features (Week 4)**
+
 - [ ] Build custom template creator
 - [ ] Implement profile and settings pages
 - [ ] Add real-time RSVP tracking
@@ -955,6 +1060,7 @@ const customTheme = {
 - [ ] Implement sharing and export features
 
 **Phase 4: Polish & Deploy (Week 5)**
+
 - [ ] Add comprehensive error handling
 - [ ] Implement performance optimizations
 - [ ] Complete responsive design testing
@@ -968,6 +1074,7 @@ const customTheme = {
 ## 🏆 FINAL NOTES
 
 This project represents a complete, production-ready wedding invitation platform with:
+
 - ✅ **Modern Technology Stack**: React 18, TypeScript, Supabase
 - ✅ **Professional Design**: Custom design system with animations
 - ✅ **Full Functionality**: Authentication, CRUD operations, real-time updates

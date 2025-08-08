@@ -222,7 +222,7 @@ export default function CreateInvitation() {
           message: error.message,
           details: error.details,
           hint: error.hint,
-          code: error.code
+          code: error.code,
         });
 
         // Create demo invitation as fallback
@@ -267,7 +267,9 @@ export default function CreateInvitation() {
           plus_one: false,
         }));
 
-        const { error: guestError } = await supabase.from("guests").insert(guestData);
+        const { error: guestError } = await supabase
+          .from("guests")
+          .insert(guestData);
         if (guestError) {
           console.error("Guest insertion error:", guestError);
         } else {

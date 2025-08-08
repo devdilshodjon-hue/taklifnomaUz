@@ -41,7 +41,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
-  console.log("AuthProvider rendering with state:", { user: !!user, profile: !!profile, loading });
+  console.log("AuthProvider rendering with state:", {
+    user: !!user,
+    profile: !!profile,
+    loading,
+  });
 
   useEffect(() => {
     let mounted = true;
@@ -73,7 +77,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await testDatabaseConnection();
 
         // Get initial session and validate it
-        const { data: { session }, error } = await supabase.auth.getSession();
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
 
         if (!mounted) return;
 
@@ -137,7 +144,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       try {
         // Handle different auth events
-        if (event === "SIGNED_OUT" || (event === "TOKEN_REFRESHED" && !session)) {
+        if (
+          event === "SIGNED_OUT" ||
+          (event === "TOKEN_REFRESHED" && !session)
+        ) {
           setSession(null);
           setUser(null);
           setProfile(null);

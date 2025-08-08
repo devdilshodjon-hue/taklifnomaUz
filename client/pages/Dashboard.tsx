@@ -52,7 +52,10 @@ export default function Dashboard() {
   let authHook;
   try {
     authHook = useAuth();
-    console.log("useAuth successful:", { user: !!authHook.user, profile: !!authHook.profile });
+    console.log("useAuth successful:", {
+      user: !!authHook.user,
+      profile: !!authHook.profile,
+    });
   } catch (error) {
     console.error("useAuth failed:", error);
     throw error;

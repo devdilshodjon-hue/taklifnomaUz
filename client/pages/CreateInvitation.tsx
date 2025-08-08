@@ -204,6 +204,25 @@ export default function CreateInvitation() {
       console.log('Demo rejimida taklifnoma yaratilmoqda...');
       // Demo uchun UUID formatda ID yaratamiz
       const mockId = generateDemoInvitationId();
+
+      // Real ma'lumotlarni localStorage ga saqlaymiz
+      const realInvitationData = {
+        id: mockId,
+        groom_name: formData.groomName,
+        bride_name: formData.brideName,
+        wedding_date: formData.weddingDate,
+        wedding_time: formData.weddingTime,
+        venue: formData.venue,
+        address: formData.address,
+        city: formData.city,
+        custom_message: formData.customMessage,
+        template_id: formData.selectedTemplate,
+        created_at: new Date().toISOString(),
+        is_demo: true
+      };
+
+      localStorage.setItem(`invitation_${mockId}`, JSON.stringify(realInvitationData));
+
       navigate(`/invitation/${mockId}`);
     } finally {
       setIsLoading(false);

@@ -94,6 +94,7 @@ export default function AdminDashboard() {
   );
   const [subscriptions, setSubscriptions] = useState<UserSubscription[]>([]);
   const [activeTab, setActiveTab] = useState("overview");
+  const [showDatabaseGuide, setShowDatabaseGuide] = useState(false);
 
   // Redirect if not logged in
   if (!isLoggedIn) {

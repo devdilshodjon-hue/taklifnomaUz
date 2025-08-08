@@ -62,51 +62,53 @@
   }
 
   .dark {
-    --background: 30 15% 8%;
-    --foreground: 40 20% 90%;
+    --background: 224 71% 4%;
+    --foreground: 0 0% 100%;
 
-    --card: 30 15% 10%;
-    --card-foreground: 40 20% 90%;
+    --card: 224 71% 6%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 30 15% 10%;
-    --popover-foreground: 40 20% 90%;
+    --popover: 224 71% 6%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 340 30% 65%;
-    --primary-foreground: 30 15% 8%;
+    --primary: 220 91% 56%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 30 10% 15%;
-    --secondary-foreground: 40 20% 90%;
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 30 10% 15%;
-    --muted-foreground: 30 10% 60%;
+    --muted: 215 28% 17%;
+    --muted-foreground: 217 9% 61%;
 
-    --accent: 340 25% 20%;
-    --accent-foreground: 340 30% 85%;
+    --accent: 215 28% 17%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 30 10% 20%;
-    --input: 30 10% 18%;
-    --ring: 340 30% 65%;
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 220 91% 56%;
 
-    /* Wedding-specific colors for dark mode */
-    --wedding-cream: 30 15% 12%;
-    --wedding-blush: 340 25% 25%;
-    --wedding-rose: 340 30% 45%;
-    --wedding-gold: 40 40% 50%;
-    --wedding-sage: 120 15% 40%;
-    --wedding-ivory: 30 15% 15%;
-    --wedding-dusty: 340 15% 35%;
+    /* Modern theme colors for dark mode */
+    --theme-primary: 220 91% 56%;
+    --theme-primary-light: 220 91% 66%;
+    --theme-primary-dark: 220 91% 46%;
+    --theme-secondary: 215 28% 17%;
+    --theme-accent: 47 96% 89%;
+    --theme-gray: 217 9% 61%;
+    --theme-gray-light: 215 28% 17%;
+    --theme-success: 142 71% 45%;
+    --theme-warning: 38 92% 50%;
 
-    --sidebar-background: 30 15% 8%;
-    --sidebar-foreground: 40 20% 85%;
-    --sidebar-primary: 340 30% 65%;
-    --sidebar-primary-foreground: 30 15% 8%;
-    --sidebar-accent: 30 10% 15%;
-    --sidebar-accent-foreground: 40 20% 85%;
-    --sidebar-border: 30 10% 20%;
-    --sidebar-ring: 340 30% 65%;
+    --sidebar-background: 224 71% 4%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 220 91% 56%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 28% 17%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 215 28% 17%;
+    --sidebar-ring: 220 91% 56%;
   }
 }
 

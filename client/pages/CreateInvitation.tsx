@@ -134,24 +134,32 @@ export default function CreateInvitation() {
   };
 
   const handleSave = async () => {
+    if (!user) {
+      setError("Taklifnoma yaratish uchun tizimga kirishingiz kerak");
+      return;
+    }
+
+    if (!formData.groomName || !formData.brideName || !formData.weddingDate || !formData.venue || !formData.address) {
+      setError("Iltimos, barcha majburiy maydonlarni to'ldiring");
+      return;
+    }
+
     setIsLoading(true);
-    
+    setError("");
+
     try {
-      // Get current user (for demo, we'll use a mock user ID)
-      const mockUserId = "demo-user-id";
-      
       const invitationData = {
-        user_id: mockUserId,
-        groom_name: formData.groomName || 'Er',
-        bride_name: formData.brideName || 'Xotin',
-        wedding_date: formData.weddingDate || '2024-06-15',
+        user_id: user.id,
+        groom_name: formData.groomName,
+        bride_name: formData.brideName,
+        wedding_date: formData.weddingDate,
         wedding_time: formData.weddingTime || null,
-        venue: formData.venue || 'To\'y zali',
-        address: formData.address || 'Manzil kiritilmagan',
+        venue: formData.venue,
+        address: formData.address,
         city: formData.city || null,
         state: formData.state || null,
         zip_code: formData.zipCode || null,
-        custom_message: formData.customMessage || 'Bizning maxsus kunimizga taklif qilamiz!',
+        custom_message: formData.customMessage || null,
         template_id: formData.selectedTemplate || 'classic-rose',
         rsvp_deadline: formData.rsvpDeadline || null,
         slug: generateSlug(),

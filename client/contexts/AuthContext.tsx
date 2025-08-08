@@ -41,6 +41,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Test database connection first
+    const testDatabaseConnection = async () => {
+      try {
+        const { data, error } = await supabase.from("profiles").select("count").limit(1);
+        if (error) {
+          console.warn("Database connection test failed:", {
+            error: error,
+            message: error?.message,
+            hint: error?.hint,
+            details: error?.details
+          });
+        } else {
+          console.log("Database connection test successful");
+        }
+      } catch (err) {
+        console.warn("Database connection test error:", err);
+      }
+    };
+
+    testDatabaseConnection();
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);

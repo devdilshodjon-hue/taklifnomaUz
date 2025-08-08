@@ -29,6 +29,7 @@ const App = () => (
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/create" element={<CreateInvitation />} />
+          <Route path="/templates" element={<Templates />} />
           <Route path="/invitation/:id" element={<InvitationView />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

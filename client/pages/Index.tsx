@@ -88,11 +88,11 @@ export default function Index() {
                 Narxlar
               </Link>
             </div>
-            <div className="flex items-center gap-3">
-              <Button variant="ghost" asChild>
+            <div className="flex items-center gap-3 animate-slide-in-right">
+              <Button variant="ghost" asChild className="hover-scale">
                 <Link to="/login">Kirish</Link>
               </Button>
-              <Button asChild className="button-modern">
+              <Button asChild className="button-modern hover-lift">
                 <Link to="/register">
                   Boshlash
                   <ArrowRight className="w-4 h-4 ml-2" />

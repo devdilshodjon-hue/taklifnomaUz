@@ -183,6 +183,12 @@ export default function InvitationView() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Database Setup Guide */}
+      <DatabaseSetupGuide
+        isVisible={showDatabaseSetup}
+        onDismiss={() => setShowDatabaseSetup(false)}
+      />
+
       {/* Share button */}
       <div className="fixed top-4 right-4 z-10">
         <Button variant="outline" size="sm" onClick={shareInvitation} className="shadow-lg">

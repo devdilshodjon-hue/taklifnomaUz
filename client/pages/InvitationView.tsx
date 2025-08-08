@@ -48,9 +48,25 @@ export default function InvitationView() {
 
   const fetchInvitation = async (invitationId: string) => {
     try {
-      // Agar ID demo format bo'lsa yoki UUID format emas bo'lsa, darhol demo ma'lumotlarni ko'rsatamiz
+      // Agar ID demo format bo'lsa yoki UUID format emas bo'lsa, localStorage dan olishga harakat qilamiz
       if (isDemoId(invitationId) || !isValidUUID(invitationId)) {
-        console.log('Demo ID aniqlandi, demo ma\'lumotlar ishlatilmoqda...', invitationId);
+        console.log('Demo ID aniqlandi, localStorage dan ma\'lumot izlanmoqda...', invitationId);
+
+        // localStorage dan real ma'lumotlarni olishga harakat qilamiz
+        const storedData = localStorage.getItem(`invitation_${invitationId}`);
+        if (storedData) {
+          try {
+            const parsedData = JSON.parse(storedData);
+            console.log('localStorage dan real ma\'lumotlar topildi:', parsedData);
+            setInvitation(parsedData);
+            return;
+          } catch (error) {
+            console.error('localStorage ma\'lumotlarini parse qilishda xatolik:', error);
+          }
+        }
+
+        // Agar localStorage da topilmasa, default demo ma'lumotlarni ko'rsatamiz
+        console.log('localStorage da ma\'lumot topilmadi, default demo ma\'lumotlar ishlatilmoqda');
         setInvitation({
           id: invitationId,
           groom_name: "Jahongir",

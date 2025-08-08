@@ -1,12 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Sparkles, ArrowLeft, Save, Eye, Calendar, MapPin, Clock, Upload, Users, Plus, X } from "lucide-react";
+import { Sparkles, ArrowLeft, Save, Eye, Calendar, MapPin, Clock, Upload, Users, Plus, X, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/lib/supabase";
 import { generateDemoUUID, generateUUIDFromSlug } from "@/lib/utils";
+import { weddingTemplates, templateCategories, getTemplatesByCategory, type TemplateData } from "@/lib/templates";
 
 interface Guest {
   id: string;

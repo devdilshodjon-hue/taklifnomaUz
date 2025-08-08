@@ -14,7 +14,7 @@ export default function Navigation({
   const location = useLocation();
 
   const navLinks = [
-    { href: "/#features", label: "Imkoniyatlar", isAnchor: true },
+    { href: "/features", label: "Imkoniyatlar", isAnchor: false },
     { href: "/templates", label: "Shablonlar", isAnchor: false },
     { href: "/template-builder", label: "Shablon Yaratish", isAnchor: false },
     { href: "/pricing", label: "Narxlar", isAnchor: false },

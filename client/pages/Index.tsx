@@ -68,22 +68,22 @@ export default function Index() {
                 TaklifNoma
               </span>
             </div>
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-8 animate-fade-in delay-200">
               <a
                 href="#features"
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors hover-lift"
               >
                 Imkoniyatlar
               </a>
               <Link
                 to="/templates"
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors hover-lift"
               >
                 Shablonlar
               </Link>
               <Link
                 to="/pricing"
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors hover-lift"
               >
                 Narxlar
               </Link>

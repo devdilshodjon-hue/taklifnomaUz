@@ -98,6 +98,15 @@ export default function Dashboard() {
       if (testError) {
         console.error("Database connection test failed:", testError);
         clearTimeout(timeoutId);
+
+        // If table doesn't exist, load from localStorage
+        if (testError.message.includes("does not exist")) {
+          console.log("Using localStorage for invitations");
+          loadInvitationsFromLocalStorage();
+          setLoading(false);
+          return;
+        }
+
         setError(
           "Ma'lumotlar bazasiga ulanishda xatolik. Iltimos, internetni tekshiring.",
         );
@@ -117,6 +126,15 @@ export default function Dashboard() {
 
       if (error) {
         console.error("Error loading invitations:", error);
+
+        // If there's an error, try loading from localStorage as fallback
+        if (error.message.includes("does not exist") || error.code === "PGRST116") {
+          console.log("Table error, falling back to localStorage");
+          loadInvitationsFromLocalStorage();
+          setLoading(false);
+          return;
+        }
+
         setError(
           "Taklifnomalarni yuklanishda xatolik. Iltimos, qayta urinib ko'ring.",
         );

@@ -163,6 +163,8 @@ export default function CreateInvitation() {
   };
 
   const handleSave = async () => {
+    console.log("handleSave started");
+
     if (!user) {
       setError("Taklifnoma yaratish uchun tizimga kirishingiz kerak");
       return;
@@ -181,26 +183,31 @@ export default function CreateInvitation() {
 
     setIsLoading(true);
     setError("");
+    console.log("Starting invitation creation...");
 
     try {
       const slug = generateSlug();
+      console.log("Generated slug:", slug);
+
       const invitationData = {
         user_id: user.id,
-        groom_name: formData.groomName,
-        bride_name: formData.brideName,
+        groom_name: formData.groomName.trim(),
+        bride_name: formData.brideName.trim(),
         wedding_date: formData.weddingDate,
         wedding_time: formData.weddingTime || null,
-        venue: formData.venue,
-        address: formData.address,
-        city: formData.city || null,
-        state: formData.state || null,
-        zip_code: formData.zipCode || null,
-        custom_message: formData.customMessage || null,
+        venue: formData.venue.trim(),
+        address: formData.address.trim(),
+        city: formData.city?.trim() || null,
+        state: formData.state?.trim() || null,
+        zip_code: formData.zipCode?.trim() || null,
+        custom_message: formData.customMessage?.trim() || null,
         template_id: formData.selectedTemplate || "classic-rose",
         rsvp_deadline: formData.rsvpDeadline || null,
         slug: slug,
         is_active: true,
       };
+
+      console.log("Invitation data prepared:", invitationData);
 
       const { data: invitation, error } = await supabase
         .from("invitations")

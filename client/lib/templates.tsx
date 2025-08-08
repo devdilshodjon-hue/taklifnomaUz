@@ -41,7 +41,7 @@ export const weddingTemplates: TemplateData[] = [
       body: 'Inter',
       accent: 'Dancing Script'
     },
-    icon: <Rose className="w-5 h-5" />
+    icon: <Heart className="w-5 h-5" />
   },
   {
     id: 'modern-minimal',

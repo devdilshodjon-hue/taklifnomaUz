@@ -84,9 +84,8 @@ export default function Contact() {
                       Email
                     </h3>
                     <p className="text-muted-foreground">
-                      support@taklifnoma.uz
+                      dev.dilshodjon@gmail.com
                     </p>
-                    <p className="text-muted-foreground">info@taklifnoma.uz</p>
                   </div>
                 </div>
 

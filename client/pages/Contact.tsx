@@ -111,8 +111,7 @@ export default function Contact() {
                     <h3 className="font-semibold text-foreground mb-1">
                       Telegram
                     </h3>
-                    <p className="text-muted-foreground">@taklifnoma_support</p>
-                    <p className="text-muted-foreground">@taklifnoma_uz</p>
+                    <p className="text-muted-foreground">@torex_dev</p>
                   </div>
                 </div>
 

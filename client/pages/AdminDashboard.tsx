@@ -227,10 +227,18 @@ export default function AdminDashboard() {
         .order("created_at", { ascending: false })
         .limit(50);
 
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes("does not exist")) {
+          console.log("Subscriptions table not found, using empty data");
+          setSubscriptions([]);
+          return;
+        }
+        throw error;
+      }
       setSubscriptions(data || []);
     } catch (error) {
       console.error("Error loading subscriptions:", error);
+      setSubscriptions([]);
     }
   };
 

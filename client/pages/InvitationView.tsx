@@ -363,6 +363,72 @@ export default function InvitationView() {
           </div>
         )}
 
+        {/* Sharing Section */}
+        <div className="card-modern p-6 text-center mt-8">
+          <h3 className="font-heading text-lg font-semibold text-foreground mb-4">
+            Bu taklifnomani ulashing
+          </h3>
+          <p className="text-muted-foreground mb-4 text-sm">
+            Do'stlaringiz va oilangizga ham ulashing
+          </p>
+
+          <div className="flex flex-wrap justify-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const text = `${invitation?.groom_name} va ${invitation?.bride_name}ning to'y marosimi`;
+                const url = `https://web.telegram.org/a/#?startattach=&text=${encodeURIComponent(text + ' ' + window.location.href)}`;
+                window.open(url, '_blank');
+              }}
+              className="text-blue-600 hover:bg-blue-50"
+            >
+              📱 Telegram
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const text = `${invitation?.groom_name} va ${invitation?.bride_name}ning to'y marosimi`;
+                const url = `https://wa.me/?text=${encodeURIComponent(text + ' ' + window.location.href)}`;
+                window.open(url, '_blank');
+              }}
+              className="text-green-600 hover:bg-green-50"
+            >
+              💬 WhatsApp
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const text = `${invitation?.groom_name} va ${invitation?.bride_name}ning to'y marosimi`;
+                const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(text)}`;
+                window.open(url, '_blank');
+              }}
+              className="text-blue-700 hover:bg-blue-50"
+            >
+              📘 Facebook
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={copyToClipboard}
+              className="text-gray-600 hover:bg-gray-50"
+            >
+              🔗 Havolani Nusxalash
+            </Button>
+          </div>
+
+          <div className="mt-4 p-3 bg-muted rounded-lg">
+            <p className="text-xs text-muted-foreground">
+              Ushbu havola: <code className="bg-background px-2 py-1 rounded">{window.location.href}</code>
+            </p>
+          </div>
+        </div>
+
         {/* Additional Info */}
         <div className="mt-8 text-center">
           <p className="text-muted-foreground italic">

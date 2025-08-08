@@ -220,6 +220,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("focus", handleWindowFocus);
   }, [user, profile]);
 
+  const createUserProfile = async (user: User) => {
+    const newProfile = {
+      id: user.id,
+      email: user.email || "",
+      first_name: user.user_metadata?.first_name || null,
+      last_name: user.user_metadata?.last_name || null,
+      avatar_url: user.user_metadata?.avatar_url || null,
+    };
+
+    console.log("Creating profile with data:", newProfile);
+
+    const { data: createdProfile, error: createError } = await supabase
+      .from("profiles")
+      .insert(newProfile)
+      .select()
+      .single();
+
+    if (!createError && createdProfile) {
+      console.log("Profile created successfully:", createdProfile);
+      return createdProfile;
+    } else {
+      console.error("Error creating profile:", {
+        error: createError,
+        message: createError?.message,
+        details: createError?.details,
+        hint: createError?.hint,
+        code: createError?.code,
+        profileData: newProfile,
+      });
+
+      // Return a minimal profile object for the app to continue working
+      return {
+        id: user.id,
+        email: user.email || "",
+        first_name: user.user_metadata?.first_name || null,
+        last_name: user.user_metadata?.last_name || null,
+        avatar_url: user.user_metadata?.avatar_url || null,
+        created_at: new Date().toISOString(),
+      };
+    }
+  };
+
   const loadProfile = async (userId: string) => {
     let timeoutId: NodeJS.Timeout;
     try {
@@ -240,7 +282,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             created_at: new Date().toISOString(),
           });
         }
-      }, 5000); // Reduced to 5 seconds
+      }, 8000); // Extended timeout
 
       // Use the current session instead of fetching again
       const currentSession = await supabase.auth.getSession();
@@ -265,47 +307,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             userId,
           );
 
-          const { data: user } = await supabase.auth.getUser();
-          if (user.user) {
-            const newProfile = {
-              id: userId,
-              email: user.user.email || "",
-              first_name: user.user.user_metadata?.first_name || null,
-              last_name: user.user.user_metadata?.last_name || null,
-              avatar_url: user.user.user_metadata?.avatar_url || null,
-            };
-
-            console.log("Creating profile with data:", newProfile);
-
-            const { data: createdProfile, error: createError } = await supabase
-              .from("profiles")
-              .insert(newProfile)
-              .select()
-              .single();
-
-            if (!createError && createdProfile) {
-              console.log("Profile created successfully:", createdProfile);
-              setProfile(createdProfile);
-            } else {
-              console.error("Error creating profile:", {
-                error: createError,
-                message: createError?.message,
-                details: createError?.details,
-                hint: createError?.hint,
-                code: createError?.code,
-                profileData: newProfile,
-              });
-
-              // Try to set a minimal profile object for the app to continue working
-              setProfile({
-                id: userId,
-                email: user.user.email || "",
-                first_name: user.user.user_metadata?.first_name || null,
-                last_name: user.user.user_metadata?.last_name || null,
-                avatar_url: user.user.user_metadata?.avatar_url || null,
-                created_at: new Date().toISOString(),
-              });
-            }
+          const { data: userData } = await supabase.auth.getUser();
+          if (userData.user) {
+            const newProfile = await createUserProfile(userData.user);
+            setProfile(newProfile);
           } else {
             console.error("No user data available for profile creation");
             setProfile(null);
@@ -319,11 +324,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             code: error?.code,
           });
 
-          // Handle 406 and other session-related errors by signing out
+          // Handle session-related errors by signing out
           if (
             error?.message?.includes("406") ||
             error?.code === "PGRST301" ||
-            error?.message?.includes("JWT")
+            error?.message?.includes("JWT") ||
+            error?.message?.includes("auth")
           ) {
             console.log("Session-related error detected, signing out...");
             await supabase.auth.signOut();
@@ -331,8 +337,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setSession(null);
             setUser(null);
           } else {
-            // For other RLS errors, set profile to null but don't break auth
-            setProfile(null);
+            // For other RLS errors, try to create a profile anyway
+            const { data: userData } = await supabase.auth.getUser();
+            if (userData.user) {
+              const newProfile = await createUserProfile(userData.user);
+              setProfile(newProfile);
+            } else {
+              setProfile(null);
+            }
           }
         }
       } else if (data) {
@@ -344,7 +356,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         message: error?.message,
         stack: error?.stack,
       });
-      setProfile(null);
+
+      // Try to create a profile as fallback
+      try {
+        const { data: userData } = await supabase.auth.getUser();
+        if (userData.user) {
+          const newProfile = await createUserProfile(userData.user);
+          setProfile(newProfile);
+        } else {
+          setProfile(null);
+        }
+      } catch (fallbackError) {
+        console.error("Fallback profile creation failed:", fallbackError);
+        setProfile(null);
+      }
     } finally {
       if (timeoutId) clearTimeout(timeoutId);
       setLoading(false);

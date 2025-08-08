@@ -5,6 +5,34 @@ const supabaseAnonKey = import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbG
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+// Supabase jadvallar mavjudligini tekshirish
+export const checkDatabaseSetup = async (): Promise<boolean> => {
+  try {
+    const { error } = await supabase
+      .from('invitations')
+      .select('id')
+      .limit(1);
+
+    if (error && error.message.includes('table') && error.message.includes('does not exist')) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.log('Database tekshiruvida xatolik:', error);
+    return false;
+  }
+}
+
+// Error xabaridan jadval mavjud emasligini aniqlash
+export const isTableNotFoundError = (error: any): boolean => {
+  if (!error) return false;
+  const message = error.message || '';
+  return message.includes('Could not find the table') ||
+         message.includes('table') && message.includes('does not exist') ||
+         message.includes('schema cache');
+}
+
 // Database types
 export type Database = {
   public: {

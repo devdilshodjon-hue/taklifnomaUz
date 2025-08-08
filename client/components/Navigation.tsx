@@ -85,15 +85,28 @@ export default function Navigation({
         </div>
 
         <div className="flex items-center gap-3">
-          <Button variant="ghost" asChild>
-            <Link to="/login">Kirish</Link>
-          </Button>
-          <Button asChild className="button-modern">
-            <Link to="/register">
-              Boshlash
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
-          </Button>
+          {user ? (
+            // Authenticated user
+            <Button variant="ghost" asChild>
+              <Link to="/dashboard" className="flex items-center gap-2">
+                <User className="w-4 h-4" />
+                {profile?.first_name || "Dashboard"}
+              </Link>
+            </Button>
+          ) : (
+            // Not authenticated
+            <>
+              <Button variant="ghost" asChild>
+                <Link to="/login">Kirish</Link>
+              </Button>
+              <Button asChild className="button-modern">
+                <Link to="/register">
+                  Boshlash
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </nav>

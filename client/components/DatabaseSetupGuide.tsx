@@ -239,7 +239,7 @@ CREATE POLICY "Admin users can access user_subscriptions" ON public.user_subscri
         document.body.removeChild(textArea);
       }
     } catch (err) {
-      console.error("Clipboard ga nusxalashda xatolik:", err);
+      console.error("Clipboard ga nusxalashda xatolik:", err?.message || err);
       // Foydalanuvchiga manual copy ni taklif qilamiz
       alert(
         "Avtomatik nusxalash ishlamadi. Iltimos, matnni qo'lda belgilab nusxalang.",

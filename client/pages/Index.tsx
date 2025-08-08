@@ -278,6 +278,80 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Pricing Preview Section */}
+      <section id="pricing" className="py-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-6">
+              Har Qanday Byudjet Uchun Mos Narx
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Bepul rejadan boshlab, premium imkoniyatlargacha. Faqat kerakli narsangiz uchun to'lang.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {[
+              {
+                name: "Asosiy",
+                price: "Bepul",
+                features: ["3 ta taklifnoma", "5 ta shablon", "50 ta mehmon", "Asosiy RSVP"],
+                popular: false,
+                color: "border-border"
+              },
+              {
+                name: "Premium",
+                price: "29,000 so'm/oy",
+                features: ["Cheksiz taklifnoma", "15+ shablon", "Cheksiz mehmonlar", "SMS xabarnomalar", "PDF yuklab olish"],
+                popular: true,
+                color: "border-primary ring-2 ring-primary"
+              },
+              {
+                name: "Biznes",
+                price: "99,000 so'm/oy",
+                features: ["Premium + API", "Maxsus dizayn", "O'z domeningiz", "Prioritetli yordam"],
+                popular: false,
+                color: "border-border"
+              }
+            ].map((plan, index) => (
+              <div key={index} className={`card-modern p-8 ${plan.color} relative ${plan.popular ? 'scale-105' : ''}`}>
+                {plan.popular && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-primary text-white px-3 py-1 rounded-full text-sm font-medium">
+                      ⭐ Mashhur
+                    </span>
+                  </div>
+                )}
+                <div className="text-center">
+                  <h3 className="font-heading text-xl font-bold text-foreground mb-2">{plan.name}</h3>
+                  <div className="text-3xl font-bold text-foreground mb-6">{plan.price}</div>
+                  <ul className="space-y-3 mb-8">
+                    {plan.features.map((feature, i) => (
+                      <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  <Button className={`w-full ${plan.popular ? 'primary-gradient' : ''}`} variant={plan.popular ? 'default' : 'outline'}>
+                    {plan.name === 'Asosiy' ? 'Bepul Boshlash' : 'Tanlash'}
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Button asChild variant="outline" size="lg">
+              <Link to="/pricing">
+                Barcha Narxlarni Ko'rish
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials */}
       <section className="py-24 bg-theme-gray-light/30">
         <div className="max-w-7xl mx-auto px-6">

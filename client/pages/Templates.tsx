@@ -149,7 +149,7 @@ export default function Templates() {
             );
 
             // Add popular templates after custom templates
-            const customCount = allTemplates.filter(t => t.isCustom).length;
+            const customCount = customTemplatesData.length;
             allTemplates = [
               ...allTemplates.slice(0, customCount),
               ...convertedPublicTemplates,

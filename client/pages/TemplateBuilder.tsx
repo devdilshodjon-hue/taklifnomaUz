@@ -355,12 +355,12 @@ export default function TemplateBuilder() {
         name: templateData.templateName.trim(),
         description: `Maxsus shablon - ${new Date().toLocaleDateString("uz-UZ")}`,
         category: "custom",
-        config: config,
         colors: config.colors,
         fonts: config.fonts,
-        layout: config.layout,
+        layout_config: config,
         is_public: false,
         is_featured: false,
+        usage_count: 0,
         tags: [config.layout.style, "maxsus", "real-time"],
       };
 
@@ -381,8 +381,37 @@ export default function TemplateBuilder() {
       }, 2000);
     } catch (err: any) {
       console.error("Template save error:", err);
+      const errorMessage = err?.message || err?.toString() || "Noma'lum xatolik";
 
-      // Save to localStorage as fallback
+      // Try using templateOperations as fallback
+      try {
+        console.log("🔄 Trying template operations fallback...");
+        const { data: fallbackData, error: fallbackError } = await templateOperations.create({
+          user_id: user.id,
+          name: templateData.templateName.trim(),
+          description: `Maxsus shablon - ${new Date().toLocaleDateString("uz-UZ")}`,
+          category: "custom",
+          colors: config.colors,
+          fonts: config.fonts,
+          layout_config: config,
+          is_public: false,
+          is_featured: false,
+          usage_count: 0,
+          tags: [config.layout.style, "maxsus", "real-time"],
+        });
+
+        if (fallbackData && !fallbackError) {
+          setSuccess("🎉 Shablon muvaffaqiyatli saqlandi!");
+          setTimeout(() => {
+            navigate("/templates");
+          }, 2000);
+          return;
+        }
+      } catch (fallbackErr) {
+        console.warn("Template operations fallback also failed:", fallbackErr);
+      }
+
+      // Final fallback to localStorage
       const fallbackTemplate = {
         id: `local_${Date.now()}`,
         ...templateData,
@@ -396,11 +425,7 @@ export default function TemplateBuilder() {
         JSON.stringify(fallbackTemplate),
       );
 
-      setSuccess("✅ Shablon vaqtincha saqlandi (mahalliy xotira)");
-
-      setTimeout(() => {
-        navigate("/templates");
-      }, 2000);
+      setError(`Shablon bazaga saqlanmadi: ${errorMessage}. Vaqtincha mahalliy xotiraga saqlandi.`);
     } finally {
       setLoading(false);
     }

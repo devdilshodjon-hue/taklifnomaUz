@@ -649,26 +649,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
-      // Add timeout wrapper
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Timeout')), 8000);
-      });
-
-      const authPromise = supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-
-      const { error } = await Promise.race([authPromise, timeoutPromise]) as any;
       return { error };
     } catch (networkError: any) {
       console.error("Network error during sign in:", networkError);
 
-      // Handle different types of network errors
-      if (networkError.message === 'Timeout') {
-        return { error: { message: "Ulanish vaqti tugadi. Iltimos, qayta urinib ko'ring." } as any };
-      }
-
+      // Handle network errors
       if (networkError.name === 'TypeError' && networkError.message?.includes('fetch')) {
         return { error: { message: "Internet ulanishi bilan muammo. Iltimos, ulanishni tekshiring." } as any };
       }

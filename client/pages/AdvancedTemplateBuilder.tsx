@@ -468,7 +468,7 @@ export default function AdvancedTemplateBuilder() {
       value: "modern",
       label: "Zamonaviy",
       description: "Minimalistik va sodda",
-      icon: "✨",
+      icon: "���",
     },
     {
       value: "elegant",
@@ -988,6 +988,33 @@ export default function AdvancedTemplateBuilder() {
             </div>
           </div>
         </nav>
+
+        {/* Database Status Banner */}
+        {connectionStatus === "offline" && (
+          <div className="bg-orange-50 dark:bg-orange-900/20 border-l-4 border-orange-400 p-3">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-orange-400 rounded-full mr-3 animate-pulse"></div>
+                <p className="text-sm text-orange-800 dark:text-orange-200">
+                  <strong>Offline rejim:</strong> Shablonlar mahalliy xotiraga saqlanadi va keyinroq sinxronlanadi.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {connectionStatus === "online" && (
+          <div className="bg-green-50 dark:bg-green-900/20 border-l-4 border-green-400 p-3">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-green-400 rounded-full mr-3 animate-pulse"></div>
+                <p className="text-sm text-green-800 dark:text-green-200">
+                  <strong>Online rejim:</strong> Supabase ma'lumotlar bazasiga ulanish muvaffaqiyatli.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="max-w-7xl mx-auto p-4 md:p-6">
           {/* Success/Error Messages */}

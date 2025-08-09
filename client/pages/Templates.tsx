@@ -1,23 +1,51 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Eye, ArrowRight, Sparkles, Loader2 } from "lucide-react";
+import { Eye, ArrowRight, Sparkles, Loader2, Star, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import TemplateRenderer from "@/components/TemplateRenderer";
 import Navigation from "@/components/Navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabase";
 import {
   defaultWeddingTemplates,
   templateCategories,
   type DefaultTemplate,
 } from "@/lib/defaultTemplates";
 
+interface CustomTemplate {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  colors: any;
+  fonts: any;
+  config: any;
+  is_public: boolean;
+  is_featured: boolean;
+  usage_count: number;
+  tags: string[];
+  created_at: string;
+  preview_image?: string;
+  user_id?: string;
+}
+
+interface ExtendedTemplate extends DefaultTemplate {
+  isCustom?: boolean;
+  customData?: CustomTemplate;
+  usage_count?: number;
+  is_featured?: boolean;
+}
+
 export default function Templates() {
+  const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [templates, setTemplates] = useState<DefaultTemplate[]>([]);
-  const [filteredTemplates, setFilteredTemplates] = useState<DefaultTemplate[]>(
+  const [templates, setTemplates] = useState<ExtendedTemplate[]>([]);
+  const [filteredTemplates, setFilteredTemplates] = useState<ExtendedTemplate[]>(
     [],
   );
   const [previewTemplate, setPreviewTemplate] =
-    useState<DefaultTemplate | null>(null);
+    useState<ExtendedTemplate | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -34,17 +62,94 @@ export default function Templates() {
     try {
       console.log("🔄 Shablonlarni yuklamoqda...");
 
-      // Always use default templates for now
-      console.log("✅ Default shablonlarni ishlatmoqda...");
+      // Start with default templates
+      let allTemplates: ExtendedTemplate[] = [...defaultWeddingTemplates];
 
-      // Use default templates directly
-      setTemplates(defaultWeddingTemplates);
-      setFilteredTemplates(defaultWeddingTemplates);
+      // Try to load custom templates from Supabase
+      try {
+        console.log("🔄 Custom shablonlarni Supabase dan yuklamoqda...");
 
-      console.log(
-        "✅ Shablonlar muvaffaqiyatli yuklandi:",
-        defaultWeddingTemplates.length,
-      );
+        const { data: customTemplates, error: customError } = await supabase
+          .from("custom_templates")
+          .select("*")
+          .eq("is_active", true)
+          .order("created_at", { ascending: false });
+
+        if (customError) {
+          console.warn("⚠️ Custom templates yuklashda xatolik:", customError);
+        } else if (customTemplates && customTemplates.length > 0) {
+          console.log("✅ Custom templates topildi:", customTemplates.length);
+
+          // Convert custom templates to ExtendedTemplate format
+          const convertedCustomTemplates: ExtendedTemplate[] = customTemplates.map(
+            (custom: CustomTemplate) => ({
+              id: custom.id,
+              name: custom.name,
+              description: custom.description,
+              category: custom.category || "custom",
+              colors: custom.colors || {},
+              fonts: custom.fonts || {},
+              preview: "🎨", // Custom icon for custom templates
+              isCustom: true,
+              customData: custom,
+              usage_count: custom.usage_count || 0,
+              is_featured: custom.is_featured || false,
+            })
+          );
+
+          // Add custom templates to the beginning
+          allTemplates = [...convertedCustomTemplates, ...allTemplates];
+        }
+      } catch (customErr) {
+        console.warn("⚠️ Custom templates yuklanmadi:", customErr);
+      }
+
+      // Also load popular public templates if user is logged in
+      if (user) {
+        try {
+          const { data: publicTemplates, error: publicError } = await supabase
+            .from("custom_templates")
+            .select("*")
+            .eq("is_public", true)
+            .eq("is_active", true)
+            .order("usage_count", { ascending: false })
+            .limit(10);
+
+          if (!publicError && publicTemplates && publicTemplates.length > 0) {
+            console.log("✅ Public templates topildi:", publicTemplates.length);
+
+            const convertedPublicTemplates: ExtendedTemplate[] = publicTemplates.map(
+              (pub: CustomTemplate) => ({
+                id: `public_${pub.id}`,
+                name: `${pub.name} (Ommaviy)`,
+                description: pub.description,
+                category: pub.category || "popular",
+                colors: pub.colors || {},
+                fonts: pub.fonts || {},
+                preview: "⭐", // Star icon for popular templates
+                isCustom: true,
+                customData: pub,
+                usage_count: pub.usage_count || 0,
+                is_featured: true,
+              })
+            );
+
+            // Add popular templates after custom templates
+            allTemplates = [
+              ...allTemplates.slice(0, customTemplates?.length || 0),
+              ...convertedPublicTemplates,
+              ...allTemplates.slice(customTemplates?.length || 0)
+            ];
+          }
+        } catch (publicErr) {
+          console.warn("⚠️ Public templates yuklanmadi:", publicErr);
+        }
+      }
+
+      setTemplates(allTemplates);
+      setFilteredTemplates(allTemplates);
+
+      console.log("✅ Barcha shablonlar yuklandi:", allTemplates.length);
     } catch (err) {
       console.error("❌ Shablonlarni yuklashda xatolik:", err);
       setError("Shablonlarni yuklashda xatolik yuz berdi");

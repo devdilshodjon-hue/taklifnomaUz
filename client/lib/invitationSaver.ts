@@ -104,27 +104,33 @@ export const saveInvitationToSupabase = async (
       invitationToSave,
     );
 
-    // Try to save with retry logic and longer timeout
-    const { data, error } = await retryWithBackoff(
-      async () => {
-        // Create a promise that will timeout after 25 seconds for invitations
-        const timeoutPromise = new Promise<never>((_, reject) => {
-          setTimeout(() => {
-            reject(new Error("Invitation operation timeout after 25 seconds"));
-          }, 25000); // Longer timeout for invitations
-        });
+    // Try direct save first (no timeout race condition)
+    console.log("📤 Attempting direct invitation save to Supabase...");
+    let result;
 
-        const savePromise = supabase
+    try {
+      const { data, error } = await supabase
+        .from("invitations")
+        .insert(invitationToSave)
+        .select()
+        .single();
+
+      result = { data, error };
+      console.log("✅ Direct invitation save result:", result);
+    } catch (directError) {
+      console.log("❌ Direct invitation save failed, trying with retry logic...", directError);
+
+      // If direct save fails, try with retry (but no timeout race)
+      result = await retryWithBackoff(async () => {
+        return await supabase
           .from("invitations")
           .insert(invitationToSave)
           .select()
           .single();
+      }, 2, 3000); // 2 retries with 3 second delay
+    }
 
-        return Promise.race([savePromise, timeoutPromise]);
-      },
-      3,
-      2000,
-    ); // 3 retries with 2 second base delay
+    const { data, error } = result;
 
     if (error) {
       throw error;

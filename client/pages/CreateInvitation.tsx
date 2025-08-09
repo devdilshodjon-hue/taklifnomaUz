@@ -181,31 +181,11 @@ export default function CreateInvitation() {
   };
 
   const handleSave = async () => {
-    console.log("🚀 Starting optimized invitation creation...");
-
-    if (!user) {
-      setError("Taklifnoma yaratish uchun tizimga kirishingiz kerak");
-      return;
-    }
-
-    const missingFields = [];
-    if (!formData.groomName?.trim()) missingFields.push("Kuyov ismi");
-    if (!formData.brideName?.trim()) missingFields.push("Kelin ismi");
-    if (!formData.weddingDate) missingFields.push("To'y sanasi");
-    if (!formData.venue?.trim()) missingFields.push("Joy nomi");
-    if (!formData.address?.trim()) missingFields.push("Manzil");
-
-    if (missingFields.length > 0) {
-      setError(
-        `Iltimos, quyidagi maydonlarni to'ldiring: ${missingFields.join(", ")}`,
-      );
-      return;
-    }
+    console.log("🚀 Starting invitation creation...");
 
     setIsLoading(true);
     setError("");
-    console.log("📋 Starting high-performance invitation creation...");
-    console.log("���� User authenticated:", !!user, "User ID:", user?.id);
+    setSuccess("");
 
     try {
       const slug = generateSlug();

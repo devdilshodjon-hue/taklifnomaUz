@@ -239,7 +239,7 @@ export default function TemplateBuilder() {
       value: "elegant", 
       label: "Nafis", 
       description: "Chiroyli va mukammal",
-      icon: "💎",
+      icon: "���",
     },
     { 
       value: "rustic", 
@@ -781,9 +781,9 @@ export default function TemplateBuilder() {
                 </TabsContent>
 
                 <TabsContent value="colors" className="space-y-6 mt-4 lg:mt-6">
-                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 lg:p-6 xl:p-8 border border-border shadow-sm">
-                    <h3 className="font-heading text-lg xl:text-xl font-semibold text-foreground mb-6 flex items-center gap-3">
-                      <Palette className="w-5 h-5 xl:w-6 xl:h-6 text-primary" />
+                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 lg:p-5 border border-border shadow-sm">
+                    <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Palette className="w-5 h-5 text-primary" />
                       Rang Shablonlari
                     </h3>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

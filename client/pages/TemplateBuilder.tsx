@@ -470,7 +470,7 @@ export default function TemplateBuilder() {
       }
     };
 
-    const deviceClass = previewDevice === "mobile" ? "max-w-xs sm:max-w-sm" : "max-w-md md:max-w-lg xl:max-w-xl";
+    const deviceClass = previewDevice === "mobile" ? "max-w-xs sm:max-w-sm" : "max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl";
 
     return (
       <div className={`w-full ${deviceClass} mx-auto transition-all duration-500`}>
@@ -663,9 +663,9 @@ export default function TemplateBuilder() {
             </Alert>
           )}
 
-          <div className="grid grid-cols-1 xl:grid-cols-7 gap-4 md:gap-6 lg:gap-8">
-            {/* Left Panel - Controls (3/7) */}
-            <div className="xl:col-span-3 order-2 xl:order-1">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6 lg:gap-8">
+            {/* Left Panel - Controls */}
+            <div className="lg:col-span-5 xl:col-span-4 order-2 lg:order-1">
               
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-card/80 p-1 shadow-sm border border-border">
@@ -1030,10 +1030,10 @@ export default function TemplateBuilder() {
               </Tabs>
             </div>
 
-            {/* Right Panel - Live Preview (4/7) */}
-            <div className="xl:col-span-4 order-1 xl:order-2">
-              <div className="xl:sticky xl:top-24">
-                <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 md:p-6 border border-border shadow-lg">
+            {/* Right Panel - Live Preview */}
+            <div className="lg:col-span-7 xl:col-span-8 order-1 lg:order-2">
+              <div className="lg:sticky lg:top-24">
+                <div className="bg-card/90 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-border shadow-lg">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="font-heading text-lg font-semibold text-foreground flex items-center gap-2">
                       <Eye className="w-5 h-5 text-primary" />
@@ -1059,8 +1059,8 @@ export default function TemplateBuilder() {
                     </div>
                   </div>
 
-                  <div className="border border-border rounded-lg p-3 md:p-6 bg-gradient-to-br from-muted/30 to-card min-h-[280px] md:min-h-[300px] flex items-center justify-center">
-                    <div className="w-full max-w-2xl">
+                  <div className="border border-border rounded-lg p-4 md:p-6 lg:p-8 bg-gradient-to-br from-muted/30 to-card min-h-[320px] md:min-h-[400px] lg:min-h-[450px] xl:min-h-[500px] flex items-center justify-center">
+                    <div className="w-full max-w-lg lg:max-w-xl xl:max-w-2xl">
                       <TemplatePreview />
                     </div>
                   </div>

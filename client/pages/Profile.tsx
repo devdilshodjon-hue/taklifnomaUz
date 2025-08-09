@@ -195,11 +195,16 @@ export default function Profile() {
         .order("created_at", { ascending: false })
         .limit(5);
 
-      if (error) throw error;
+      if (error) {
+        console.warn("Error loading recent invitations:", error.message);
+        setRecentInvitations([]);
+        return;
+      }
 
       setRecentInvitations(data || []);
     } catch (error) {
-      console.error("Error loading recent invitations:", error);
+      console.warn("Error loading recent invitations:", error);
+      setRecentInvitations([]);
     }
   };
 

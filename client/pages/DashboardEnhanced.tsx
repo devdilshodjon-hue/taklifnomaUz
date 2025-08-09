@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase, safeSupabaseOperation } from "@/lib/supabaseClient";
 import {
   PlusCircle,
   Eye,

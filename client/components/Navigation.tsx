@@ -13,7 +13,19 @@ export default function Navigation({
   className = "",
 }: NavigationProps) {
   const location = useLocation();
-  const { user, profile } = useAuth();
+
+  // Safe auth hook usage with error handling
+  let user = null;
+  let profile = null;
+
+  try {
+    const auth = useAuth();
+    user = auth.user;
+    profile = auth.profile;
+  } catch (error) {
+    console.warn("Auth context not available in Navigation:", error);
+    // Continue with null values - component will render guest view
+  }
 
   const navLinks = [
     { href: "/features", label: "Imkoniyatlar", isAnchor: false },

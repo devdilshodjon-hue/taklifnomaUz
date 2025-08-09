@@ -642,9 +642,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       return { error };
-    } catch (err) {
-      console.error("Google sign-in error:", err);
-      return { error: err as any };
+    } catch (networkError: any) {
+      console.error("Network error during Google sign-in:", networkError);
+
+      if (networkError.name === 'AbortError') {
+        return { error: { message: "Ulanish vaqti tugadi. Iltimos, qayta urinib ko'ring." } as any };
+      }
+
+      if (networkError.message?.includes('Failed to fetch')) {
+        return { error: { message: "Internet ulanishi bilan muammo. Google orqali kirishda xatolik." } as any };
+      }
+
+      return { error: { message: "Google orqali kirishda xatolik. Qayta urinib ko'ring." } as any };
     }
   };
 

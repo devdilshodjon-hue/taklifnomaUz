@@ -188,34 +188,8 @@ export default function CreateInvitation() {
     console.log("👤 User authenticated:", !!user, "User ID:", user?.id);
 
     try {
-      // Check authentication session first
-      const {
-        data: { session },
-        error: sessionError,
-      } = await supabase.auth.getSession();
-      if (sessionError) {
-        console.error("Session error:", sessionError);
-        setError(
-          "Autentifikatsiya sessiyasida xatolik. Iltimos, qayta kiring.",
-        );
-        return;
-      }
-
-      if (!session) {
-        console.error("No active session found");
-        setError("Sessiya tugagan. Iltimos, qayta kiring.");
-        return;
-      }
-
-      console.log(
-        "Session verified:",
-        !!session,
-        "Session user:",
-        session.user?.id,
-      );
-
       const slug = generateSlug();
-      console.log("Generated slug:", slug);
+      console.log("🔗 Generated slug:", slug);
 
       const invitationData = {
         user_id: user.id,
@@ -233,96 +207,23 @@ export default function CreateInvitation() {
         rsvp_deadline: formData.rsvpDeadline || null,
         slug: slug,
         is_active: true,
+        metadata: {
+          created_with: "CreateInvitation v2.0",
+          performance_optimized: true,
+        }
       };
 
-      console.log("Invitation data prepared:", invitationData);
+      console.log("📋 Invitation data prepared:", invitationData);
 
-      console.log("Attempting to save to Supabase...");
-
-      // Test connection first
-      const { data: testData, error: testError } = await supabase
-        .from("invitations")
-        .select("id")
-        .limit(1);
-
-      if (testError) {
-        console.error("Database connection test failed:", testError);
-        if (testError.message.includes("does not exist")) {
-          console.log("Invitations table does not exist, using demo mode");
-          // Show database setup guide
-          setError(
-            "Ma'lumotlar bazasi jadvallari mavjud emas. Demo rejimida davom etmoqda.",
-          );
-        }
-      } else {
-        console.log("Database connection test successful");
-      }
-
-      const { data: invitation, error } = await supabase
-        .from("invitations")
-        .insert(invitationData)
-        .select()
-        .single();
+      // Use optimized invitation operations with automatic caching and fallback
+      const { data: invitation, error } = await invitationOperations.create(invitationData);
 
       if (error) {
-        console.error("Supabase insertion error:", error?.message || error, {
-          error: error,
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code,
-        });
-
-        // Show user-friendly error message based on error type
-        if (error.message.includes("auth")) {
-          setError("Autentifikatsiya xatoligi. Iltimos, qayta kiring.");
-          return;
-        } else if (error.message.includes("duplicate")) {
-          setError("Bu ma'lumotlar bilan taklifnoma allaqachon mavjud.");
-          return;
-        } else {
-          setError(`Ma'lumotlar bazasiga saqlashda xatolik: ${error.message}`);
-        }
-
-        // Create demo invitation as fallback
-        console.log("Demo rejimida taklifnoma yaratilmoqda...");
-        const mockId = generateDemoInvitationId();
-
-        // Real ma'lumotlarni localStorage ga saqlaymiz
-        const realInvitationData = {
-          id: mockId,
-          groom_name: formData.groomName,
-          bride_name: formData.brideName,
-          wedding_date: formData.weddingDate,
-          wedding_time: formData.weddingTime,
-          venue: formData.venue,
-          address: formData.address,
-          city: formData.city,
-          custom_message: formData.customMessage,
-          template_id: formData.selectedTemplate,
-          created_at: new Date().toISOString(),
-          is_demo: true,
-        };
-
-        localStorage.setItem(
-          `invitation_${mockId}`,
-          JSON.stringify(realInvitationData),
-        );
-
-        // Update demo invitation count
-        const currentCount = parseInt(
-          localStorage.getItem("demo_invitation_count") || "0",
-        );
-        localStorage.setItem(
-          "demo_invitation_count",
-          (currentCount + 1).toString(),
-        );
-
-        navigate(`/invitation/${mockId}`);
-        return;
+        console.error("❌ Invitation creation error:", error);
+        throw new Error(error.message || "Taklifnoma yaratishda xatolik yuz berdi");
       }
 
-      console.log("Supabase save successful:", invitation);
+      console.log("✅ Invitation created successfully:", invitation);
 
       // Mehmonlarni qo'shish
       if (guests.length > 0 && invitation) {

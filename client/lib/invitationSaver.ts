@@ -1,4 +1,4 @@
-import { supabase } from "./supabaseClient";
+import { supabase, safeSupabaseOperation } from "./supabaseClient";
 import { toast } from "sonner";
 
 export interface InvitationFormData {

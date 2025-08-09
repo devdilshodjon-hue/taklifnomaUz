@@ -11,21 +11,19 @@ if (!supabaseUrl || !supabaseAnonKey) {
   );
 }
 
-console.log("🔧 Supabase client initializing with:", {
+console.log("��� Supabase client initializing with:", {
   url: supabaseUrl,
   hasKey: !!supabaseAnonKey,
   keyPrefix: supabaseAnonKey?.substring(0, 20) + "...",
 });
 
-// Enhanced Supabase client with proper configuration
+// Enhanced Supabase client with improved permission handling
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
+    persistSession: false, // Disable session for anonymous access
+    autoRefreshToken: false,
+    detectSessionInUrl: false,
     flowType: "pkce",
-    storage: window?.localStorage,
-    storageKey: "taklifnoma-auth-token",
   },
   db: {
     schema: "public",
@@ -34,6 +32,8 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     headers: {
       "x-client-info": "taklifnoma-app@1.0.0",
       "x-application-name": "TaklifNoma.uz",
+      "apikey": supabaseAnonKey,
+      "Authorization": `Bearer ${supabaseAnonKey}`,
     },
   },
   realtime: {

@@ -167,16 +167,16 @@ export default function CreateInvitation() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
         {/* Header */}
-        <nav className="bg-white/90 backdrop-blur-md border-b border-slate-200/60 p-4 sticky top-0 z-50 shadow-lg">
+        <nav className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-700/60 p-4 sticky top-0 z-50 shadow-lg">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
                 size="sm"
                 asChild
-                className="hover:bg-slate-100 transition-colors"
+                className="hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               >
                 <Link to="/dashboard">
                   <ArrowLeft className="w-4 h-4 mr-2" />
@@ -188,10 +188,10 @@ export default function CreateInvitation() {
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h1 className="font-heading text-xl font-bold text-slate-900">
+                  <h1 className="font-heading text-xl font-bold text-slate-900 dark:text-slate-100">
                     Taklifnoma Yaratish
                   </h1>
-                  <p className="text-xs text-slate-600">
+                  <p className="text-xs text-slate-600 dark:text-slate-400">
                     Chiroyli taklifnoma yarating
                   </p>
                 </div>
@@ -202,7 +202,7 @@ export default function CreateInvitation() {
                 onClick={() => setPreviewOpen(true)}
                 variant="outline"
                 size="sm"
-                className="hover:bg-slate-50"
+                className="hover:bg-slate-50 dark:hover:bg-slate-800"
               >
                 <Eye className="w-4 h-4 mr-2" />
                 Oldindan Ko'rish

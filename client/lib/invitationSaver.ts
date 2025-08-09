@@ -114,8 +114,8 @@ export const saveInvitationToSupabase = async (
     console.log("💾 Backup saved to localStorage");
 
     try {
-      // Try Supabase with improved timeout handling
-      const savePromise = supabase
+      // Try Supabase with safe wrapper and timeout handling
+      const saveOperation = () => supabase
         .from("invitations")
         .insert(invitationToSave)
         .select()
@@ -123,11 +123,12 @@ export const saveInvitationToSupabase = async (
 
       const timeoutPromise = new Promise<never>(
         (_, reject) =>
-          setTimeout(() => reject(new Error("Connection timeout")), 5000), // Reduced to 5 seconds
+          setTimeout(() => reject(new Error("Connection timeout")), 5000)
       );
 
-      const result = await Promise.race([savePromise, timeoutPromise]);
-      const { data, error } = result as any;
+      const safePromise = safeSupabaseOperation(saveOperation);
+      const result = await Promise.race([safePromise, timeoutPromise]);
+      const { data, error, isPermissionError } = result as any;
 
       if (error) {
         console.warn("⚠️ Supabase error:", error.message);

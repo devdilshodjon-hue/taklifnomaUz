@@ -7,14 +7,17 @@ import Navigation from "@/components/Navigation";
 import {
   defaultWeddingTemplates,
   templateCategories,
-  type DefaultTemplate
+  type DefaultTemplate,
 } from "@/lib/defaultTemplates";
 
 export default function Templates() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [templates, setTemplates] = useState<DefaultTemplate[]>([]);
-  const [filteredTemplates, setFilteredTemplates] = useState<DefaultTemplate[]>([]);
-  const [previewTemplate, setPreviewTemplate] = useState<DefaultTemplate | null>(null);
+  const [filteredTemplates, setFilteredTemplates] = useState<DefaultTemplate[]>(
+    [],
+  );
+  const [previewTemplate, setPreviewTemplate] =
+    useState<DefaultTemplate | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -38,8 +41,10 @@ export default function Templates() {
       setTemplates(defaultWeddingTemplates);
       setFilteredTemplates(defaultWeddingTemplates);
 
-      console.log("✅ Shablonlar muvaffaqiyatli yuklandi:", defaultWeddingTemplates.length);
-
+      console.log(
+        "✅ Shablonlar muvaffaqiyatli yuklandi:",
+        defaultWeddingTemplates.length,
+      );
     } catch (err) {
       console.error("❌ Shablonlarni yuklashda xatolik:", err);
       setError("Shablonlarni yuklashda xatolik yuz berdi");
@@ -59,7 +64,7 @@ export default function Templates() {
     if (categoryId === "all") {
       setFilteredTemplates(templates);
     } else {
-      const filtered = templates.filter(t => t.category === categoryId);
+      const filtered = templates.filter((t) => t.category === categoryId);
       setFilteredTemplates(filtered);
     }
   };
@@ -103,9 +108,7 @@ export default function Templates() {
     <div className="min-h-screen bg-background animate-fade-in">
       <Navigation showBackButton className="animate-slide-up" />
 
-      <div className="max-w-6xl mx-auto p-6">
-
-      </div>
+      <div className="max-w-6xl mx-auto p-6"></div>
 
       <div className="max-w-6xl mx-auto p-6">
         {/* Header */}

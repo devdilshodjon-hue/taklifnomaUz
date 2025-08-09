@@ -68,7 +68,8 @@ export const defaultWeddingTemplates: DefaultTemplate[] = [
   {
     id: "modern-minimalist",
     name: "Zamonaviy Minimalist",
-    description: "Oddiy va zamonaviy dizayn, minimalist uslubni yaxshi ko'radiganlar uchun",
+    description:
+      "Oddiy va zamonaviy dizayn, minimalist uslubni yaxshi ko'radiganlar uchun",
     category: "modern",
     config: {
       style: "modern",
@@ -307,32 +308,78 @@ export const defaultWeddingTemplates: DefaultTemplate[] = [
 // Template categories with counts
 export const templateCategories = [
   { id: "all", name: "Hammasi", count: defaultWeddingTemplates.length },
-  { id: "classic", name: "Klassik", count: defaultWeddingTemplates.filter(t => t.category === "classic").length },
-  { id: "modern", name: "Zamonaviy", count: defaultWeddingTemplates.filter(t => t.category === "modern").length },
-  { id: "romantic", name: "Romantik", count: defaultWeddingTemplates.filter(t => t.category === "romantic").length },
-  { id: "luxury", name: "Hashamatli", count: defaultWeddingTemplates.filter(t => t.category === "luxury").length },
-  { id: "traditional", name: "An'anaviy", count: defaultWeddingTemplates.filter(t => t.category === "traditional").length },
-  { id: "nature", name: "Tabiat", count: defaultWeddingTemplates.filter(t => t.category === "nature").length },
-  { id: "vintage", name: "Vintage", count: defaultWeddingTemplates.filter(t => t.category === "vintage").length },
-  { id: "summer", name: "Yozgi", count: defaultWeddingTemplates.filter(t => t.category === "summer").length },
+  {
+    id: "classic",
+    name: "Klassik",
+    count: defaultWeddingTemplates.filter((t) => t.category === "classic")
+      .length,
+  },
+  {
+    id: "modern",
+    name: "Zamonaviy",
+    count: defaultWeddingTemplates.filter((t) => t.category === "modern")
+      .length,
+  },
+  {
+    id: "romantic",
+    name: "Romantik",
+    count: defaultWeddingTemplates.filter((t) => t.category === "romantic")
+      .length,
+  },
+  {
+    id: "luxury",
+    name: "Hashamatli",
+    count: defaultWeddingTemplates.filter((t) => t.category === "luxury")
+      .length,
+  },
+  {
+    id: "traditional",
+    name: "An'anaviy",
+    count: defaultWeddingTemplates.filter((t) => t.category === "traditional")
+      .length,
+  },
+  {
+    id: "nature",
+    name: "Tabiat",
+    count: defaultWeddingTemplates.filter((t) => t.category === "nature")
+      .length,
+  },
+  {
+    id: "vintage",
+    name: "Vintage",
+    count: defaultWeddingTemplates.filter((t) => t.category === "vintage")
+      .length,
+  },
+  {
+    id: "summer",
+    name: "Yozgi",
+    count: defaultWeddingTemplates.filter((t) => t.category === "summer")
+      .length,
+  },
 ];
 
 // Get templates by category
-export const getTemplatesByCategory = (categoryId: string): DefaultTemplate[] => {
+export const getTemplatesByCategory = (
+  categoryId: string,
+): DefaultTemplate[] => {
   if (categoryId === "all") {
     return defaultWeddingTemplates;
   }
-  return defaultWeddingTemplates.filter(template => template.category === categoryId);
+  return defaultWeddingTemplates.filter(
+    (template) => template.category === categoryId,
+  );
 };
 
 // Get featured templates
 export const getFeaturedTemplates = (): DefaultTemplate[] => {
-  return defaultWeddingTemplates.filter(template => template.is_featured);
+  return defaultWeddingTemplates.filter((template) => template.is_featured);
 };
 
 // Get popular templates (sorted by usage count)
 export const getPopularTemplates = (): DefaultTemplate[] => {
-  return [...defaultWeddingTemplates].sort((a, b) => b.usage_count - a.usage_count);
+  return [...defaultWeddingTemplates].sort(
+    (a, b) => b.usage_count - a.usage_count,
+  );
 };
 
 // Template storage and loading system
@@ -356,19 +403,24 @@ export class TemplateManager {
 
     try {
       console.log("🔄 Loading templates...");
-      
+
       // Try to load from database first
       // This will be implemented with actual database call
       // For now, use defaults
-      
+
       this.loadedTemplates = defaultWeddingTemplates;
       this.isLoaded = true;
-      
-      console.log("✅ Templates loaded successfully:", this.loadedTemplates.length);
+
+      console.log(
+        "✅ Templates loaded successfully:",
+        this.loadedTemplates.length,
+      );
       return this.loadedTemplates;
-      
     } catch (error) {
-      console.warn("⚠️ Failed to load templates from database, using defaults:", error);
+      console.warn(
+        "⚠️ Failed to load templates from database, using defaults:",
+        error,
+      );
       this.loadedTemplates = defaultWeddingTemplates;
       this.isLoaded = true;
       return this.loadedTemplates;
@@ -383,36 +435,37 @@ export class TemplateManager {
   // Get template by ID
   async getTemplateById(id: string): Promise<DefaultTemplate | null> {
     const templates = await this.loadTemplates();
-    return templates.find(template => template.id === id) || null;
+    return templates.find((template) => template.id === id) || null;
   }
 
   // Search templates
   async searchTemplates(query: string): Promise<DefaultTemplate[]> {
     const templates = await this.loadTemplates();
     const searchTerm = query.toLowerCase();
-    
-    return templates.filter(template => 
-      template.name.toLowerCase().includes(searchTerm) ||
-      template.description.toLowerCase().includes(searchTerm) ||
-      template.category.toLowerCase().includes(searchTerm)
+
+    return templates.filter(
+      (template) =>
+        template.name.toLowerCase().includes(searchTerm) ||
+        template.description.toLowerCase().includes(searchTerm) ||
+        template.category.toLowerCase().includes(searchTerm),
     );
   }
 
   // Get templates by category
   async getTemplatesByCategory(categoryId: string): Promise<DefaultTemplate[]> {
     const templates = await this.loadTemplates();
-    
+
     if (categoryId === "all") {
       return templates;
     }
-    
-    return templates.filter(template => template.category === categoryId);
+
+    return templates.filter((template) => template.category === categoryId);
   }
 
   // Get featured templates
   async getFeaturedTemplates(): Promise<DefaultTemplate[]> {
     const templates = await this.loadTemplates();
-    return templates.filter(template => template.is_featured);
+    return templates.filter((template) => template.is_featured);
   }
 
   // Get popular templates
@@ -424,9 +477,12 @@ export class TemplateManager {
   // Initialize templates in localStorage for offline access
   initializeLocalStorage(): void {
     try {
-      const stored = localStorage.getItem('default_templates');
+      const stored = localStorage.getItem("default_templates");
       if (!stored) {
-        localStorage.setItem('default_templates', JSON.stringify(defaultWeddingTemplates));
+        localStorage.setItem(
+          "default_templates",
+          JSON.stringify(defaultWeddingTemplates),
+        );
         console.log("✅ Default templates saved to localStorage");
       }
     } catch (error) {
@@ -437,7 +493,7 @@ export class TemplateManager {
   // Load from localStorage if database is unavailable
   loadFromLocalStorage(): DefaultTemplate[] {
     try {
-      const stored = localStorage.getItem('default_templates');
+      const stored = localStorage.getItem("default_templates");
       if (stored) {
         return JSON.parse(stored);
       }

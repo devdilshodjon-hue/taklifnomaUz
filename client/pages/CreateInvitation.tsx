@@ -52,8 +52,9 @@ export default function CreateInvitation() {
   const [guests, setGuests] = useState<Guest[]>([]);
   const [newGuest, setNewGuest] = useState({ name: "", email: "", phone: "" });
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [filteredTemplates, setFilteredTemplates] =
-    useState<DefaultTemplate[]>(defaultWeddingTemplates);
+  const [filteredTemplates, setFilteredTemplates] = useState<DefaultTemplate[]>(
+    defaultWeddingTemplates,
+  );
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
@@ -68,9 +69,8 @@ export default function CreateInvitation() {
       setCurrentStep(3); // Template selection step ga o'tish
     }
   }, [location.state]);
-  const [previewTemplate, setPreviewTemplate] = useState<DefaultTemplate | null>(
-    null,
-  );
+  const [previewTemplate, setPreviewTemplate] =
+    useState<DefaultTemplate | null>(null);
   const [showPreview, setShowPreview] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -97,7 +97,8 @@ export default function CreateInvitation() {
         const templates = await templateManager.getAllTemplates();
         setFilteredTemplates(templates);
       } else {
-        const filtered = await templateManager.getTemplatesByCategory(categoryId);
+        const filtered =
+          await templateManager.getTemplatesByCategory(categoryId);
         setFilteredTemplates(filtered);
       }
     } catch (error) {
@@ -106,7 +107,9 @@ export default function CreateInvitation() {
       if (categoryId === "all") {
         setFilteredTemplates(defaultWeddingTemplates);
       } else {
-        const filtered = defaultWeddingTemplates.filter(t => t.category === categoryId);
+        const filtered = defaultWeddingTemplates.filter(
+          (t) => t.category === categoryId,
+        );
         setFilteredTemplates(filtered);
       }
     }

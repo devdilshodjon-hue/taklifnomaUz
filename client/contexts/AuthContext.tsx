@@ -360,11 +360,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log("Profile created successfully:", createdProfile.id);
         return createdProfile;
       } else {
-        console.warn("Profile creation failed, using minimal profile:", createError?.message);
+        console.warn(
+          "Profile creation failed, using minimal profile:",
+          createError?.message,
+        );
         throw createError;
       }
     } catch (error) {
-      console.warn("Database profile creation failed, returning minimal profile");
+      console.warn(
+        "Database profile creation failed, returning minimal profile",
+      );
 
       // Return a complete minimal profile object for the app to continue working
       return {
@@ -456,9 +461,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .single();
 
       if (error) {
-        if (error.code === "PGRST116" || error.message.includes("No rows found")) {
+        if (
+          error.code === "PGRST116" ||
+          error.message.includes("No rows found")
+        ) {
           // Profile doesn't exist, create one
-          console.log("Profile not found, creating new profile for user:", userId);
+          console.log(
+            "Profile not found, creating new profile for user:",
+            userId,
+          );
 
           try {
             const { data: userData } = await supabase.auth.getUser();
@@ -486,7 +497,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               }
             }
           } catch (createError) {
-            console.warn("Failed to create profile, using minimal profile:", createError);
+            console.warn(
+              "Failed to create profile, using minimal profile:",
+              createError,
+            );
             if (session?.user) {
               const minimalProfile = {
                 id: session.user.id,

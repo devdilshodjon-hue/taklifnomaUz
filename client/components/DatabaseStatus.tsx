@@ -9,7 +9,10 @@ interface DatabaseStatusProps {
   showDetails?: boolean;
 }
 
-export default function DatabaseStatus({ className = "", showDetails = false }: DatabaseStatusProps) {
+export default function DatabaseStatus({
+  className = "",
+  showDetails = false,
+}: DatabaseStatusProps) {
   const [isSetup, setIsSetup] = useState<boolean | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<{
     connected: boolean;
@@ -27,9 +30,9 @@ export default function DatabaseStatus({ className = "", showDetails = false }: 
     try {
       const [setupResult, connectionResult] = await Promise.all([
         checkDatabaseSetup(),
-        testDatabaseConnection()
+        testDatabaseConnection(),
       ]);
-      
+
       setIsSetup(setupResult);
       setConnectionStatus(connectionResult);
     } catch (error) {
@@ -38,7 +41,7 @@ export default function DatabaseStatus({ className = "", showDetails = false }: 
       setConnectionStatus({
         connected: false,
         latency: 0,
-        error: "Connection failed"
+        error: "Connection failed",
       });
     } finally {
       setChecking(false);
@@ -56,7 +59,9 @@ export default function DatabaseStatus({ className = "", showDetails = false }: 
 
   return (
     <div className={className}>
-      <Alert className={`${isSetup ? 'border-orange-200 bg-orange-50' : 'border-red-200 bg-red-50'}`}>
+      <Alert
+        className={`${isSetup ? "border-orange-200 bg-orange-50" : "border-red-200 bg-red-50"}`}
+      >
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0">
             {isSetup ? (
@@ -65,28 +70,29 @@ export default function DatabaseStatus({ className = "", showDetails = false }: 
               <Database className="h-5 w-5 text-red-600 mt-0.5" />
             )}
           </div>
-          
+
           <div className="flex-grow">
-            <AlertDescription className={isSetup ? 'text-orange-800' : 'text-red-800'}>
+            <AlertDescription
+              className={isSetup ? "text-orange-800" : "text-red-800"}
+            >
               <div className="font-medium mb-1">
-                {isSetup 
-                  ? "Ma'lumotlar bazasi qisman ishlayapti" 
-                  : "Ma'lumotlar bazasi sozlanmagan"
-                }
+                {isSetup
+                  ? "Ma'lumotlar bazasi qisman ishlayapti"
+                  : "Ma'lumotlar bazasi sozlanmagan"}
               </div>
-              
+
               <div className="text-sm">
                 {!isSetup && (
                   <>
-                    Default shablonlar va offline rejim ishlatilmoqda. 
-                    To'liq funksionallik uchun ma'lumotlar bazasini sozlang.
+                    Default shablonlar va offline rejim ishlatilmoqda. To'liq
+                    funksionallik uchun ma'lumotlar bazasini sozlang.
                   </>
                 )}
-                
+
                 {isSetup && !connectionStatus?.connected && (
                   <>
-                    Ba'zi xususiyatlar cheklangan bo'lishi mumkin. 
-                    Internet ulanishini tekshiring.
+                    Ba'zi xususiyatlar cheklangan bo'lishi mumkin. Internet
+                    ulanishini tekshiring.
                   </>
                 )}
               </div>
@@ -94,7 +100,8 @@ export default function DatabaseStatus({ className = "", showDetails = false }: 
               {showDetails && connectionStatus && (
                 <div className="mt-2 text-xs space-y-1">
                   <div>
-                    <strong>Ulanish:</strong> {connectionStatus.connected ? "✅ Ulangan" : "❌ Ulanmagan"}
+                    <strong>Ulanish:</strong>{" "}
+                    {connectionStatus.connected ? "✅ Ulangan" : "❌ Ulanmagan"}
                   </div>
                   {connectionStatus.connected && (
                     <div>
@@ -119,7 +126,9 @@ export default function DatabaseStatus({ className = "", showDetails = false }: 
               disabled={checking}
               className="h-8 px-3"
             >
-              <RefreshCw className={`h-3 w-3 ${checking ? 'animate-spin' : ''}`} />
+              <RefreshCw
+                className={`h-3 w-3 ${checking ? "animate-spin" : ""}`}
+              />
             </Button>
           </div>
         </div>

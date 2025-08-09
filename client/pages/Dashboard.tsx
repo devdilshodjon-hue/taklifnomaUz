@@ -124,7 +124,9 @@ export default function Dashboard() {
       const dbSetup = await checkDatabaseSetup();
 
       if (!dbSetup) {
-        console.log("📁 Ma'lumotlar bazasi mavjud emas, localStorage dan yuklanmoqda");
+        console.log(
+          "📁 Ma'lumotlar bazasi mavjud emas, localStorage dan yuklanmoqda",
+        );
         clearTimeout(timeoutId);
         loadInvitationsFromLocalStorage();
         setLoading(false);

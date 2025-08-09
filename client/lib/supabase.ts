@@ -108,7 +108,9 @@ export const checkDatabaseSetup = async (): Promise<boolean> => {
     return cached;
   }
 
-  console.log("🔍 Ma'lumotlar bazasi ulanishi va sozlamalarini tekshirmoqda...");
+  console.log(
+    "🔍 Ma'lumotlar bazasi ulanishi va sozlamalarini tekshirmoqda...",
+  );
 
   try {
     const result = await connectionManager.executeQuery(
@@ -116,9 +118,19 @@ export const checkDatabaseSetup = async (): Promise<boolean> => {
       async () => {
         // Test multiple critical tables
         const tableTests = [
-          { name: "profiles", query: () => supabase.from("profiles").select("id").limit(1) },
-          { name: "invitations", query: () => supabase.from("invitations").select("id").limit(1) },
-          { name: "custom_templates", query: () => supabase.from("custom_templates").select("id").limit(1) },
+          {
+            name: "profiles",
+            query: () => supabase.from("profiles").select("id").limit(1),
+          },
+          {
+            name: "invitations",
+            query: () => supabase.from("invitations").select("id").limit(1),
+          },
+          {
+            name: "custom_templates",
+            query: () =>
+              supabase.from("custom_templates").select("id").limit(1),
+          },
         ];
 
         let tablesExist = 0;
@@ -128,23 +140,48 @@ export const checkDatabaseSetup = async (): Promise<boolean> => {
           try {
             const { error } = await table.query();
             if (error) {
-              if (error.message.includes("does not exist") ||
-                  (error.message.includes("table") && error.message.includes("does not exist"))) {
+              if (
+                error.message.includes("does not exist") ||
+                (error.message.includes("table") &&
+                  error.message.includes("does not exist"))
+              ) {
                 console.warn(`❌ Jadval "${table.name}" mavjud emas`);
-                tableResults.push({ name: table.name, exists: false, error: error.message });
+                tableResults.push({
+                  name: table.name,
+                  exists: false,
+                  error: error.message,
+                });
               } else {
-                console.log(`✅ Jadval "${table.name}" mavjud lekin kirish xatosi:`, error.message);
-                tableResults.push({ name: table.name, exists: true, error: error.message });
+                console.log(
+                  `✅ Jadval "${table.name}" mavjud lekin kirish xatosi:`,
+                  error.message,
+                );
+                tableResults.push({
+                  name: table.name,
+                  exists: true,
+                  error: error.message,
+                });
                 tablesExist++;
               }
             } else {
               console.log(`✅ Jadval "${table.name}" mavjud va kirish mumkin`);
-              tableResults.push({ name: table.name, exists: true, error: null });
+              tableResults.push({
+                name: table.name,
+                exists: true,
+                error: null,
+              });
               tablesExist++;
             }
           } catch (tableError) {
-            console.warn(`❌ Jadval "${table.name}" tekshirishda xatolik:`, tableError);
-            tableResults.push({ name: table.name, exists: false, error: tableError });
+            console.warn(
+              `❌ Jadval "${table.name}" tekshirishda xatolik:`,
+              tableError,
+            );
+            tableResults.push({
+              name: table.name,
+              exists: false,
+              error: tableError,
+            });
           }
         }
 
@@ -154,7 +191,7 @@ export const checkDatabaseSetup = async (): Promise<boolean> => {
           topilganJadvallar: tablesExist,
           jami: tableTests.length,
           sozlangan: isSetup,
-          tafsilotlar: tableResults
+          tafsilotlar: tableResults,
         });
 
         return isSetup;
@@ -167,12 +204,17 @@ export const checkDatabaseSetup = async (): Promise<boolean> => {
     if (result) {
       console.log("✅ Ma'lumotlar bazasi to'g'ri sozlangan");
     } else {
-      console.log("⚠️ Ma'lumotlar bazasi sozlanmagan, fallback rejimda ishlaymiz");
+      console.log(
+        "⚠️ Ma'lumotlar bazasi sozlanmagan, fallback rejimda ishlaymiz",
+      );
     }
 
     return result;
   } catch (error) {
-    console.error("❌ Ma'lumotlar bazasi ulanish testi muvaffaqiyatsiz:", error);
+    console.error(
+      "❌ Ma'lumotlar bazasi ulanish testi muvaffaqiyatsiz:",
+      error,
+    );
     cacheUtils.setConfig("database_setup", false);
     return false;
   }
@@ -182,15 +224,12 @@ export const checkDatabaseSetup = async (): Promise<boolean> => {
 export const testDatabaseConnection = async (): Promise<{
   connected: boolean;
   latency: number;
-  error?: string
+  error?: string;
 }> => {
   const startTime = Date.now();
 
   try {
-    const { error } = await supabase
-      .from("profiles")
-      .select("id")
-      .limit(1);
+    const { error } = await supabase.from("profiles").select("id").limit(1);
 
     const latency = Date.now() - startTime;
 
@@ -198,19 +237,19 @@ export const testDatabaseConnection = async (): Promise<{
       return {
         connected: false,
         latency,
-        error: error.message
+        error: error.message,
       };
     }
 
     return {
       connected: true,
-      latency
+      latency,
     };
   } catch (error: any) {
     return {
       connected: false,
       latency: Date.now() - startTime,
-      error: error?.message || "Noma'lum ulanish xatosi"
+      error: error?.message || "Noma'lum ulanish xatosi",
     };
   }
 };

@@ -86,7 +86,9 @@ export default function TemplateBuilder() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("info");
-  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("desktop");
+  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">(
+    "desktop",
+  );
 
   // Template data for real-time preview
   const [templateData, setTemplateData] = useState<InvitationData>({
@@ -97,7 +99,8 @@ export default function TemplateBuilder() {
     weddingTime: "16:00",
     venue: "Atirgul Bog'i",
     address: "Toshkent sh., Yunusobod t., Bog' ko'chasi 123",
-    customMessage: "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
+    customMessage:
+      "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
   });
 
   const [config, setConfig] = useState<TemplateConfig>({
@@ -230,26 +233,26 @@ export default function TemplateBuilder() {
       icon: "📜",
     },
     {
-      value: "modern", 
+      value: "modern",
       label: "Zamonaviy",
       description: "Minimalistik va sodda",
       icon: "✨",
     },
-    { 
-      value: "elegant", 
-      label: "Nafis", 
+    {
+      value: "elegant",
+      label: "Nafis",
       description: "Chiroyli va mukammal",
       icon: "💎",
     },
-    { 
-      value: "rustic", 
-      label: "Tabiy", 
+    {
+      value: "rustic",
+      label: "Tabiy",
       description: "Tabiy va issiq his",
       icon: "🌿",
     },
-    { 
-      value: "luxury", 
-      label: "Hashamatli", 
+    {
+      value: "luxury",
+      label: "Hashamatli",
       description: "Dabdabali va noyob",
       icon: "👑",
     },
@@ -372,14 +375,13 @@ export default function TemplateBuilder() {
       }
 
       setSuccess("🎉 Shablon muvaffaqiyatli saqlandi!");
-      
+
       setTimeout(() => {
         navigate("/templates");
       }, 2000);
-
     } catch (err: any) {
       console.error("Template save error:", err);
-      
+
       // Save to localStorage as fallback
       const fallbackTemplate = {
         id: `local_${Date.now()}`,
@@ -388,14 +390,14 @@ export default function TemplateBuilder() {
         created_at: new Date().toISOString(),
         is_local: true,
       };
-      
+
       localStorage.setItem(
         `custom_template_${fallbackTemplate.id}`,
         JSON.stringify(fallbackTemplate),
       );
 
       setSuccess("✅ Shablon vaqtincha saqlandi (mahalliy xotira)");
-      
+
       setTimeout(() => {
         navigate("/templates");
       }, 2000);
@@ -443,37 +445,57 @@ export default function TemplateBuilder() {
       borderRadius: `${config.layout.borderRadius}px`,
       boxShadow: `0 ${config.layout.shadowIntensity}px ${config.layout.shadowIntensity * 2}px rgba(0,0,0,0.1)`,
       border: `2px solid ${config.colors.accent}20`,
-      transition: config.animations.enabled ? `all ${config.animations.duration}s ease-in-out` : 'none',
-      transform: config.animations.enabled && config.animations.type === 'scale' ? 'scale(1.02)' : 'scale(1)',
+      transition: config.animations.enabled
+        ? `all ${config.animations.duration}s ease-in-out`
+        : "none",
+      transform:
+        config.animations.enabled && config.animations.type === "scale"
+          ? "scale(1.02)"
+          : "scale(1)",
     };
 
     const headingStyle = {
       fontFamily: config.fonts.heading,
       color: config.colors.primary,
-      transition: config.animations.enabled ? `all ${config.animations.duration}s ease-in-out` : 'none',
+      transition: config.animations.enabled
+        ? `all ${config.animations.duration}s ease-in-out`
+        : "none",
     };
 
     const accentStyle = {
       fontFamily: config.fonts.accent,
       color: config.colors.accent,
-      transition: config.animations.enabled ? `all ${config.animations.duration}s ease-in-out` : 'none',
+      transition: config.animations.enabled
+        ? `all ${config.animations.duration}s ease-in-out`
+        : "none",
     };
 
     const getLayoutClass = () => {
       switch (config.layout.style) {
-        case "classic": return "text-center space-y-6";
-        case "modern": return "text-center space-y-4";
-        case "elegant": return "text-center space-y-8";
-        case "rustic": return "text-left space-y-6";
-        case "luxury": return "text-center space-y-10";
-        default: return "text-center space-y-6";
+        case "classic":
+          return "text-center space-y-6";
+        case "modern":
+          return "text-center space-y-4";
+        case "elegant":
+          return "text-center space-y-8";
+        case "rustic":
+          return "text-left space-y-6";
+        case "luxury":
+          return "text-center space-y-10";
+        default:
+          return "text-center space-y-6";
       }
     };
 
-    const deviceClass = previewDevice === "mobile" ? "max-w-xs" : "max-w-sm md:max-w-md lg:max-w-lg";
+    const deviceClass =
+      previewDevice === "mobile"
+        ? "max-w-xs"
+        : "max-w-sm md:max-w-md lg:max-w-lg";
 
     return (
-      <div className={`w-full ${deviceClass} mx-auto transition-all duration-500`}>
+      <div
+        className={`w-full ${deviceClass} mx-auto transition-all duration-500`}
+      >
         <div
           className="transition-all duration-500 hover:shadow-xl"
           style={containerStyle}
@@ -485,7 +507,10 @@ export default function TemplateBuilder() {
                 className="w-12 h-0.5 transition-all duration-300"
                 style={{ backgroundColor: config.colors.accent }}
               />
-              <Heart className="w-4 h-4 animate-pulse" style={{ color: config.colors.accent }} />
+              <Heart
+                className="w-4 h-4 animate-pulse"
+                style={{ color: config.colors.accent }}
+              />
               <div
                 className="w-12 h-0.5 transition-all duration-300"
                 style={{ backgroundColor: config.colors.accent }}
@@ -504,41 +529,66 @@ export default function TemplateBuilder() {
 
             {/* Names with real-time updates */}
             <div className="space-y-3">
-              <h1 className={`${previewDevice === 'mobile' ? 'text-lg sm:text-xl' : 'text-2xl md:text-3xl xl:text-4xl'} font-bold tracking-wide transition-all duration-300`} style={headingStyle}>
+              <h1
+                className={`${previewDevice === "mobile" ? "text-lg sm:text-xl" : "text-2xl md:text-3xl xl:text-4xl"} font-bold tracking-wide transition-all duration-300`}
+                style={headingStyle}
+              >
                 {templateData.groomName}
               </h1>
-              <div className={`${previewDevice === 'mobile' ? 'text-2xl sm:text-3xl' : 'text-3xl xl:text-4xl'}`} style={accentStyle}>
+              <div
+                className={`${previewDevice === "mobile" ? "text-2xl sm:text-3xl" : "text-3xl xl:text-4xl"}`}
+                style={accentStyle}
+              >
                 &
               </div>
-              <h1 className={`${previewDevice === 'mobile' ? 'text-lg sm:text-xl' : 'text-2xl md:text-3xl xl:text-4xl'} font-bold tracking-wide transition-all duration-300`} style={headingStyle}>
+              <h1
+                className={`${previewDevice === "mobile" ? "text-lg sm:text-xl" : "text-2xl md:text-3xl xl:text-4xl"} font-bold tracking-wide transition-all duration-300`}
+                style={headingStyle}
+              >
                 {templateData.brideName}
               </h1>
             </div>
 
             {/* Decorative Divider */}
             <div className="flex justify-center items-center space-x-2">
-              <Star className="w-3 h-3 animate-spin" style={{ color: config.colors.accent, animationDuration: '3s' }} />
+              <Star
+                className="w-3 h-3 animate-spin"
+                style={{ color: config.colors.accent, animationDuration: "3s" }}
+              />
               <div
                 className="w-8 h-0.5 transition-all duration-300"
                 style={{ backgroundColor: config.colors.accent }}
               />
-              <Sparkles className="w-3 h-3 animate-pulse" style={{ color: config.colors.accent }} />
+              <Sparkles
+                className="w-3 h-3 animate-pulse"
+                style={{ color: config.colors.accent }}
+              />
               <div
                 className="w-8 h-0.5 transition-all duration-300"
                 style={{ backgroundColor: config.colors.accent }}
               />
-              <Star className="w-3 h-3 animate-spin" style={{ color: config.colors.accent, animationDuration: '3s', animationDirection: 'reverse' }} />
+              <Star
+                className="w-3 h-3 animate-spin"
+                style={{
+                  color: config.colors.accent,
+                  animationDuration: "3s",
+                  animationDirection: "reverse",
+                }}
+              />
             </div>
 
             {/* Date and Time with real-time updates */}
             <div className="space-y-2">
               <div
-                className={`${previewDevice === 'mobile' ? 'text-base sm:text-lg' : 'text-lg xl:text-xl'} font-semibold transition-all duration-300`}
+                className={`${previewDevice === "mobile" ? "text-base sm:text-lg" : "text-lg xl:text-xl"} font-semibold transition-all duration-300`}
                 style={{ color: config.colors.primary }}
               >
                 {templateData.weddingDate}
               </div>
-              <div className={`${previewDevice === 'mobile' ? 'text-sm sm:text-base' : 'text-base xl:text-lg'} transition-all duration-300`} style={{ color: config.colors.secondary }}>
+              <div
+                className={`${previewDevice === "mobile" ? "text-sm sm:text-base" : "text-base xl:text-lg"} transition-all duration-300`}
+                style={{ color: config.colors.secondary }}
+              >
                 {templateData.weddingTime}
               </div>
             </div>
@@ -550,19 +600,22 @@ export default function TemplateBuilder() {
                 style={{ backgroundColor: config.colors.accent }}
               />
               <div
-                className={`${previewDevice === 'mobile' ? 'text-base sm:text-lg' : 'text-lg xl:text-xl'} font-medium transition-all duration-300`}
+                className={`${previewDevice === "mobile" ? "text-base sm:text-lg" : "text-lg xl:text-xl"} font-medium transition-all duration-300`}
                 style={{ color: config.colors.primary }}
               >
                 {templateData.venue}
               </div>
-              <div className={`${previewDevice === 'mobile' ? 'text-xs sm:text-sm' : 'text-sm xl:text-base'} leading-relaxed transition-all duration-300`} style={{ color: config.colors.secondary }}>
+              <div
+                className={`${previewDevice === "mobile" ? "text-xs sm:text-sm" : "text-sm xl:text-base"} leading-relaxed transition-all duration-300`}
+                style={{ color: config.colors.secondary }}
+              >
                 {templateData.address}
               </div>
             </div>
 
             {/* Message with real-time updates */}
             <div
-              className={`${previewDevice === 'mobile' ? 'text-xs sm:text-sm px-2 sm:px-3' : 'text-sm xl:text-base px-4 xl:px-6'} leading-relaxed italic transition-all duration-300`}
+              className={`${previewDevice === "mobile" ? "text-xs sm:text-sm px-2 sm:px-3" : "text-sm xl:text-base px-4 xl:px-6"} leading-relaxed italic transition-all duration-300`}
               style={{ color: config.colors.text }}
             >
               "{templateData.customMessage}"
@@ -574,7 +627,10 @@ export default function TemplateBuilder() {
                 className="w-16 h-0.5 transition-all duration-300"
                 style={{ backgroundColor: config.colors.accent }}
               />
-              <Heart className="w-4 h-4 animate-bounce" style={{ color: config.colors.accent }} />
+              <Heart
+                className="w-4 h-4 animate-bounce"
+                style={{ color: config.colors.accent }}
+              />
               <div
                 className="w-16 h-0.5 transition-all duration-300"
                 style={{ backgroundColor: config.colors.accent }}
@@ -584,7 +640,9 @@ export default function TemplateBuilder() {
             {/* Real-time indicator */}
             <div className="flex justify-center items-center mt-4 opacity-50">
               <Zap className="w-3 h-3 text-green-500 animate-pulse mr-1" />
-              <span className="text-xs" style={{ color: config.colors.text }}>Real-time</span>
+              <span className="text-xs" style={{ color: config.colors.text }}>
+                Real-time
+              </span>
             </div>
           </div>
         </div>
@@ -599,7 +657,12 @@ export default function TemplateBuilder() {
         <nav className="bg-background/90 backdrop-blur-md border-b border-border p-4 sticky top-0 z-50 shadow-lg">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" asChild className="hover:bg-muted transition-colors">
+              <Button
+                variant="ghost"
+                size="sm"
+                asChild
+                className="hover:bg-muted transition-colors"
+              >
                 <Link to="/templates">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Shablonlar
@@ -613,7 +676,9 @@ export default function TemplateBuilder() {
                   <h1 className="font-heading text-xl font-bold text-foreground">
                     Shablon Yaratuvchi
                   </h1>
-                  <p className="text-xs text-muted-foreground">Real-time oldindan ko'rish</p>
+                  <p className="text-xs text-muted-foreground">
+                    Real-time oldindan ko'rish
+                  </p>
                 </div>
               </div>
             </div>
@@ -666,26 +731,44 @@ export default function TemplateBuilder() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6 lg:gap-8">
             {/* Left Panel - Controls */}
             <div className="lg:col-span-5 xl:col-span-4 order-2 lg:order-1">
-              
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className="w-full"
+              >
                 <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 bg-card/80 p-1.5 lg:p-2 shadow-sm border border-border">
-                  <TabsTrigger value="info" className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm p-2 lg:p-3">
+                  <TabsTrigger
+                    value="info"
+                    className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm p-2 lg:p-3"
+                  >
                     <Settings className="w-3 h-3 lg:w-4 lg:h-4" />
                     <span className="hidden sm:inline">Ma'lumot</span>
                   </TabsTrigger>
-                  <TabsTrigger value="colors" className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm p-2 lg:p-3">
+                  <TabsTrigger
+                    value="colors"
+                    className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm p-2 lg:p-3"
+                  >
                     <Palette className="w-3 h-3 lg:w-4 lg:h-4" />
                     <span className="hidden sm:inline">Ranglar</span>
                   </TabsTrigger>
-                  <TabsTrigger value="fonts" className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm p-2 lg:p-3">
+                  <TabsTrigger
+                    value="fonts"
+                    className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm p-2 lg:p-3"
+                  >
                     <Type className="w-3 h-3 lg:w-4 lg:h-4" />
                     <span className="hidden lg:inline">Shriftlar</span>
                   </TabsTrigger>
-                  <TabsTrigger value="layout" className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm p-2 lg:p-3">
+                  <TabsTrigger
+                    value="layout"
+                    className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm p-2 lg:p-3"
+                  >
                     <Layout className="w-3 h-3 lg:w-4 lg:h-4" />
                     <span className="hidden lg:inline">Layout</span>
                   </TabsTrigger>
-                  <TabsTrigger value="effects" className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm p-2 lg:p-3">
+                  <TabsTrigger
+                    value="effects"
+                    className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm p-2 lg:p-3"
+                  >
                     <Layers className="w-3 h-3 lg:w-4 lg:h-4" />
                     <span className="hidden lg:inline">Effektlar</span>
                   </TabsTrigger>
@@ -699,79 +782,150 @@ export default function TemplateBuilder() {
                     </h2>
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="templateName" className="text-sm font-medium">Shablon Nomi</Label>
+                        <Label
+                          htmlFor="templateName"
+                          className="text-sm font-medium"
+                        >
+                          Shablon Nomi
+                        </Label>
                         <Input
                           id="templateName"
                           value={templateData.templateName}
-                          onChange={(e) => handleTemplateDataChange("templateName", e.target.value)}
+                          onChange={(e) =>
+                            handleTemplateDataChange(
+                              "templateName",
+                              e.target.value,
+                            )
+                          }
                           placeholder="Mening ajoyib shablonim"
                           className="mt-1 border-border focus:border-primary"
                         />
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="groomName" className="text-sm font-medium">Kuyov Ismi</Label>
+                          <Label
+                            htmlFor="groomName"
+                            className="text-sm font-medium"
+                          >
+                            Kuyov Ismi
+                          </Label>
                           <Input
                             id="groomName"
                             value={templateData.groomName}
-                            onChange={(e) => handleTemplateDataChange("groomName", e.target.value)}
+                            onChange={(e) =>
+                              handleTemplateDataChange(
+                                "groomName",
+                                e.target.value,
+                              )
+                            }
                             className="mt-1 border-border focus:border-primary"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="brideName" className="text-sm font-medium">Kelin Ismi</Label>
+                          <Label
+                            htmlFor="brideName"
+                            className="text-sm font-medium"
+                          >
+                            Kelin Ismi
+                          </Label>
                           <Input
                             id="brideName"
                             value={templateData.brideName}
-                            onChange={(e) => handleTemplateDataChange("brideName", e.target.value)}
+                            onChange={(e) =>
+                              handleTemplateDataChange(
+                                "brideName",
+                                e.target.value,
+                              )
+                            }
                             className="mt-1 border-border focus:border-primary"
                           />
                         </div>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="weddingDate" className="text-sm font-medium">To'y Sanasi</Label>
+                          <Label
+                            htmlFor="weddingDate"
+                            className="text-sm font-medium"
+                          >
+                            To'y Sanasi
+                          </Label>
                           <Input
                             id="weddingDate"
                             value={templateData.weddingDate}
-                            onChange={(e) => handleTemplateDataChange("weddingDate", e.target.value)}
+                            onChange={(e) =>
+                              handleTemplateDataChange(
+                                "weddingDate",
+                                e.target.value,
+                              )
+                            }
                             className="mt-1 border-border focus:border-primary"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="weddingTime" className="text-sm font-medium">Vaqt</Label>
+                          <Label
+                            htmlFor="weddingTime"
+                            className="text-sm font-medium"
+                          >
+                            Vaqt
+                          </Label>
                           <Input
                             id="weddingTime"
                             value={templateData.weddingTime}
-                            onChange={(e) => handleTemplateDataChange("weddingTime", e.target.value)}
+                            onChange={(e) =>
+                              handleTemplateDataChange(
+                                "weddingTime",
+                                e.target.value,
+                              )
+                            }
                             className="mt-1 border-border focus:border-primary"
                           />
                         </div>
                       </div>
                       <div>
-                        <Label htmlFor="venue" className="text-sm font-medium">Joy</Label>
+                        <Label htmlFor="venue" className="text-sm font-medium">
+                          Joy
+                        </Label>
                         <Input
                           id="venue"
                           value={templateData.venue}
-                          onChange={(e) => handleTemplateDataChange("venue", e.target.value)}
+                          onChange={(e) =>
+                            handleTemplateDataChange("venue", e.target.value)
+                          }
                           className="mt-1 border-border focus:border-primary"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="address" className="text-sm font-medium">Manzil</Label>
+                        <Label
+                          htmlFor="address"
+                          className="text-sm font-medium"
+                        >
+                          Manzil
+                        </Label>
                         <Input
                           id="address"
                           value={templateData.address}
-                          onChange={(e) => handleTemplateDataChange("address", e.target.value)}
+                          onChange={(e) =>
+                            handleTemplateDataChange("address", e.target.value)
+                          }
                           className="mt-1 border-border focus:border-primary"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="customMessage" className="text-sm font-medium">Maxsus Xabar</Label>
+                        <Label
+                          htmlFor="customMessage"
+                          className="text-sm font-medium"
+                        >
+                          Maxsus Xabar
+                        </Label>
                         <Textarea
                           id="customMessage"
                           value={templateData.customMessage}
-                          onChange={(e) => handleTemplateDataChange("customMessage", e.target.value)}
+                          onChange={(e) =>
+                            handleTemplateDataChange(
+                              "customMessage",
+                              e.target.value,
+                            )
+                          }
                           className="mt-1 border-border focus:border-primary"
                           rows={3}
                         />
@@ -798,15 +952,21 @@ export default function TemplateBuilder() {
                             <div className="flex gap-1">
                               <div
                                 className="w-4 h-4 rounded-full border border-white shadow-sm group-hover:scale-110 transition-transform"
-                                style={{ backgroundColor: preset.colors.primary }}
+                                style={{
+                                  backgroundColor: preset.colors.primary,
+                                }}
                               />
                               <div
                                 className="w-4 h-4 rounded-full border border-white shadow-sm group-hover:scale-110 transition-transform"
-                                style={{ backgroundColor: preset.colors.secondary }}
+                                style={{
+                                  backgroundColor: preset.colors.secondary,
+                                }}
                               />
                               <div
                                 className="w-4 h-4 rounded-full border border-white shadow-sm group-hover:scale-110 transition-transform"
-                                style={{ backgroundColor: preset.colors.accent }}
+                                style={{
+                                  backgroundColor: preset.colors.accent,
+                                }}
                               />
                             </div>
                           </div>
@@ -818,25 +978,42 @@ export default function TemplateBuilder() {
                     </div>
 
                     <div className="mt-6 space-y-4">
-                      <h4 className="font-medium text-foreground">Maxsus Ranglar</h4>
+                      <h4 className="font-medium text-foreground">
+                        Maxsus Ranglar
+                      </h4>
                       {Object.entries(config.colors).map(([key, value]) => (
                         <div key={key} className="flex items-center gap-3">
                           <Label className="text-sm font-medium capitalize min-w-[80px]">
-                            {key === 'primary' ? 'Asosiy' : 
-                             key === 'secondary' ? 'Ikkinchi' :
-                             key === 'accent' ? 'Urg\'u' :
-                             key === 'background' ? 'Fon' : 'Matn'}
+                            {key === "primary"
+                              ? "Asosiy"
+                              : key === "secondary"
+                                ? "Ikkinchi"
+                                : key === "accent"
+                                  ? "Urg'u"
+                                  : key === "background"
+                                    ? "Fon"
+                                    : "Matn"}
                           </Label>
                           <Input
                             type="color"
                             value={value}
-                            onChange={(e) => handleColorChange(key as keyof TemplateConfig["colors"], e.target.value)}
+                            onChange={(e) =>
+                              handleColorChange(
+                                key as keyof TemplateConfig["colors"],
+                                e.target.value,
+                              )
+                            }
                             className="w-12 h-10 p-1 border border-border rounded-lg cursor-pointer"
                           />
                           <Input
                             type="text"
                             value={value}
-                            onChange={(e) => handleColorChange(key as keyof TemplateConfig["colors"], e.target.value)}
+                            onChange={(e) =>
+                              handleColorChange(
+                                key as keyof TemplateConfig["colors"],
+                                e.target.value,
+                              )
+                            }
                             className="flex-1 border-border focus:border-primary"
                           />
                         </div>
@@ -854,12 +1031,20 @@ export default function TemplateBuilder() {
                     {Object.entries(config.fonts).map(([key, value]) => (
                       <div key={key} className="space-y-2">
                         <Label className="text-sm font-medium capitalize">
-                          {key === 'heading' ? 'Sarlavha Shrifti' : 
-                           key === 'body' ? 'Asosiy Shrift' : 'Dekorativ Shrift'}
+                          {key === "heading"
+                            ? "Sarlavha Shrifti"
+                            : key === "body"
+                              ? "Asosiy Shrift"
+                              : "Dekorativ Shrift"}
                         </Label>
                         <Select
                           value={value}
-                          onValueChange={(val) => handleFontChange(key as keyof TemplateConfig["fonts"], val)}
+                          onValueChange={(val) =>
+                            handleFontChange(
+                              key as keyof TemplateConfig["fonts"],
+                              val,
+                            )
+                          }
                         >
                           <SelectTrigger className="border-border focus:border-primary">
                             <SelectValue />
@@ -887,15 +1072,19 @@ export default function TemplateBuilder() {
                       <Layout className="w-5 h-5 text-primary" />
                       Layout Sozlamalari
                     </h3>
-                    
+
                     <div className="space-y-4">
                       <div>
-                        <Label className="text-sm font-medium">Layout Uslubi</Label>
+                        <Label className="text-sm font-medium">
+                          Layout Uslubi
+                        </Label>
                         <div className="grid grid-cols-1 gap-2 mt-2">
                           {layoutStyles.map((style) => (
                             <button
                               key={style.value}
-                              onClick={() => handleLayoutChange("style", style.value)}
+                              onClick={() =>
+                                handleLayoutChange("style", style.value)
+                              }
                               className={`p-3 border rounded-lg text-left transition-all ${
                                 config.layout.style === style.value
                                   ? "border-primary bg-primary/5"
@@ -905,8 +1094,12 @@ export default function TemplateBuilder() {
                               <div className="flex items-center gap-3">
                                 <span className="text-xl">{style.icon}</span>
                                 <div>
-                                  <div className="font-medium text-foreground">{style.label}</div>
-                                  <div className="text-xs text-muted-foreground">{style.description}</div>
+                                  <div className="font-medium text-foreground">
+                                    {style.label}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    {style.description}
+                                  </div>
                                 </div>
                               </div>
                             </button>
@@ -921,7 +1114,9 @@ export default function TemplateBuilder() {
                           </Label>
                           <Slider
                             value={[config.layout.spacing]}
-                            onValueChange={(value) => handleLayoutChange("spacing", value[0])}
+                            onValueChange={(value) =>
+                              handleLayoutChange("spacing", value[0])
+                            }
                             max={50}
                             min={10}
                             step={2}
@@ -934,7 +1129,9 @@ export default function TemplateBuilder() {
                           </Label>
                           <Slider
                             value={[config.layout.padding]}
-                            onValueChange={(value) => handleLayoutChange("padding", value[0])}
+                            onValueChange={(value) =>
+                              handleLayoutChange("padding", value[0])
+                            }
                             max={60}
                             min={16}
                             step={4}
@@ -947,7 +1144,9 @@ export default function TemplateBuilder() {
                           </Label>
                           <Slider
                             value={[config.layout.borderRadius]}
-                            onValueChange={(value) => handleLayoutChange("borderRadius", value[0])}
+                            onValueChange={(value) =>
+                              handleLayoutChange("borderRadius", value[0])
+                            }
                             max={30}
                             min={0}
                             step={2}
@@ -960,7 +1159,9 @@ export default function TemplateBuilder() {
                           </Label>
                           <Slider
                             value={[config.layout.shadowIntensity]}
-                            onValueChange={(value) => handleLayoutChange("shadowIntensity", value[0])}
+                            onValueChange={(value) =>
+                              handleLayoutChange("shadowIntensity", value[0])
+                            }
                             max={20}
                             min={0}
                             step={1}
@@ -978,30 +1179,41 @@ export default function TemplateBuilder() {
                       <Layers className="w-5 h-5 text-primary" />
                       Animatsiya va Effektlar
                     </h3>
-                    
+
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <Label className="text-sm font-medium">Animatsiyani yoqish</Label>
+                        <Label className="text-sm font-medium">
+                          Animatsiyani yoqish
+                        </Label>
                         <Switch
                           checked={config.animations.enabled}
-                          onCheckedChange={(checked) => handleAnimationChange("enabled", checked)}
+                          onCheckedChange={(checked) =>
+                            handleAnimationChange("enabled", checked)
+                          }
                         />
                       </div>
 
                       {config.animations.enabled && (
                         <>
                           <div>
-                            <Label className="text-sm font-medium">Animatsiya turi</Label>
+                            <Label className="text-sm font-medium">
+                              Animatsiya turi
+                            </Label>
                             <Select
                               value={config.animations.type}
-                              onValueChange={(val) => handleAnimationChange("type", val)}
+                              onValueChange={(val) =>
+                                handleAnimationChange("type", val)
+                              }
                             >
                               <SelectTrigger className="mt-2 border-border focus:border-primary">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
                                 {animationTypes.map((anim) => (
-                                  <SelectItem key={anim.value} value={anim.value}>
+                                  <SelectItem
+                                    key={anim.value}
+                                    value={anim.value}
+                                  >
                                     {anim.label}
                                   </SelectItem>
                                 ))}
@@ -1011,11 +1223,14 @@ export default function TemplateBuilder() {
 
                           <div>
                             <Label className="text-sm font-medium">
-                              Animatsiya davomiyligi: {config.animations.duration}s
+                              Animatsiya davomiyligi:{" "}
+                              {config.animations.duration}s
                             </Label>
                             <Slider
                               value={[config.animations.duration]}
-                              onValueChange={(value) => handleAnimationChange("duration", value[0])}
+                              onValueChange={(value) =>
+                                handleAnimationChange("duration", value[0])
+                              }
                               max={2}
                               min={0.1}
                               step={0.1}
@@ -1041,7 +1256,9 @@ export default function TemplateBuilder() {
                     </h2>
                     <div className="flex items-center gap-3">
                       <Button
-                        variant={previewDevice === "desktop" ? "default" : "outline"}
+                        variant={
+                          previewDevice === "desktop" ? "default" : "outline"
+                        }
                         size="sm"
                         onClick={() => setPreviewDevice("desktop")}
                         className="h-9 w-9 lg:h-10 lg:w-10 p-0"
@@ -1049,7 +1266,9 @@ export default function TemplateBuilder() {
                         <Monitor className="w-4 h-4" />
                       </Button>
                       <Button
-                        variant={previewDevice === "mobile" ? "default" : "outline"}
+                        variant={
+                          previewDevice === "mobile" ? "default" : "outline"
+                        }
                         size="sm"
                         onClick={() => setPreviewDevice("mobile")}
                         className="h-9 w-9 lg:h-10 lg:w-10 p-0"
@@ -1086,7 +1305,9 @@ export default function TemplateBuilder() {
 
                   <div className="text-center mt-6 text-sm text-muted-foreground flex items-center justify-center gap-2">
                     <Zap className="w-3 h-3 text-green-500 animate-pulse" />
-                    Real vaqtda yangilanadi • {previewDevice === "desktop" ? "Kompyuter" : "Mobil"} ko'rinish
+                    Real vaqtda yangilanadi •{" "}
+                    {previewDevice === "desktop" ? "Kompyuter" : "Mobil"}{" "}
+                    ko'rinish
                   </div>
                 </div>
               </div>

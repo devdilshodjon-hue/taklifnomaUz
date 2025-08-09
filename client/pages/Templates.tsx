@@ -66,7 +66,7 @@ export default function Templates() {
       setError("Shablonlar yuklash juda uzoq davom etdi. Default shablonlar ko'rsatiladi.");
       setTemplates(defaultWeddingTemplates);
       setFilteredTemplates(defaultWeddingTemplates);
-    }, 10000); // 10 seconds timeout
+    }, 5000); // 5 seconds timeout (reduced)
 
     try {
       console.log("🔄 Shablonlarni yuklamoqda...");

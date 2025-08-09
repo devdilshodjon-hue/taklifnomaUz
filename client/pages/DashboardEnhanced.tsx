@@ -364,11 +364,22 @@ export default function DashboardEnhanced() {
                         <p className="text-sm text-blue-700 dark:text-blue-300">
                           {error}
                         </p>
-                        {invitations.length > 0 && (
-                          <p className="text-xs text-blue-600 dark:text-blue-400 mt-2">
-                            ✓ {invitations.length} ta taklifnoma mahalliy xotiradan yuklandi
-                          </p>
-                        )}
+                        <div className="flex items-center justify-between mt-3">
+                          {invitations.length > 0 && (
+                            <p className="text-xs text-blue-600 dark:text-blue-400">
+                              ✓ {invitations.length} ta taklifnoma mahalliy xotiradan yuklandi
+                            </p>
+                          )}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={loadInvitations}
+                            className="text-blue-700 border-blue-300 hover:bg-blue-100 dark:text-blue-300 dark:border-blue-700 dark:hover:bg-blue-900"
+                          >
+                            <RefreshCw className="w-4 h-4 mr-1" />
+                            Qayta urinish
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>

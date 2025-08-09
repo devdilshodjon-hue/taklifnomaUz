@@ -694,7 +694,7 @@ export default function TemplateBuilder() {
                           value={templateData.templateName}
                           onChange={(e) => handleTemplateDataChange("templateName", e.target.value)}
                           placeholder="Mening ajoyib shablonim"
-                          className="mt-1 border-rose-200 focus:border-rose-400"
+                          className="mt-1 border-border focus:border-primary"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
@@ -704,7 +704,7 @@ export default function TemplateBuilder() {
                             id="groomName"
                             value={templateData.groomName}
                             onChange={(e) => handleTemplateDataChange("groomName", e.target.value)}
-                            className="mt-1 border-rose-200 focus:border-rose-400"
+                            className="mt-1 border-border focus:border-primary"
                           />
                         </div>
                         <div>
@@ -713,7 +713,7 @@ export default function TemplateBuilder() {
                             id="brideName"
                             value={templateData.brideName}
                             onChange={(e) => handleTemplateDataChange("brideName", e.target.value)}
-                            className="mt-1 border-rose-200 focus:border-rose-400"
+                            className="mt-1 border-border focus:border-primary"
                           />
                         </div>
                       </div>
@@ -724,7 +724,7 @@ export default function TemplateBuilder() {
                             id="weddingDate"
                             value={templateData.weddingDate}
                             onChange={(e) => handleTemplateDataChange("weddingDate", e.target.value)}
-                            className="mt-1 border-rose-200 focus:border-rose-400"
+                            className="mt-1 border-border focus:border-primary"
                           />
                         </div>
                         <div>
@@ -733,7 +733,7 @@ export default function TemplateBuilder() {
                             id="weddingTime"
                             value={templateData.weddingTime}
                             onChange={(e) => handleTemplateDataChange("weddingTime", e.target.value)}
-                            className="mt-1 border-rose-200 focus:border-rose-400"
+                            className="mt-1 border-border focus:border-primary"
                           />
                         </div>
                       </div>
@@ -743,7 +743,7 @@ export default function TemplateBuilder() {
                           id="venue"
                           value={templateData.venue}
                           onChange={(e) => handleTemplateDataChange("venue", e.target.value)}
-                          className="mt-1 border-rose-200 focus:border-rose-400"
+                          className="mt-1 border-border focus:border-primary"
                         />
                       </div>
                       <div>
@@ -752,7 +752,7 @@ export default function TemplateBuilder() {
                           id="address"
                           value={templateData.address}
                           onChange={(e) => handleTemplateDataChange("address", e.target.value)}
-                          className="mt-1 border-rose-200 focus:border-rose-400"
+                          className="mt-1 border-border focus:border-primary"
                         />
                       </div>
                       <div>
@@ -761,7 +761,7 @@ export default function TemplateBuilder() {
                           id="customMessage"
                           value={templateData.customMessage}
                           onChange={(e) => handleTemplateDataChange("customMessage", e.target.value)}
-                          className="mt-1 border-rose-200 focus:border-rose-400"
+                          className="mt-1 border-border focus:border-primary"
                           rows={3}
                         />
                       </div>
@@ -770,9 +770,9 @@ export default function TemplateBuilder() {
                 </TabsContent>
 
                 <TabsContent value="colors" className="space-y-6 mt-6">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-6 border border-border shadow-sm">
                     <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <Palette className="w-5 h-5 text-rose-500" />
+                      <Palette className="w-5 h-5 text-primary" />
                       Rang Shablonlari
                     </h3>
                     <div className="grid grid-cols-2 gap-3">
@@ -780,7 +780,7 @@ export default function TemplateBuilder() {
                         <button
                           key={index}
                           onClick={() => applyColorPreset(preset)}
-                          className="p-4 border border-rose-200 rounded-lg hover:border-rose-400 transition-all hover:shadow-md group"
+                          className="p-4 border border-border rounded-lg hover:border-primary transition-all hover:shadow-md group"
                         >
                           <div className="flex items-center gap-2 mb-3">
                             <span className="text-lg">{preset.emoji}</span>
@@ -820,13 +820,13 @@ export default function TemplateBuilder() {
                             type="color"
                             value={value}
                             onChange={(e) => handleColorChange(key as keyof TemplateConfig["colors"], e.target.value)}
-                            className="w-12 h-10 p-1 border border-rose-200 rounded-lg cursor-pointer"
+                            className="w-12 h-10 p-1 border border-border rounded-lg cursor-pointer"
                           />
                           <Input
                             type="text"
                             value={value}
                             onChange={(e) => handleColorChange(key as keyof TemplateConfig["colors"], e.target.value)}
-                            className="flex-1 border-rose-200 focus:border-rose-400"
+                            className="flex-1 border-border focus:border-primary"
                           />
                         </div>
                       ))}
@@ -835,9 +835,9 @@ export default function TemplateBuilder() {
                 </TabsContent>
 
                 <TabsContent value="fonts" className="space-y-4 mt-6">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-6 border border-border shadow-sm">
                     <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <Type className="w-5 h-5 text-rose-500" />
+                      <Type className="w-5 h-5 text-primary" />
                       Shrift Sozlamalari
                     </h3>
                     {Object.entries(config.fonts).map(([key, value]) => (
@@ -850,7 +850,7 @@ export default function TemplateBuilder() {
                           value={value}
                           onValueChange={(val) => handleFontChange(key as keyof TemplateConfig["fonts"], val)}
                         >
-                          <SelectTrigger className="border-rose-200 focus:border-rose-400">
+                          <SelectTrigger className="border-border focus:border-primary">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -871,9 +871,9 @@ export default function TemplateBuilder() {
                 </TabsContent>
 
                 <TabsContent value="layout" className="space-y-6 mt-6">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-6 border border-border shadow-sm">
                     <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <Layout className="w-5 h-5 text-rose-500" />
+                      <Layout className="w-5 h-5 text-primary" />
                       Layout Sozlamalari
                     </h3>
                     
@@ -887,8 +887,8 @@ export default function TemplateBuilder() {
                               onClick={() => handleLayoutChange("style", style.value)}
                               className={`p-3 border rounded-lg text-left transition-all ${
                                 config.layout.style === style.value
-                                  ? "border-rose-400 bg-rose-50"
-                                  : "border-rose-200 hover:border-rose-300 hover:bg-rose-25"
+                                  ? "border-primary bg-primary/5"
+                                  : "border-border hover:border-primary/50 hover:bg-rose-25"
                               }`}
                             >
                               <div className="flex items-center gap-3">
@@ -962,9 +962,9 @@ export default function TemplateBuilder() {
                 </TabsContent>
 
                 <TabsContent value="effects" className="space-y-6 mt-6">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-6 border border-border shadow-sm">
                     <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <Layers className="w-5 h-5 text-rose-500" />
+                      <Layers className="w-5 h-5 text-primary" />
                       Animatsiya va Effektlar
                     </h3>
                     
@@ -985,7 +985,7 @@ export default function TemplateBuilder() {
                               value={config.animations.type}
                               onValueChange={(val) => handleAnimationChange("type", val)}
                             >
-                              <SelectTrigger className="mt-2 border-rose-200 focus:border-rose-400">
+                              <SelectTrigger className="mt-2 border-border focus:border-primary">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
@@ -1022,10 +1022,10 @@ export default function TemplateBuilder() {
             {/* Right Panel - Live Preview (3/7) */}
             <div className="lg:col-span-3">
               <div className="sticky top-24">
-                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-lg">
+                <div className="bg-card/90 backdrop-blur-sm rounded-xl p-6 border border-border shadow-lg">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="font-heading text-lg font-semibold text-foreground flex items-center gap-2">
-                      <Eye className="w-5 h-5 text-rose-500" />
+                      <Eye className="w-5 h-5 text-primary" />
                       Jonli Oldindan Ko'rish
                     </h2>
                     <div className="flex items-center gap-2">
@@ -1048,7 +1048,7 @@ export default function TemplateBuilder() {
                     </div>
                   </div>
 
-                  <div className="border border-rose-200 rounded-lg p-6 bg-gradient-to-br from-rose-25 to-pink-25 min-h-[600px] flex items-center justify-center">
+                  <div className="border border-border rounded-lg p-6 bg-gradient-to-br from-muted/30 to-card min-h-[600px] flex items-center justify-center">
                     <TemplatePreview />
                   </div>
 
@@ -1056,7 +1056,7 @@ export default function TemplateBuilder() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1 hover:bg-rose-50 border-rose-200 text-xs"
+                      className="flex-1 hover:bg-muted border-border text-xs"
                     >
                       <Download className="w-4 h-4 mr-1" />
                       Yuklab olish
@@ -1064,7 +1064,7 @@ export default function TemplateBuilder() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1 hover:bg-rose-50 border-rose-200 text-xs"
+                      className="flex-1 hover:bg-muted border-border text-xs"
                     >
                       <Share2 className="w-4 h-4 mr-1" />
                       Ulashish

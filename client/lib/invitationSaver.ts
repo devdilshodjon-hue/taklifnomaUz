@@ -105,58 +105,86 @@ export const saveInvitationToSupabase = async (
     console.log("📤 Saving invitation to Supabase:", invitationToSave);
     console.log("🔗 Generated URL:", invitationURL);
 
-    // Direct insert to Supabase with timeout
-    const savePromise = supabase
-      .from("invitations")
-      .insert(invitationToSave)
-      .select()
-      .single();
+    // Always save to localStorage first as a backup
+    const fallbackResult = saveInvitationToLocalStorage(user, formData, slug);
+    console.log("💾 Backup saved to localStorage");
 
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("6 soniyalik vaqt tugadi")), 6000)
-    );
+    try {
+      // Try Supabase with improved timeout handling
+      const savePromise = supabase
+        .from("invitations")
+        .insert(invitationToSave)
+        .select()
+        .single();
 
-    const { data, error } = await Promise.race([savePromise, timeoutPromise]) as any;
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Connection timeout")), 5000) // Reduced to 5 seconds
+      );
 
-    if (error) {
-      console.error("❌ Supabase invitation save error:", error);
-      
-      // Try fallback save to localStorage
-      const fallbackResult = saveInvitationToLocalStorage(user, formData, slug);
-      
+      const result = await Promise.race([savePromise, timeoutPromise]);
+      const { data, error } = result as any;
+
+      if (error) {
+        console.warn("⚠️ Supabase error:", error.message);
+
+        toast.dismiss("saving-invitation");
+        toast.warning("⚠️ Supabase xatosi, mahalliy saqlandi", {
+          description: `Xatolik: ${error.message}`,
+          duration: 4000,
+        });
+
+        return {
+          success: true, // Still success because saved locally
+          error: error.message,
+          data: fallbackResult.data,
+          url: invitationURL
+        };
+      }
+
+      // Success with Supabase!
       toast.dismiss("saving-invitation");
-      toast.warning("⚠️ Supabase xatosi, mahalliy saqlandi", {
-        description: `Xatolik: ${error.message}`,
-        duration: 6000,
+      toast.success("🎉 Taklifnoma Supabase ga saqlandi!", {
+        description: `URL: ${invitationURL}`,
+        duration: 4000,
+        action: {
+          label: "Ko'rish",
+          onClick: () => window.open(invitationURL, '_blank')
+        }
       });
 
+      console.log("✅ Invitation successfully saved to Supabase:", data);
+      console.log("🔗 Invitation URL:", invitationURL);
+
       return {
-        success: true, // Still success because saved locally
-        error: error.message,
+        success: true,
+        data: { ...data, url: invitationURL },
+        url: invitationURL
+      };
+
+    } catch (supabaseError: any) {
+      console.warn("⚠️ Supabase connection failed:", supabaseError.message);
+
+      toast.dismiss("saving-invitation");
+
+      if (supabaseError.message?.includes("timeout") || supabaseError.message?.includes("Connection timeout")) {
+        toast.success("💾 Taklifnoma mahalliy saqlandi!", {
+          description: "Ulanish vaqti tugadi, lekin ma'lumotlar xavfsiz saqlandi",
+          duration: 4000,
+        });
+      } else {
+        toast.success("💾 Taklifnoma mahalliy saqlandi!", {
+          description: "Internet ulanishi yo'q, lekin ma'lumotlar xavfsiz saqlandi",
+          duration: 4000,
+        });
+      }
+
+      return {
+        success: true, // Always success since we have localStorage backup
+        error: supabaseError.message,
         data: fallbackResult.data,
         url: invitationURL
       };
     }
-
-    // Success!
-    toast.dismiss("saving-invitation");
-    toast.success("🎉 Taklifnoma Supabase ga saqlandi!", {
-      description: `URL: ${invitationURL}`,
-      duration: 6000,
-      action: {
-        label: "Ko'rish",
-        onClick: () => window.open(invitationURL, '_blank')
-      }
-    });
-
-    console.log("✅ Invitation successfully saved to Supabase:", data);
-    console.log("🔗 Invitation URL:", invitationURL);
-    
-    return { 
-      success: true, 
-      data: { ...data, url: invitationURL },
-      url: invitationURL 
-    };
 
   } catch (err: any) {
     console.error("❌ Invitation save process failed:", err);

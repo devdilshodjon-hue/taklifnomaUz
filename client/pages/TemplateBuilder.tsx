@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase, templateOperations } from "@/lib/supabase";
+import { saveTemplateToSupabase } from "@/lib/templateSaver";
 import {
   ArrowLeft,
   Save,

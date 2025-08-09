@@ -104,7 +104,15 @@ interface TemplateConfig {
     caption: string;
   };
   layout: {
-    style: "classic" | "modern" | "elegant" | "rustic" | "luxury" | "minimalist" | "artistic" | "vintage";
+    style:
+      | "classic"
+      | "modern"
+      | "elegant"
+      | "rustic"
+      | "luxury"
+      | "minimalist"
+      | "artistic"
+      | "vintage";
     spacing: number;
     borderRadius: number;
     shadowIntensity: number;
@@ -177,12 +185,16 @@ export default function AdvancedTemplateBuilder() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("info");
-  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("desktop");
+  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">(
+    "desktop",
+  );
   const [fullScreenPreview, setFullScreenPreview] = useState(false);
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
   const [history, setHistory] = useState<TemplateConfig[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [connectionStatus, setConnectionStatus] = useState<"checking" | "online" | "offline">("checking");
+  const [connectionStatus, setConnectionStatus] = useState<
+    "checking" | "online" | "offline"
+  >("checking");
 
   // Template data for real-time preview
   const [templateData, setTemplateData] = useState<InvitationData>({
@@ -193,8 +205,10 @@ export default function AdvancedTemplateBuilder() {
     weddingTime: "16:00",
     venue: "Atirgul Bog'i",
     address: "Toshkent sh., Yunusobod t., Bog' ko'chasi 123",
-    customMessage: "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
-    additionalInfo: "Marosim 16:00 da boshlanadi, iltimos vaqtida tashrif buyuring.",
+    customMessage:
+      "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
+    additionalInfo:
+      "Marosim 16:00 da boshlanadi, iltimos vaqtida tashrif buyuring.",
     rsvpInfo: "Iltimos, 10 Iyungacha javob bering",
     dresscode: "Rasmiy kiyim",
     giftInfo: "Sizning kelishingiz bizning eng katta sovg'amiz",
@@ -400,27 +414,95 @@ export default function AdvancedTemplateBuilder() {
     { value: "Montserrat", label: "Montserrat (Aniq)", category: "Sans Serif" },
     { value: "Open Sans", label: "Open Sans (Sodda)", category: "Sans Serif" },
     { value: "Roboto", label: "Roboto (Texnologik)", category: "Sans Serif" },
-    { value: "Playfair Display", label: "Playfair Display (Klassik)", category: "Serif" },
+    {
+      value: "Playfair Display",
+      label: "Playfair Display (Klassik)",
+      category: "Serif",
+    },
     { value: "Lora", label: "Lora (O'qish uchun)", category: "Serif" },
-    { value: "Merriweather", label: "Merriweather (Jurnalistik)", category: "Serif" },
-    { value: "Crimson Text", label: "Crimson Text (Akademik)", category: "Serif" },
-    { value: "Libre Baskerville", label: "Libre Baskerville (Klassik)", category: "Serif" },
-    { value: "Dancing Script", label: "Dancing Script (Qo'lyozma)", category: "Script" },
+    {
+      value: "Merriweather",
+      label: "Merriweather (Jurnalistik)",
+      category: "Serif",
+    },
+    {
+      value: "Crimson Text",
+      label: "Crimson Text (Akademik)",
+      category: "Serif",
+    },
+    {
+      value: "Libre Baskerville",
+      label: "Libre Baskerville (Klassik)",
+      category: "Serif",
+    },
+    {
+      value: "Dancing Script",
+      label: "Dancing Script (Qo'lyozma)",
+      category: "Script",
+    },
     { value: "Great Vibes", label: "Great Vibes (Nafis)", category: "Script" },
     { value: "Pacifico", label: "Pacifico (Dam olish)", category: "Script" },
-    { value: "Source Code Pro", label: "Source Code Pro (Kod)", category: "Monospace" },
-    { value: "JetBrains Mono", label: "JetBrains Mono (Zamonaviy)", category: "Monospace" },
+    {
+      value: "Source Code Pro",
+      label: "Source Code Pro (Kod)",
+      category: "Monospace",
+    },
+    {
+      value: "JetBrains Mono",
+      label: "JetBrains Mono (Zamonaviy)",
+      category: "Monospace",
+    },
   ];
 
   const layoutStyles = [
-    { value: "classic", label: "Klassik", description: "An'anaviy va rasmiiy", icon: "📜" },
-    { value: "modern", label: "Zamonaviy", description: "Minimalistik va sodda", icon: "✨" },
-    { value: "elegant", label: "Nafis", description: "Chiroyli va mukammal", icon: "💎" },
-    { value: "rustic", label: "Tabiy", description: "Tabiy va issiq his", icon: "🌿" },
-    { value: "luxury", label: "Hashamatli", description: "Dabdabali va noyob", icon: "👑" },
-    { value: "minimalist", label: "Minimalist", description: "Juda sodda va toza", icon: "⚪" },
-    { value: "artistic", label: "San'atiy", description: "Ijodiy va noyob", icon: "🎨" },
-    { value: "vintage", label: "Vintage", description: "Eski uslub va nostalgia", icon: "📷" },
+    {
+      value: "classic",
+      label: "Klassik",
+      description: "An'anaviy va rasmiiy",
+      icon: "📜",
+    },
+    {
+      value: "modern",
+      label: "Zamonaviy",
+      description: "Minimalistik va sodda",
+      icon: "✨",
+    },
+    {
+      value: "elegant",
+      label: "Nafis",
+      description: "Chiroyli va mukammal",
+      icon: "💎",
+    },
+    {
+      value: "rustic",
+      label: "Tabiy",
+      description: "Tabiy va issiq his",
+      icon: "🌿",
+    },
+    {
+      value: "luxury",
+      label: "Hashamatli",
+      description: "Dabdabali va noyob",
+      icon: "👑",
+    },
+    {
+      value: "minimalist",
+      label: "Minimalist",
+      description: "Juda sodda va toza",
+      icon: "⚪",
+    },
+    {
+      value: "artistic",
+      label: "San'atiy",
+      description: "Ijodiy va noyob",
+      icon: "🎨",
+    },
+    {
+      value: "vintage",
+      label: "Vintage",
+      description: "Eski uslub va nostalgia",
+      icon: "📷",
+    },
   ];
 
   const animationTypes = [
@@ -472,7 +554,10 @@ export default function AdvancedTemplateBuilder() {
     saveToHistory(newConfig);
   };
 
-  const handleColorChange = (colorType: keyof TemplateConfig["colors"], value: string) => {
+  const handleColorChange = (
+    colorType: keyof TemplateConfig["colors"],
+    value: string,
+  ) => {
     const newConfig = {
       ...config,
       colors: {
@@ -483,7 +568,10 @@ export default function AdvancedTemplateBuilder() {
     updateConfig(newConfig);
   };
 
-  const handleFontChange = (fontType: keyof TemplateConfig["fonts"], value: string) => {
+  const handleFontChange = (
+    fontType: keyof TemplateConfig["fonts"],
+    value: string,
+  ) => {
     const newConfig = {
       ...config,
       fonts: {
@@ -494,7 +582,10 @@ export default function AdvancedTemplateBuilder() {
     updateConfig(newConfig);
   };
 
-  const handleLayoutChange = (layoutKey: keyof TemplateConfig["layout"], value: any) => {
+  const handleLayoutChange = (
+    layoutKey: keyof TemplateConfig["layout"],
+    value: any,
+  ) => {
     const newConfig = {
       ...config,
       layout: {
@@ -505,7 +596,10 @@ export default function AdvancedTemplateBuilder() {
     updateConfig(newConfig);
   };
 
-  const handleEffectChange = (effectKey: keyof TemplateConfig["effects"], value: number) => {
+  const handleEffectChange = (
+    effectKey: keyof TemplateConfig["effects"],
+    value: number,
+  ) => {
     const newConfig = {
       ...config,
       effects: {
@@ -516,7 +610,10 @@ export default function AdvancedTemplateBuilder() {
     updateConfig(newConfig);
   };
 
-  const handleTemplateDataChange = (key: keyof InvitationData, value: string) => {
+  const handleTemplateDataChange = (
+    key: keyof InvitationData,
+    value: string,
+  ) => {
     setTemplateData((prev) => ({
       ...prev,
       [key]: value,
@@ -611,10 +708,13 @@ export default function AdvancedTemplateBuilder() {
     const checkConnection = async () => {
       try {
         setConnectionStatus("checking");
-        const response = await fetch('https://tcilxdkolqodtgowlgrh.supabase.co/rest/v1/', {
-          method: 'HEAD',
-          signal: AbortSignal.timeout(5000), // 5 second timeout for status check
-        });
+        const response = await fetch(
+          "https://tcilxdkolqodtgowlgrh.supabase.co/rest/v1/",
+          {
+            method: "HEAD",
+            signal: AbortSignal.timeout(5000), // 5 second timeout for status check
+          },
+        );
         setConnectionStatus(response.ok ? "online" : "offline");
       } catch {
         setConnectionStatus("offline");
@@ -653,13 +753,18 @@ export default function AdvancedTemplateBuilder() {
 
   // Generate CSS for preview
   const getPreviewStyle = () => {
-    const backgroundStyle = config.background.type === "gradient" 
-      ? `linear-gradient(${config.background.gradientDirection}, ${config.colors.gradient1}, ${config.colors.gradient2})`
-      : config.colors.background;
+    const backgroundStyle =
+      config.background.type === "gradient"
+        ? `linear-gradient(${config.background.gradientDirection}, ${config.colors.gradient1}, ${config.colors.gradient2})`
+        : config.colors.background;
 
     return {
-      backgroundColor: config.background.type === "solid" ? config.colors.background : "transparent",
-      backgroundImage: config.background.type === "gradient" ? backgroundStyle : "none",
+      backgroundColor:
+        config.background.type === "solid"
+          ? config.colors.background
+          : "transparent",
+      backgroundImage:
+        config.background.type === "gradient" ? backgroundStyle : "none",
       color: config.colors.text,
       fontFamily: config.fonts.body,
       padding: `${config.layout.padding}px`,
@@ -669,14 +774,19 @@ export default function AdvancedTemplateBuilder() {
       border: `${config.border.width}px ${config.border.style} ${config.border.color}`,
       filter: `blur(${config.effects.blur}px) brightness(${config.effects.brightness}%) contrast(${config.effects.contrast}%) saturate(${config.effects.saturate}%) sepia(${config.effects.sepia}%) grayscale(${config.effects.grayscale}%) hue-rotate(${config.effects.hueRotate}deg)`,
       opacity: config.effects.opacity / 100,
-      transition: config.animations.enabled ? `all ${config.animations.duration}s ${config.animations.easing}` : "none",
+      transition: config.animations.enabled
+        ? `all ${config.animations.duration}s ${config.animations.easing}`
+        : "none",
       textAlign: config.layout.alignment as any,
       letterSpacing: `${config.typography.letterSpacing}px`,
       lineHeight: config.typography.lineHeight,
       textTransform: config.typography.textTransform as any,
       fontWeight: config.typography.fontWeight,
       textDecoration: config.typography.textDecoration as any,
-      textShadow: config.typography.textShadow !== "none" ? config.typography.textShadow : "none",
+      textShadow:
+        config.typography.textShadow !== "none"
+          ? config.typography.textShadow
+          : "none",
     };
   };
 
@@ -718,7 +828,9 @@ export default function AdvancedTemplateBuilder() {
                 {connectionStatus === "checking" && (
                   <>
                     <Loader2 className="w-3 h-3 animate-spin text-slate-500" />
-                    <span className="text-xs text-slate-600">Tekshirilmoqda</span>
+                    <span className="text-xs text-slate-600">
+                      Tekshirilmoqda
+                    </span>
                   </>
                 )}
                 {connectionStatus === "online" && (
@@ -781,7 +893,9 @@ export default function AdvancedTemplateBuilder() {
                 ) : (
                   <Save className="w-4 h-4 mr-2" />
                 )}
-                {connectionStatus === "offline" ? "Mahalliy Saqlash" : "Saqlash"}
+                {connectionStatus === "offline"
+                  ? "Mahalliy Saqlash"
+                  : "Saqlash"}
               </Button>
             </div>
           </div>
@@ -810,29 +924,51 @@ export default function AdvancedTemplateBuilder() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Left Panel - Advanced Controls */}
             <div className="lg:col-span-4 order-2 lg:order-1">
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className="w-full"
+              >
                 <TabsList className="grid w-full grid-cols-3 lg:grid-cols-2 xl:grid-cols-4 bg-white/80 p-1.5 shadow-sm border border-slate-200">
-                  <TabsTrigger value="info" className="flex items-center gap-1 text-xs p-2">
+                  <TabsTrigger
+                    value="info"
+                    className="flex items-center gap-1 text-xs p-2"
+                  >
                     <Settings className="w-3 h-3" />
                     <span className="hidden sm:inline">Ma'lumot</span>
                   </TabsTrigger>
-                  <TabsTrigger value="colors" className="flex items-center gap-1 text-xs p-2">
+                  <TabsTrigger
+                    value="colors"
+                    className="flex items-center gap-1 text-xs p-2"
+                  >
                     <Palette className="w-3 h-3" />
                     <span className="hidden sm:inline">Ranglar</span>
                   </TabsTrigger>
-                  <TabsTrigger value="fonts" className="flex items-center gap-1 text-xs p-2">
+                  <TabsTrigger
+                    value="fonts"
+                    className="flex items-center gap-1 text-xs p-2"
+                  >
                     <Type className="w-3 h-3" />
                     <span className="hidden sm:inline">Shrift</span>
                   </TabsTrigger>
-                  <TabsTrigger value="layout" className="flex items-center gap-1 text-xs p-2">
+                  <TabsTrigger
+                    value="layout"
+                    className="flex items-center gap-1 text-xs p-2"
+                  >
                     <Layout className="w-3 h-3" />
                     <span className="hidden sm:inline">Layout</span>
                   </TabsTrigger>
-                  <TabsTrigger value="effects" className="flex items-center gap-1 text-xs p-2">
+                  <TabsTrigger
+                    value="effects"
+                    className="flex items-center gap-1 text-xs p-2"
+                  >
                     <Layers className="w-3 h-3" />
                     <span className="hidden sm:inline">Effekt</span>
                   </TabsTrigger>
-                  <TabsTrigger value="animation" className="flex items-center gap-1 text-xs p-2">
+                  <TabsTrigger
+                    value="animation"
+                    className="flex items-center gap-1 text-xs p-2"
+                  >
                     <Sparkles className="w-3 h-3" />
                     <span className="hidden sm:inline">Animatsiya</span>
                   </TabsTrigger>
@@ -849,38 +985,62 @@ export default function AdvancedTemplateBuilder() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div>
-                        <Label htmlFor="templateName" className="text-sm font-medium">
+                        <Label
+                          htmlFor="templateName"
+                          className="text-sm font-medium"
+                        >
                           Shablon Nomi
                         </Label>
                         <Input
                           id="templateName"
                           value={templateData.templateName}
-                          onChange={(e) => handleTemplateDataChange("templateName", e.target.value)}
+                          onChange={(e) =>
+                            handleTemplateDataChange(
+                              "templateName",
+                              e.target.value,
+                            )
+                          }
                           placeholder="Professional shablon nomi"
                           className="mt-1"
                         />
                       </div>
-                      
+
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="groomName" className="text-sm font-medium">
+                          <Label
+                            htmlFor="groomName"
+                            className="text-sm font-medium"
+                          >
                             Kuyov Ismi
                           </Label>
                           <Input
                             id="groomName"
                             value={templateData.groomName}
-                            onChange={(e) => handleTemplateDataChange("groomName", e.target.value)}
+                            onChange={(e) =>
+                              handleTemplateDataChange(
+                                "groomName",
+                                e.target.value,
+                              )
+                            }
                             className="mt-1"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="brideName" className="text-sm font-medium">
+                          <Label
+                            htmlFor="brideName"
+                            className="text-sm font-medium"
+                          >
                             Kelin Ismi
                           </Label>
                           <Input
                             id="brideName"
                             value={templateData.brideName}
-                            onChange={(e) => handleTemplateDataChange("brideName", e.target.value)}
+                            onChange={(e) =>
+                              handleTemplateDataChange(
+                                "brideName",
+                                e.target.value,
+                              )
+                            }
                             className="mt-1"
                           />
                         </div>
@@ -888,24 +1048,40 @@ export default function AdvancedTemplateBuilder() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="weddingDate" className="text-sm font-medium">
+                          <Label
+                            htmlFor="weddingDate"
+                            className="text-sm font-medium"
+                          >
                             To'y Sanasi
                           </Label>
                           <Input
                             id="weddingDate"
                             value={templateData.weddingDate}
-                            onChange={(e) => handleTemplateDataChange("weddingDate", e.target.value)}
+                            onChange={(e) =>
+                              handleTemplateDataChange(
+                                "weddingDate",
+                                e.target.value,
+                              )
+                            }
                             className="mt-1"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="weddingTime" className="text-sm font-medium">
+                          <Label
+                            htmlFor="weddingTime"
+                            className="text-sm font-medium"
+                          >
                             Vaqt
                           </Label>
                           <Input
                             id="weddingTime"
                             value={templateData.weddingTime}
-                            onChange={(e) => handleTemplateDataChange("weddingTime", e.target.value)}
+                            onChange={(e) =>
+                              handleTemplateDataChange(
+                                "weddingTime",
+                                e.target.value,
+                              )
+                            }
                             className="mt-1"
                           />
                         </div>
@@ -918,57 +1094,85 @@ export default function AdvancedTemplateBuilder() {
                         <Input
                           id="venue"
                           value={templateData.venue}
-                          onChange={(e) => handleTemplateDataChange("venue", e.target.value)}
+                          onChange={(e) =>
+                            handleTemplateDataChange("venue", e.target.value)
+                          }
                           className="mt-1"
                         />
                       </div>
 
                       <div>
-                        <Label htmlFor="address" className="text-sm font-medium">
+                        <Label
+                          htmlFor="address"
+                          className="text-sm font-medium"
+                        >
                           Manzil
                         </Label>
                         <Input
                           id="address"
                           value={templateData.address}
-                          onChange={(e) => handleTemplateDataChange("address", e.target.value)}
+                          onChange={(e) =>
+                            handleTemplateDataChange("address", e.target.value)
+                          }
                           className="mt-1"
                         />
                       </div>
 
                       <div>
-                        <Label htmlFor="customMessage" className="text-sm font-medium">
+                        <Label
+                          htmlFor="customMessage"
+                          className="text-sm font-medium"
+                        >
                           Maxsus Xabar
                         </Label>
                         <Textarea
                           id="customMessage"
                           value={templateData.customMessage}
-                          onChange={(e) => handleTemplateDataChange("customMessage", e.target.value)}
+                          onChange={(e) =>
+                            handleTemplateDataChange(
+                              "customMessage",
+                              e.target.value,
+                            )
+                          }
                           className="mt-1"
                           rows={3}
                         />
                       </div>
 
                       <div>
-                        <Label htmlFor="dresscode" className="text-sm font-medium">
+                        <Label
+                          htmlFor="dresscode"
+                          className="text-sm font-medium"
+                        >
                           Kiyim Kodi
                         </Label>
                         <Input
                           id="dresscode"
                           value={templateData.dresscode}
-                          onChange={(e) => handleTemplateDataChange("dresscode", e.target.value)}
+                          onChange={(e) =>
+                            handleTemplateDataChange(
+                              "dresscode",
+                              e.target.value,
+                            )
+                          }
                           className="mt-1"
                           placeholder="Rasmiy kiyim"
                         />
                       </div>
 
                       <div>
-                        <Label htmlFor="rsvpInfo" className="text-sm font-medium">
+                        <Label
+                          htmlFor="rsvpInfo"
+                          className="text-sm font-medium"
+                        >
                           RSVP Ma'lumoti
                         </Label>
                         <Input
                           id="rsvpInfo"
                           value={templateData.rsvpInfo}
-                          onChange={(e) => handleTemplateDataChange("rsvpInfo", e.target.value)}
+                          onChange={(e) =>
+                            handleTemplateDataChange("rsvpInfo", e.target.value)
+                          }
                           className="mt-1"
                           placeholder="Javob berish sanasi"
                         />
@@ -1004,15 +1208,21 @@ export default function AdvancedTemplateBuilder() {
                                 <div className="flex gap-1">
                                   <div
                                     className="w-3 h-3 rounded-full border border-white shadow-sm group-hover:scale-110 transition-transform"
-                                    style={{ backgroundColor: preset.colors.primary }}
+                                    style={{
+                                      backgroundColor: preset.colors.primary,
+                                    }}
                                   />
                                   <div
                                     className="w-3 h-3 rounded-full border border-white shadow-sm group-hover:scale-110 transition-transform"
-                                    style={{ backgroundColor: preset.colors.secondary }}
+                                    style={{
+                                      backgroundColor: preset.colors.secondary,
+                                    }}
                                   />
                                   <div
                                     className="w-3 h-3 rounded-full border border-white shadow-sm group-hover:scale-110 transition-transform"
-                                    style={{ backgroundColor: preset.colors.accent }}
+                                    style={{
+                                      backgroundColor: preset.colors.accent,
+                                    }}
                                   />
                                 </div>
                               </div>
@@ -1035,15 +1245,25 @@ export default function AdvancedTemplateBuilder() {
                           {Object.entries(config.colors).map(([key, value]) => (
                             <div key={key} className="flex items-center gap-3">
                               <Label className="text-sm font-medium capitalize min-w-[80px]">
-                                {key === "primary" ? "Asosiy" :
-                                 key === "secondary" ? "Ikkinchi" :
-                                 key === "accent" ? "Urg'u" :
-                                 key === "background" ? "Fon" :
-                                 key === "text" ? "Matn" :
-                                 key === "gradient1" ? "Gradient 1" :
-                                 key === "gradient2" ? "Gradient 2" :
-                                 key === "shadow" ? "Soya" :
-                                 key === "border" ? "Chegara" : key}
+                                {key === "primary"
+                                  ? "Asosiy"
+                                  : key === "secondary"
+                                    ? "Ikkinchi"
+                                    : key === "accent"
+                                      ? "Urg'u"
+                                      : key === "background"
+                                        ? "Fon"
+                                        : key === "text"
+                                          ? "Matn"
+                                          : key === "gradient1"
+                                            ? "Gradient 1"
+                                            : key === "gradient2"
+                                              ? "Gradient 2"
+                                              : key === "shadow"
+                                                ? "Soya"
+                                                : key === "border"
+                                                  ? "Chegara"
+                                                  : key}
                               </Label>
                               <Input
                                 type="color"
@@ -1088,10 +1308,15 @@ export default function AdvancedTemplateBuilder() {
                       {Object.entries(config.fonts).map(([key, value]) => (
                         <div key={key} className="space-y-2">
                           <Label className="text-sm font-medium capitalize">
-                            {key === "heading" ? "Sarlavha Shrifti" :
-                             key === "body" ? "Asosiy Shrift" :
-                             key === "accent" ? "Dekorativ Shrift" :
-                             key === "caption" ? "Kichik Matn Shrifti" : key}
+                            {key === "heading"
+                              ? "Sarlavha Shrifti"
+                              : key === "body"
+                                ? "Asosiy Shrift"
+                                : key === "accent"
+                                  ? "Dekorativ Shrift"
+                                  : key === "caption"
+                                    ? "Kichik Matn Shrifti"
+                                    : key}
                           </Label>
                           <Select
                             value={value}
@@ -1114,7 +1339,10 @@ export default function AdvancedTemplateBuilder() {
                                 >
                                   <div className="flex items-center justify-between w-full">
                                     <span>{font.label}</span>
-                                    <Badge variant="secondary" className="ml-2 text-xs">
+                                    <Badge
+                                      variant="secondary"
+                                      className="ml-2 text-xs"
+                                    >
                                       {font.category}
                                     </Badge>
                                   </div>
@@ -1129,18 +1357,24 @@ export default function AdvancedTemplateBuilder() {
 
                       {/* Typography Controls */}
                       <div className="space-y-4">
-                        <Label className="text-sm font-medium">Tipografiya Sozlamalari</Label>
-                        
+                        <Label className="text-sm font-medium">
+                          Tipografiya Sozlamalari
+                        </Label>
+
                         <div>
                           <Label className="text-sm text-slate-600">
-                            Harf Orasidagi Masofa: {config.typography.letterSpacing}px
+                            Harf Orasidagi Masofa:{" "}
+                            {config.typography.letterSpacing}px
                           </Label>
                           <Slider
                             value={[config.typography.letterSpacing]}
                             onValueChange={(value) =>
                               updateConfig({
                                 ...config,
-                                typography: { ...config.typography, letterSpacing: value[0] }
+                                typography: {
+                                  ...config.typography,
+                                  letterSpacing: value[0],
+                                },
                               })
                             }
                             max={10}
@@ -1159,7 +1393,10 @@ export default function AdvancedTemplateBuilder() {
                             onValueChange={(value) =>
                               updateConfig({
                                 ...config,
-                                typography: { ...config.typography, lineHeight: value[0] }
+                                typography: {
+                                  ...config.typography,
+                                  lineHeight: value[0],
+                                },
                               })
                             }
                             max={3}
@@ -1178,7 +1415,10 @@ export default function AdvancedTemplateBuilder() {
                             onValueChange={(value) =>
                               updateConfig({
                                 ...config,
-                                typography: { ...config.typography, fontWeight: value[0] }
+                                typography: {
+                                  ...config.typography,
+                                  fontWeight: value[0],
+                                },
                               })
                             }
                             max={900}
@@ -1189,13 +1429,18 @@ export default function AdvancedTemplateBuilder() {
                         </div>
 
                         <div>
-                          <Label className="text-sm text-slate-600">Matn Shakli</Label>
+                          <Label className="text-sm text-slate-600">
+                            Matn Shakli
+                          </Label>
                           <Select
                             value={config.typography.textTransform}
                             onValueChange={(val) =>
                               updateConfig({
                                 ...config,
-                                typography: { ...config.typography, textTransform: val as any }
+                                typography: {
+                                  ...config.typography,
+                                  textTransform: val as any,
+                                },
                               })
                             }
                           >
@@ -1204,9 +1449,15 @@ export default function AdvancedTemplateBuilder() {
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="none">Oddiy</SelectItem>
-                              <SelectItem value="uppercase">BOSH HARFLAR</SelectItem>
-                              <SelectItem value="lowercase">kichik harflar</SelectItem>
-                              <SelectItem value="capitalize">Har So'z Bosh Harf</SelectItem>
+                              <SelectItem value="uppercase">
+                                BOSH HARFLAR
+                              </SelectItem>
+                              <SelectItem value="lowercase">
+                                kichik harflar
+                              </SelectItem>
+                              <SelectItem value="capitalize">
+                                Har So'z Bosh Harf
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -1227,12 +1478,16 @@ export default function AdvancedTemplateBuilder() {
                     <CardContent className="space-y-4">
                       {/* Layout Style */}
                       <div>
-                        <Label className="text-sm font-medium mb-3 block">Layout Uslubi</Label>
+                        <Label className="text-sm font-medium mb-3 block">
+                          Layout Uslubi
+                        </Label>
                         <div className="grid grid-cols-2 gap-2">
                           {layoutStyles.map((style) => (
                             <button
                               key={style.value}
-                              onClick={() => handleLayoutChange("style", style.value)}
+                              onClick={() =>
+                                handleLayoutChange("style", style.value)
+                              }
                               className={`p-3 border rounded-lg text-left transition-all ${
                                 config.layout.style === style.value
                                   ? "border-blue-500 bg-blue-50"
@@ -1242,8 +1497,12 @@ export default function AdvancedTemplateBuilder() {
                               <div className="flex items-center gap-3">
                                 <span className="text-xl">{style.icon}</span>
                                 <div>
-                                  <div className="font-medium text-slate-700">{style.label}</div>
-                                  <div className="text-xs text-slate-500">{style.description}</div>
+                                  <div className="font-medium text-slate-700">
+                                    {style.label}
+                                  </div>
+                                  <div className="text-xs text-slate-500">
+                                    {style.description}
+                                  </div>
                                 </div>
                               </div>
                             </button>
@@ -1255,15 +1514,19 @@ export default function AdvancedTemplateBuilder() {
 
                       {/* Spacing Controls */}
                       <div className="space-y-4">
-                        <Label className="text-sm font-medium">Bo'shliq Sozlamalari</Label>
-                        
+                        <Label className="text-sm font-medium">
+                          Bo'shliq Sozlamalari
+                        </Label>
+
                         <div>
                           <Label className="text-sm text-slate-600">
                             Ichki Bo'shliq: {config.layout.padding}px
                           </Label>
                           <Slider
                             value={[config.layout.padding]}
-                            onValueChange={(value) => handleLayoutChange("padding", value[0])}
+                            onValueChange={(value) =>
+                              handleLayoutChange("padding", value[0])
+                            }
                             max={80}
                             min={8}
                             step={4}
@@ -1277,7 +1540,9 @@ export default function AdvancedTemplateBuilder() {
                           </Label>
                           <Slider
                             value={[config.layout.margin]}
-                            onValueChange={(value) => handleLayoutChange("margin", value[0])}
+                            onValueChange={(value) =>
+                              handleLayoutChange("margin", value[0])
+                            }
                             max={40}
                             min={0}
                             step={2}
@@ -1291,7 +1556,9 @@ export default function AdvancedTemplateBuilder() {
                           </Label>
                           <Slider
                             value={[config.layout.spacing]}
-                            onValueChange={(value) => handleLayoutChange("spacing", value[0])}
+                            onValueChange={(value) =>
+                              handleLayoutChange("spacing", value[0])
+                            }
                             max={60}
                             min={8}
                             step={2}
@@ -1305,7 +1572,9 @@ export default function AdvancedTemplateBuilder() {
                           </Label>
                           <Slider
                             value={[config.layout.borderRadius]}
-                            onValueChange={(value) => handleLayoutChange("borderRadius", value[0])}
+                            onValueChange={(value) =>
+                              handleLayoutChange("borderRadius", value[0])
+                            }
                             max={40}
                             min={0}
                             step={2}
@@ -1319,7 +1588,9 @@ export default function AdvancedTemplateBuilder() {
                           </Label>
                           <Slider
                             value={[config.layout.shadowIntensity]}
-                            onValueChange={(value) => handleLayoutChange("shadowIntensity", value[0])}
+                            onValueChange={(value) =>
+                              handleLayoutChange("shadowIntensity", value[0])
+                            }
                             max={30}
                             min={0}
                             step={1}
@@ -1332,18 +1603,30 @@ export default function AdvancedTemplateBuilder() {
 
                       {/* Alignment */}
                       <div>
-                        <Label className="text-sm font-medium mb-3 block">Matn Joylashuvi</Label>
+                        <Label className="text-sm font-medium mb-3 block">
+                          Matn Joylashuvi
+                        </Label>
                         <div className="flex gap-2">
                           {[
                             { value: "left", icon: AlignLeft, label: "Chap" },
-                            { value: "center", icon: AlignCenter, label: "Markaz" },
+                            {
+                              value: "center",
+                              icon: AlignCenter,
+                              label: "Markaz",
+                            },
                             { value: "right", icon: AlignRight, label: "O'ng" },
                           ].map(({ value, icon: Icon, label }) => (
                             <Button
                               key={value}
-                              variant={config.layout.alignment === value ? "default" : "outline"}
+                              variant={
+                                config.layout.alignment === value
+                                  ? "default"
+                                  : "outline"
+                              }
                               size="sm"
-                              onClick={() => handleLayoutChange("alignment", value)}
+                              onClick={() =>
+                                handleLayoutChange("alignment", value)
+                              }
                               className="flex-1"
                             >
                               <Icon className="w-4 h-4 mr-1" />
@@ -1368,40 +1651,72 @@ export default function AdvancedTemplateBuilder() {
                     <CardContent className="space-y-4">
                       {/* Filter Effects */}
                       <div>
-                        <Label className="text-sm font-medium mb-3 block">Filter Effektlari</Label>
-                        
+                        <Label className="text-sm font-medium mb-3 block">
+                          Filter Effektlari
+                        </Label>
+
                         <div className="space-y-4">
-                          {Object.entries(config.effects).map(([key, value]) => {
-                            const max = key === "blur" ? 10 : 
-                                     key === "hueRotate" ? 360 : 200;
-                            const step = key === "blur" ? 0.5 : 
-                                       key === "hueRotate" ? 15 : 5;
-                            const unit = key === "blur" ? "px" :
-                                       key === "hueRotate" ? "°" : "%";
-                            
-                            return (
-                              <div key={key}>
-                                <Label className="text-sm text-slate-600">
-                                  {key === "blur" ? "Bulaniqlik" :
-                                   key === "brightness" ? "Yorqinlik" :
-                                   key === "contrast" ? "Kontrast" :
-                                   key === "saturate" ? "To'yinganlik" :
-                                   key === "sepia" ? "Sepia" :
-                                   key === "grayscale" ? "Kulrang" :
-                                   key === "hueRotate" ? "Rang Aylanishi" :
-                                   key === "opacity" ? "Shaffoflik" : key}: {value}{unit}
-                                </Label>
-                                <Slider
-                                  value={[value]}
-                                  onValueChange={(val) => handleEffectChange(key as keyof TemplateConfig["effects"], val[0])}
-                                  max={max}
-                                  min={0}
-                                  step={step}
-                                  className="mt-2"
-                                />
-                              </div>
-                            );
-                          })}
+                          {Object.entries(config.effects).map(
+                            ([key, value]) => {
+                              const max =
+                                key === "blur"
+                                  ? 10
+                                  : key === "hueRotate"
+                                    ? 360
+                                    : 200;
+                              const step =
+                                key === "blur"
+                                  ? 0.5
+                                  : key === "hueRotate"
+                                    ? 15
+                                    : 5;
+                              const unit =
+                                key === "blur"
+                                  ? "px"
+                                  : key === "hueRotate"
+                                    ? "°"
+                                    : "%";
+
+                              return (
+                                <div key={key}>
+                                  <Label className="text-sm text-slate-600">
+                                    {key === "blur"
+                                      ? "Bulaniqlik"
+                                      : key === "brightness"
+                                        ? "Yorqinlik"
+                                        : key === "contrast"
+                                          ? "Kontrast"
+                                          : key === "saturate"
+                                            ? "To'yinganlik"
+                                            : key === "sepia"
+                                              ? "Sepia"
+                                              : key === "grayscale"
+                                                ? "Kulrang"
+                                                : key === "hueRotate"
+                                                  ? "Rang Aylanishi"
+                                                  : key === "opacity"
+                                                    ? "Shaffoflik"
+                                                    : key}
+                                    : {value}
+                                    {unit}
+                                  </Label>
+                                  <Slider
+                                    value={[value]}
+                                    onValueChange={(val) =>
+                                      handleEffectChange(
+                                        key as keyof TemplateConfig["effects"],
+                                        val[0],
+                                      )
+                                    }
+                                    max={max}
+                                    min={0}
+                                    step={step}
+                                    className="mt-2"
+                                  />
+                                </div>
+                              );
+                            },
+                          )}
                         </div>
                       </div>
 
@@ -1409,8 +1724,10 @@ export default function AdvancedTemplateBuilder() {
 
                       {/* Border Controls */}
                       <div>
-                        <Label className="text-sm font-medium mb-3 block">Chegara Sozlamalari</Label>
-                        
+                        <Label className="text-sm font-medium mb-3 block">
+                          Chegara Sozlamalari
+                        </Label>
+
                         <div className="space-y-4">
                           <div>
                             <Label className="text-sm text-slate-600">
@@ -1421,7 +1738,7 @@ export default function AdvancedTemplateBuilder() {
                               onValueChange={(value) =>
                                 updateConfig({
                                   ...config,
-                                  border: { ...config.border, width: value[0] }
+                                  border: { ...config.border, width: value[0] },
                                 })
                               }
                               max={10}
@@ -1432,13 +1749,18 @@ export default function AdvancedTemplateBuilder() {
                           </div>
 
                           <div>
-                            <Label className="text-sm text-slate-600">Chegara Uslubi</Label>
+                            <Label className="text-sm text-slate-600">
+                              Chegara Uslubi
+                            </Label>
                             <Select
                               value={config.border.style}
                               onValueChange={(val) =>
                                 updateConfig({
                                   ...config,
-                                  border: { ...config.border, style: val as any }
+                                  border: {
+                                    ...config.border,
+                                    style: val as any,
+                                  },
                                 })
                               }
                             >
@@ -1447,15 +1769,23 @@ export default function AdvancedTemplateBuilder() {
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="solid">Uzluksiz</SelectItem>
-                                <SelectItem value="dashed">Tire-tire</SelectItem>
-                                <SelectItem value="dotted">Nuqta-nuqta</SelectItem>
-                                <SelectItem value="double">Ikki tomonlama</SelectItem>
+                                <SelectItem value="dashed">
+                                  Tire-tire
+                                </SelectItem>
+                                <SelectItem value="dotted">
+                                  Nuqta-nuqta
+                                </SelectItem>
+                                <SelectItem value="double">
+                                  Ikki tomonlama
+                                </SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
 
                           <div>
-                            <Label className="text-sm text-slate-600">Chegara Rangi</Label>
+                            <Label className="text-sm text-slate-600">
+                              Chegara Rangi
+                            </Label>
                             <div className="flex gap-2 mt-2">
                               <Input
                                 type="color"
@@ -1463,7 +1793,10 @@ export default function AdvancedTemplateBuilder() {
                                 onChange={(e) =>
                                   updateConfig({
                                     ...config,
-                                    border: { ...config.border, color: e.target.value }
+                                    border: {
+                                      ...config.border,
+                                      color: e.target.value,
+                                    },
                                   })
                                 }
                                 className="w-12 h-10 p-1"
@@ -1474,7 +1807,10 @@ export default function AdvancedTemplateBuilder() {
                                 onChange={(e) =>
                                   updateConfig({
                                     ...config,
-                                    border: { ...config.border, color: e.target.value }
+                                    border: {
+                                      ...config.border,
+                                      color: e.target.value,
+                                    },
                                   })
                                 }
                                 className="flex-1"
@@ -1488,17 +1824,24 @@ export default function AdvancedTemplateBuilder() {
 
                       {/* Background */}
                       <div>
-                        <Label className="text-sm font-medium mb-3 block">Fon Sozlamalari</Label>
-                        
+                        <Label className="text-sm font-medium mb-3 block">
+                          Fon Sozlamalari
+                        </Label>
+
                         <div className="space-y-4">
                           <div>
-                            <Label className="text-sm text-slate-600">Fon Turi</Label>
+                            <Label className="text-sm text-slate-600">
+                              Fon Turi
+                            </Label>
                             <Select
                               value={config.background.type}
                               onValueChange={(val) =>
                                 updateConfig({
                                   ...config,
-                                  background: { ...config.background, type: val as any }
+                                  background: {
+                                    ...config.background,
+                                    type: val as any,
+                                  },
                                 })
                               }
                             >
@@ -1506,8 +1849,12 @@ export default function AdvancedTemplateBuilder() {
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="solid">Oddiy Rang</SelectItem>
-                                <SelectItem value="gradient">Gradient</SelectItem>
+                                <SelectItem value="solid">
+                                  Oddiy Rang
+                                </SelectItem>
+                                <SelectItem value="gradient">
+                                  Gradient
+                                </SelectItem>
                                 <SelectItem value="image">Rasm</SelectItem>
                                 <SelectItem value="pattern">Naqsh</SelectItem>
                               </SelectContent>
@@ -1516,13 +1863,18 @@ export default function AdvancedTemplateBuilder() {
 
                           {config.background.type === "gradient" && (
                             <div>
-                              <Label className="text-sm text-slate-600">Gradient Yo'nalishi</Label>
+                              <Label className="text-sm text-slate-600">
+                                Gradient Yo'nalishi
+                              </Label>
                               <Select
                                 value={config.background.gradientDirection}
                                 onValueChange={(val) =>
                                   updateConfig({
                                     ...config,
-                                    background: { ...config.background, gradientDirection: val }
+                                    background: {
+                                      ...config.background,
+                                      gradientDirection: val,
+                                    },
                                   })
                                 }
                               >
@@ -1531,7 +1883,10 @@ export default function AdvancedTemplateBuilder() {
                                 </SelectTrigger>
                                 <SelectContent>
                                   {gradientDirections.map((dir) => (
-                                    <SelectItem key={dir.value} value={dir.value}>
+                                    <SelectItem
+                                      key={dir.value}
+                                      value={dir.value}
+                                    >
                                       {dir.label}
                                     </SelectItem>
                                   ))}
@@ -1556,13 +1911,18 @@ export default function AdvancedTemplateBuilder() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <Label className="text-sm font-medium">Animatsiyani Yoqish</Label>
+                        <Label className="text-sm font-medium">
+                          Animatsiyani Yoqish
+                        </Label>
                         <Switch
                           checked={config.animations.enabled}
                           onCheckedChange={(checked) =>
                             updateConfig({
                               ...config,
-                              animations: { ...config.animations, enabled: checked }
+                              animations: {
+                                ...config.animations,
+                                enabled: checked,
+                              },
                             })
                           }
                         />
@@ -1571,13 +1931,18 @@ export default function AdvancedTemplateBuilder() {
                       {config.animations.enabled && (
                         <div className="space-y-4">
                           <div>
-                            <Label className="text-sm font-medium">Animatsiya Turi</Label>
+                            <Label className="text-sm font-medium">
+                              Animatsiya Turi
+                            </Label>
                             <Select
                               value={config.animations.type}
                               onValueChange={(val) =>
                                 updateConfig({
                                   ...config,
-                                  animations: { ...config.animations, type: val as any }
+                                  animations: {
+                                    ...config.animations,
+                                    type: val as any,
+                                  },
                                 })
                               }
                             >
@@ -1586,7 +1951,10 @@ export default function AdvancedTemplateBuilder() {
                               </SelectTrigger>
                               <SelectContent>
                                 {animationTypes.map((anim) => (
-                                  <SelectItem key={anim.value} value={anim.value}>
+                                  <SelectItem
+                                    key={anim.value}
+                                    value={anim.value}
+                                  >
                                     {anim.label}
                                   </SelectItem>
                                 ))}
@@ -1603,7 +1971,10 @@ export default function AdvancedTemplateBuilder() {
                               onValueChange={(value) =>
                                 updateConfig({
                                   ...config,
-                                  animations: { ...config.animations, duration: value[0] }
+                                  animations: {
+                                    ...config.animations,
+                                    duration: value[0],
+                                  },
                                 })
                               }
                               max={3}
@@ -1622,7 +1993,10 @@ export default function AdvancedTemplateBuilder() {
                               onValueChange={(value) =>
                                 updateConfig({
                                   ...config,
-                                  animations: { ...config.animations, delay: value[0] }
+                                  animations: {
+                                    ...config.animations,
+                                    delay: value[0],
+                                  },
                                 })
                               }
                               max={2}
@@ -1633,13 +2007,18 @@ export default function AdvancedTemplateBuilder() {
                           </div>
 
                           <div>
-                            <Label className="text-sm text-slate-600">Animatsiya Uslubi</Label>
+                            <Label className="text-sm text-slate-600">
+                              Animatsiya Uslubi
+                            </Label>
                             <Select
                               value={config.animations.easing}
                               onValueChange={(val) =>
                                 updateConfig({
                                   ...config,
-                                  animations: { ...config.animations, easing: val }
+                                  animations: {
+                                    ...config.animations,
+                                    easing: val,
+                                  },
                                 })
                               }
                             >
@@ -1649,10 +2028,16 @@ export default function AdvancedTemplateBuilder() {
                               <SelectContent>
                                 <SelectItem value="ease">Ease</SelectItem>
                                 <SelectItem value="ease-in">Ease In</SelectItem>
-                                <SelectItem value="ease-out">Ease Out</SelectItem>
-                                <SelectItem value="ease-in-out">Ease In Out</SelectItem>
+                                <SelectItem value="ease-out">
+                                  Ease Out
+                                </SelectItem>
+                                <SelectItem value="ease-in-out">
+                                  Ease In Out
+                                </SelectItem>
                                 <SelectItem value="linear">Linear</SelectItem>
-                                <SelectItem value="cubic-bezier(0.68, -0.55, 0.265, 1.55)">Bounce</SelectItem>
+                                <SelectItem value="cubic-bezier(0.68, -0.55, 0.265, 1.55)">
+                                  Bounce
+                                </SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
@@ -1673,13 +2058,19 @@ export default function AdvancedTemplateBuilder() {
                       <div className="flex items-center gap-3">
                         <Eye className="w-5 h-5 text-blue-500" />
                         <div>
-                          <CardTitle className="text-lg">Jonli Oldindan Ko'rish</CardTitle>
-                          <p className="text-sm text-slate-600">Real vaqtda yangilanadi</p>
+                          <CardTitle className="text-lg">
+                            Jonli Oldindan Ko'rish
+                          </CardTitle>
+                          <p className="text-sm text-slate-600">
+                            Real vaqtda yangilanadi
+                          </p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
                         <Button
-                          variant={previewDevice === "desktop" ? "default" : "outline"}
+                          variant={
+                            previewDevice === "desktop" ? "default" : "outline"
+                          }
                           size="sm"
                           onClick={() => setPreviewDevice("desktop")}
                         >
@@ -1687,7 +2078,9 @@ export default function AdvancedTemplateBuilder() {
                           Desktop
                         </Button>
                         <Button
-                          variant={previewDevice === "mobile" ? "default" : "outline"}
+                          variant={
+                            previewDevice === "mobile" ? "default" : "outline"
+                          }
                           size="sm"
                           onClick={() => setPreviewDevice("mobile")}
                         >
@@ -1699,20 +2092,28 @@ export default function AdvancedTemplateBuilder() {
                   </CardHeader>
                   <CardContent>
                     <div className="border border-slate-200 rounded-xl p-6 bg-gradient-to-br from-slate-50 to-white min-h-[400px] flex items-center justify-center">
-                      <div className={`transition-all duration-500 ${
-                        previewDevice === "mobile" ? "max-w-sm" : "max-w-2xl w-full"
-                      }`}>
+                      <div
+                        className={`transition-all duration-500 ${
+                          previewDevice === "mobile"
+                            ? "max-w-sm"
+                            : "max-w-2xl w-full"
+                        }`}
+                      >
                         {/* Enhanced Preview */}
-                        <div 
+                        <div
                           className="transition-all duration-500 hover:scale-105"
                           style={getPreviewStyle()}
                         >
-                          <div className={`space-y-${Math.floor(config.layout.spacing / 4)}`}>
+                          <div
+                            className={`space-y-${Math.floor(config.layout.spacing / 4)}`}
+                          >
                             {/* Decorative Header */}
                             <div className="flex justify-center items-center space-x-2 mb-6">
                               <div
                                 className="w-16 h-0.5 transition-all duration-300"
-                                style={{ backgroundColor: config.colors.accent }}
+                                style={{
+                                  backgroundColor: config.colors.accent,
+                                }}
                               />
                               <Heart
                                 className="w-5 h-5 animate-pulse"
@@ -1720,7 +2121,9 @@ export default function AdvancedTemplateBuilder() {
                               />
                               <div
                                 className="w-16 h-0.5 transition-all duration-300"
-                                style={{ backgroundColor: config.colors.accent }}
+                                style={{
+                                  backgroundColor: config.colors.accent,
+                                }}
                               />
                             </div>
 
@@ -1728,10 +2131,10 @@ export default function AdvancedTemplateBuilder() {
                             <div className="text-center space-y-2">
                               <div
                                 className="text-sm font-medium tracking-widest uppercase opacity-75"
-                                style={{ 
+                                style={{
                                   color: config.colors.secondary,
                                   fontFamily: config.fonts.caption,
-                                  letterSpacing: `${config.typography.letterSpacing}px`
+                                  letterSpacing: `${config.typography.letterSpacing}px`,
                                 }}
                               >
                                 To'y Taklifnomasi
@@ -1748,18 +2151,23 @@ export default function AdvancedTemplateBuilder() {
                                   letterSpacing: `${config.typography.letterSpacing}px`,
                                   lineHeight: config.typography.lineHeight,
                                   fontWeight: config.typography.fontWeight,
-                                  textTransform: config.typography.textTransform as any,
-                                  textDecoration: config.typography.textDecoration as any,
-                                  textShadow: config.typography.textShadow !== "none" ? config.typography.textShadow : "none",
+                                  textTransform: config.typography
+                                    .textTransform as any,
+                                  textDecoration: config.typography
+                                    .textDecoration as any,
+                                  textShadow:
+                                    config.typography.textShadow !== "none"
+                                      ? config.typography.textShadow
+                                      : "none",
                                 }}
                               >
                                 {templateData.groomName}
                               </h1>
                               <div
                                 className={`${previewDevice === "mobile" ? "text-3xl" : "text-5xl"}`}
-                                style={{ 
+                                style={{
                                   color: config.colors.accent,
-                                  fontFamily: config.fonts.accent 
+                                  fontFamily: config.fonts.accent,
                                 }}
                               >
                                 &
@@ -1772,9 +2180,14 @@ export default function AdvancedTemplateBuilder() {
                                   letterSpacing: `${config.typography.letterSpacing}px`,
                                   lineHeight: config.typography.lineHeight,
                                   fontWeight: config.typography.fontWeight,
-                                  textTransform: config.typography.textTransform as any,
-                                  textDecoration: config.typography.textDecoration as any,
-                                  textShadow: config.typography.textShadow !== "none" ? config.typography.textShadow : "none",
+                                  textTransform: config.typography
+                                    .textTransform as any,
+                                  textDecoration: config.typography
+                                    .textDecoration as any,
+                                  textShadow:
+                                    config.typography.textShadow !== "none"
+                                      ? config.typography.textShadow
+                                      : "none",
                                 }}
                               >
                                 {templateData.brideName}
@@ -1783,29 +2196,55 @@ export default function AdvancedTemplateBuilder() {
 
                             {/* Decorative Divider */}
                             <div className="flex justify-center items-center space-x-3 my-6">
-                              <Star className="w-4 h-4 animate-spin" style={{ color: config.colors.accent, animationDuration: "3s" }} />
-                              <div className="w-12 h-0.5" style={{ backgroundColor: config.colors.accent }} />
-                              <Sparkles className="w-4 h-4 animate-pulse" style={{ color: config.colors.accent }} />
-                              <div className="w-12 h-0.5" style={{ backgroundColor: config.colors.accent }} />
-                              <Star className="w-4 h-4 animate-spin" style={{ color: config.colors.accent, animationDuration: "3s", animationDirection: "reverse" }} />
+                              <Star
+                                className="w-4 h-4 animate-spin"
+                                style={{
+                                  color: config.colors.accent,
+                                  animationDuration: "3s",
+                                }}
+                              />
+                              <div
+                                className="w-12 h-0.5"
+                                style={{
+                                  backgroundColor: config.colors.accent,
+                                }}
+                              />
+                              <Sparkles
+                                className="w-4 h-4 animate-pulse"
+                                style={{ color: config.colors.accent }}
+                              />
+                              <div
+                                className="w-12 h-0.5"
+                                style={{
+                                  backgroundColor: config.colors.accent,
+                                }}
+                              />
+                              <Star
+                                className="w-4 h-4 animate-spin"
+                                style={{
+                                  color: config.colors.accent,
+                                  animationDuration: "3s",
+                                  animationDirection: "reverse",
+                                }}
+                              />
                             </div>
 
                             {/* Date and Time */}
                             <div className="text-center space-y-2">
                               <div
                                 className={`${previewDevice === "mobile" ? "text-lg" : "text-xl"} font-semibold`}
-                                style={{ 
+                                style={{
                                   color: config.colors.primary,
-                                  fontFamily: config.fonts.body 
+                                  fontFamily: config.fonts.body,
                                 }}
                               >
                                 {templateData.weddingDate}
                               </div>
                               <div
                                 className={`${previewDevice === "mobile" ? "text-base" : "text-lg"}`}
-                                style={{ 
+                                style={{
                                   color: config.colors.secondary,
-                                  fontFamily: config.fonts.body 
+                                  fontFamily: config.fonts.body,
                                 }}
                               >
                                 {templateData.weddingTime}
@@ -1814,21 +2253,26 @@ export default function AdvancedTemplateBuilder() {
 
                             {/* Venue */}
                             <div className="text-center space-y-3">
-                              <div className="w-16 h-0.5 mx-auto" style={{ backgroundColor: config.colors.accent }} />
+                              <div
+                                className="w-16 h-0.5 mx-auto"
+                                style={{
+                                  backgroundColor: config.colors.accent,
+                                }}
+                              />
                               <div
                                 className={`${previewDevice === "mobile" ? "text-lg" : "text-xl"} font-medium`}
-                                style={{ 
+                                style={{
                                   color: config.colors.primary,
-                                  fontFamily: config.fonts.body 
+                                  fontFamily: config.fonts.body,
                                 }}
                               >
                                 {templateData.venue}
                               </div>
                               <div
                                 className={`${previewDevice === "mobile" ? "text-sm" : "text-base"} leading-relaxed`}
-                                style={{ 
+                                style={{
                                   color: config.colors.secondary,
-                                  fontFamily: config.fonts.body 
+                                  fontFamily: config.fonts.body,
                                 }}
                               >
                                 {templateData.address}
@@ -1838,9 +2282,9 @@ export default function AdvancedTemplateBuilder() {
                             {/* Message */}
                             <div
                               className={`${previewDevice === "mobile" ? "text-sm px-3" : "text-base px-6"} leading-relaxed italic text-center`}
-                              style={{ 
+                              style={{
                                 color: config.colors.text,
-                                fontFamily: config.fonts.body 
+                                fontFamily: config.fonts.body,
                               }}
                             >
                               "{templateData.customMessage}"
@@ -1851,9 +2295,9 @@ export default function AdvancedTemplateBuilder() {
                               <div className="text-center">
                                 <div
                                   className="text-sm font-medium"
-                                  style={{ 
+                                  style={{
                                     color: config.colors.primary,
-                                    fontFamily: config.fonts.caption 
+                                    fontFamily: config.fonts.caption,
                                   }}
                                 >
                                   Kiyim kodi: {templateData.dresscode}
@@ -1866,9 +2310,9 @@ export default function AdvancedTemplateBuilder() {
                               <div className="text-center">
                                 <div
                                   className="text-sm"
-                                  style={{ 
+                                  style={{
                                     color: config.colors.secondary,
-                                    fontFamily: config.fonts.caption 
+                                    fontFamily: config.fonts.caption,
                                   }}
                                 >
                                   {templateData.rsvpInfo}
@@ -1878,15 +2322,34 @@ export default function AdvancedTemplateBuilder() {
 
                             {/* Footer Decoration */}
                             <div className="flex justify-center items-center space-x-3 mt-8">
-                              <div className="w-20 h-0.5" style={{ backgroundColor: config.colors.accent }} />
-                              <Heart className="w-5 h-5 animate-bounce" style={{ color: config.colors.accent }} />
-                              <div className="w-20 h-0.5" style={{ backgroundColor: config.colors.accent }} />
+                              <div
+                                className="w-20 h-0.5"
+                                style={{
+                                  backgroundColor: config.colors.accent,
+                                }}
+                              />
+                              <Heart
+                                className="w-5 h-5 animate-bounce"
+                                style={{ color: config.colors.accent }}
+                              />
+                              <div
+                                className="w-20 h-0.5"
+                                style={{
+                                  backgroundColor: config.colors.accent,
+                                }}
+                              />
                             </div>
 
                             {/* Real-time indicator */}
                             <div className="flex justify-center items-center mt-4 opacity-50">
                               <Zap className="w-3 h-3 text-green-500 animate-pulse mr-1" />
-                              <span className="text-xs" style={{ color: config.colors.text, fontFamily: config.fonts.caption }}>
+                              <span
+                                className="text-xs"
+                                style={{
+                                  color: config.colors.text,
+                                  fontFamily: config.fonts.caption,
+                                }}
+                              >
                                 Real-time • Professional
                               </span>
                             </div>
@@ -1954,20 +2417,31 @@ export default function AdvancedTemplateBuilder() {
             </div>
 
             <div className="w-full h-full p-8 overflow-auto">
-              <div className={`mx-auto transition-all duration-300 ${
-                previewDevice === "mobile" ? "max-w-sm" : "max-w-4xl"
-              }`}>
+              <div
+                className={`mx-auto transition-all duration-300 ${
+                  previewDevice === "mobile" ? "max-w-sm" : "max-w-4xl"
+                }`}
+              >
                 <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
                   <div style={getPreviewStyle()}>
                     {/* Full preview content would go here */}
                     <div className="text-center p-8">
-                      <h1 className="text-4xl font-bold mb-4" style={{ color: config.colors.primary }}>
+                      <h1
+                        className="text-4xl font-bold mb-4"
+                        style={{ color: config.colors.primary }}
+                      >
                         {templateData.groomName} & {templateData.brideName}
                       </h1>
-                      <p className="text-xl" style={{ color: config.colors.secondary }}>
+                      <p
+                        className="text-xl"
+                        style={{ color: config.colors.secondary }}
+                      >
                         {templateData.weddingDate} • {templateData.weddingTime}
                       </p>
-                      <p className="text-lg mt-4" style={{ color: config.colors.text }}>
+                      <p
+                        className="text-lg mt-4"
+                        style={{ color: config.colors.text }}
+                      >
                         {templateData.venue}
                       </p>
                     </div>

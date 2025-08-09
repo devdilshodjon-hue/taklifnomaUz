@@ -73,16 +73,16 @@ export default function CreateInvitation() {
 
   // Generate a unique slug for the invitation
   const generateSlug = () => {
-    const name1 = formData.groomName.toLowerCase().replace(/[^a-z0-9]/g, '');
-    const name2 = formData.brideName.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const name1 = formData.groomName.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const name2 = formData.brideName.toLowerCase().replace(/[^a-z0-9]/g, "");
     const timestamp = Date.now().toString().slice(-6);
     return `${name1}-${name2}-${timestamp}`;
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -101,7 +101,7 @@ export default function CreateInvitation() {
 
     if (result.success) {
       setSuccess("Taklifnoma muvaffaqiyatli yaratildi!");
-      
+
       // Navigate to dashboard after success
       setTimeout(() => {
         navigate("/dashboard");
@@ -132,18 +132,21 @@ export default function CreateInvitation() {
   };
 
   const removeGuest = (id: string) => {
-    setGuests(guests.filter(guest => guest.id !== id));
+    setGuests(guests.filter((guest) => guest.id !== id));
   };
 
   const updateGuest = (id: string, field: keyof Guest, value: string) => {
-    setGuests(guests.map(guest => 
-      guest.id === id ? { ...guest, [field]: value } : guest
-    ));
+    setGuests(
+      guests.map((guest) =>
+        guest.id === id ? { ...guest, [field]: value } : guest,
+      ),
+    );
   };
 
-  const templates = selectedCategory === "all" 
-    ? defaultWeddingTemplates 
-    : getTemplatesByCategory(selectedCategory);
+  const templates =
+    selectedCategory === "all"
+      ? defaultWeddingTemplates
+      : getTemplatesByCategory(selectedCategory);
 
   // Mock invitation data for preview
   const getMockInvitationData = () => ({
@@ -153,9 +156,12 @@ export default function CreateInvitation() {
     wedding_date: formData.weddingDate || "2024-06-15",
     wedding_time: formData.weddingTime || "16:00",
     venue: formData.venue || "Atirgul Bog'i",
-    address: formData.address || "Toshkent sh., Yunusobod t., Bog' ko'chasi 123",
+    address:
+      formData.address || "Toshkent sh., Yunusobod t., Bog' ko'chasi 123",
     city: formData.city || "Toshkent",
-    custom_message: formData.customMessage || "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
+    custom_message:
+      formData.customMessage ||
+      "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
     template_id: formData.selectedTemplate,
   });
 
@@ -246,30 +252,40 @@ export default function CreateInvitation() {
                   <Users className="w-5 h-5 text-blue-500" />
                   Asosiy Ma'lumotlar
                 </h2>
-                
+
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="groomName" className="text-sm font-medium">
+                      <Label
+                        htmlFor="groomName"
+                        className="text-sm font-medium"
+                      >
                         Kuyov Ismi *
                       </Label>
                       <Input
                         id="groomName"
                         value={formData.groomName}
-                        onChange={(e) => handleInputChange("groomName", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("groomName", e.target.value)
+                        }
                         placeholder="Jahongir"
                         className="mt-1"
                         required
                       />
                     </div>
                     <div>
-                      <Label htmlFor="brideName" className="text-sm font-medium">
+                      <Label
+                        htmlFor="brideName"
+                        className="text-sm font-medium"
+                      >
                         Kelin Ismi *
                       </Label>
                       <Input
                         id="brideName"
                         value={formData.brideName}
-                        onChange={(e) => handleInputChange("brideName", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("brideName", e.target.value)
+                        }
                         placeholder="Sarvinoz"
                         className="mt-1"
                         required
@@ -279,27 +295,37 @@ export default function CreateInvitation() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="weddingDate" className="text-sm font-medium">
+                      <Label
+                        htmlFor="weddingDate"
+                        className="text-sm font-medium"
+                      >
                         To'y Sanasi *
                       </Label>
                       <Input
                         id="weddingDate"
                         type="date"
                         value={formData.weddingDate}
-                        onChange={(e) => handleInputChange("weddingDate", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("weddingDate", e.target.value)
+                        }
                         className="mt-1"
                         required
                       />
                     </div>
                     <div>
-                      <Label htmlFor="weddingTime" className="text-sm font-medium">
+                      <Label
+                        htmlFor="weddingTime"
+                        className="text-sm font-medium"
+                      >
                         Vaqt
                       </Label>
                       <Input
                         id="weddingTime"
                         type="time"
                         value={formData.weddingTime}
-                        onChange={(e) => handleInputChange("weddingTime", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("weddingTime", e.target.value)
+                        }
                         className="mt-1"
                       />
                     </div>
@@ -312,7 +338,9 @@ export default function CreateInvitation() {
                     <Input
                       id="venue"
                       value={formData.venue}
-                      onChange={(e) => handleInputChange("venue", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("venue", e.target.value)
+                      }
                       placeholder="Atirgul Bog'i"
                       className="mt-1"
                       required
@@ -326,7 +354,9 @@ export default function CreateInvitation() {
                     <Input
                       id="address"
                       value={formData.address}
-                      onChange={(e) => handleInputChange("address", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("address", e.target.value)
+                      }
                       placeholder="Toshkent sh., Yunusobod t., Bog' ko'chasi 123"
                       className="mt-1"
                       required
@@ -341,7 +371,9 @@ export default function CreateInvitation() {
                       <Input
                         id="city"
                         value={formData.city}
-                        onChange={(e) => handleInputChange("city", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("city", e.target.value)
+                        }
                         placeholder="Toshkent"
                         className="mt-1"
                       />
@@ -353,7 +385,9 @@ export default function CreateInvitation() {
                       <Input
                         id="state"
                         value={formData.state}
-                        onChange={(e) => handleInputChange("state", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("state", e.target.value)
+                        }
                         placeholder="Toshkent viloyati"
                         className="mt-1"
                       />
@@ -365,7 +399,9 @@ export default function CreateInvitation() {
                       <Input
                         id="zipCode"
                         value={formData.zipCode}
-                        onChange={(e) => handleInputChange("zipCode", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("zipCode", e.target.value)
+                        }
                         placeholder="100000"
                         className="mt-1"
                       />
@@ -373,13 +409,18 @@ export default function CreateInvitation() {
                   </div>
 
                   <div>
-                    <Label htmlFor="customMessage" className="text-sm font-medium">
+                    <Label
+                      htmlFor="customMessage"
+                      className="text-sm font-medium"
+                    >
                       Maxsus Xabar
                     </Label>
                     <Textarea
                       id="customMessage"
                       value={formData.customMessage}
-                      onChange={(e) => handleInputChange("customMessage", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("customMessage", e.target.value)
+                      }
                       placeholder="Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz."
                       className="mt-1"
                       rows={3}
@@ -387,14 +428,19 @@ export default function CreateInvitation() {
                   </div>
 
                   <div>
-                    <Label htmlFor="rsvpDeadline" className="text-sm font-medium">
+                    <Label
+                      htmlFor="rsvpDeadline"
+                      className="text-sm font-medium"
+                    >
                       RSVP Muddati
                     </Label>
                     <Input
                       id="rsvpDeadline"
                       type="date"
                       value={formData.rsvpDeadline}
-                      onChange={(e) => handleInputChange("rsvpDeadline", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("rsvpDeadline", e.target.value)
+                      }
                       className="mt-1"
                     />
                   </div>
@@ -414,7 +460,11 @@ export default function CreateInvitation() {
                     {templateCategories.map((category) => (
                       <Button
                         key={category.id}
-                        variant={selectedCategory === category.id ? "default" : "outline"}
+                        variant={
+                          selectedCategory === category.id
+                            ? "default"
+                            : "outline"
+                        }
                         size="sm"
                         onClick={() => setSelectedCategory(category.id)}
                         className="text-xs"
@@ -430,7 +480,9 @@ export default function CreateInvitation() {
                   {templates.map((template) => (
                     <button
                       key={template.id}
-                      onClick={() => handleInputChange("selectedTemplate", template.id)}
+                      onClick={() =>
+                        handleInputChange("selectedTemplate", template.id)
+                      }
                       className={`p-3 border rounded-lg text-left transition-all hover:shadow-md ${
                         formData.selectedTemplate === template.id
                           ? "border-blue-500 bg-blue-50 ring-2 ring-blue-200"
@@ -439,12 +491,19 @@ export default function CreateInvitation() {
                     >
                       <div
                         className="aspect-[3/4] mb-2 rounded-md flex items-center justify-center text-2xl"
-                        style={{ backgroundColor: template.colors.background, color: template.colors.primary }}
+                        style={{
+                          backgroundColor: template.colors.background,
+                          color: template.colors.primary,
+                        }}
                       >
                         {template.preview}
                       </div>
-                      <div className="text-xs font-medium text-slate-700">{template.name}</div>
-                      <div className="text-xs text-slate-500">{template.category}</div>
+                      <div className="text-xs font-medium text-slate-700">
+                        {template.name}
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        {template.category}
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -475,25 +534,34 @@ export default function CreateInvitation() {
                 ) : (
                   <div className="space-y-3">
                     {guests.map((guest) => (
-                      <div key={guest.id} className="flex gap-3 items-center p-3 border border-slate-200 rounded-lg">
+                      <div
+                        key={guest.id}
+                        className="flex gap-3 items-center p-3 border border-slate-200 rounded-lg"
+                      >
                         <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-2">
                           <Input
                             placeholder="Ism"
                             value={guest.name}
-                            onChange={(e) => updateGuest(guest.id, "name", e.target.value)}
+                            onChange={(e) =>
+                              updateGuest(guest.id, "name", e.target.value)
+                            }
                             className="text-sm"
                           />
                           <Input
                             placeholder="Email"
                             type="email"
                             value={guest.email}
-                            onChange={(e) => updateGuest(guest.id, "email", e.target.value)}
+                            onChange={(e) =>
+                              updateGuest(guest.id, "email", e.target.value)
+                            }
                             className="text-sm"
                           />
                           <Input
                             placeholder="Telefon"
                             value={guest.phone}
-                            onChange={(e) => updateGuest(guest.id, "phone", e.target.value)}
+                            onChange={(e) =>
+                              updateGuest(guest.id, "phone", e.target.value)
+                            }
                             className="text-sm"
                           />
                         </div>
@@ -519,7 +587,7 @@ export default function CreateInvitation() {
                   <Eye className="w-5 h-5 text-blue-500" />
                   Oldindan Ko'rish
                 </h2>
-                
+
                 <div className="border border-slate-200 rounded-lg overflow-hidden">
                   <TemplateRenderer
                     invitation={getMockInvitationData()}
@@ -548,7 +616,9 @@ export default function CreateInvitation() {
           <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Taklifnoma Oldindan Ko'rish</h3>
+                <h3 className="text-lg font-semibold">
+                  Taklifnoma Oldindan Ko'rish
+                </h3>
                 <Button
                   onClick={() => setPreviewOpen(false)}
                   variant="ghost"

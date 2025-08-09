@@ -1,5 +1,5 @@
-import { supabase } from './supabase';
-import { toast } from 'sonner';
+import { supabase } from "./supabase";
+import { toast } from "sonner";
 
 export interface InvitationFormData {
   groomName: string;
@@ -19,12 +19,11 @@ export interface InvitationFormData {
 export const saveInvitationToSupabase = async (
   user: any,
   formData: InvitationFormData,
-  slug: string
+  slug: string,
 ): Promise<{ success: boolean; error?: string; data?: any }> => {
-  
   // Always dismiss any existing saving toast
   toast.dismiss("saving-invitation");
-  
+
   // Input validation
   if (!user?.id) {
     toast.error("❌ Xatolik", {
@@ -47,7 +46,10 @@ export const saveInvitationToSupabase = async (
       description: `Quyidagi maydonlarni to'ldiring: ${missingFields.join(", ")}`,
       duration: 4000,
     });
-    return { success: false, error: `Missing fields: ${missingFields.join(", ")}` };
+    return {
+      success: false,
+      error: `Missing fields: ${missingFields.join(", ")}`,
+    };
   }
 
   // Show loading toast
@@ -60,7 +62,7 @@ export const saveInvitationToSupabase = async (
   const retryWithBackoff = async <T>(
     fn: () => Promise<T>,
     maxRetries: number = 3,
-    baseDelay: number = 1000
+    baseDelay: number = 1000,
   ): Promise<T> => {
     for (let i = 0; i < maxRetries; i++) {
       try {
@@ -69,11 +71,13 @@ export const saveInvitationToSupabase = async (
         if (i === maxRetries - 1) throw error;
 
         const delay = baseDelay * Math.pow(2, i);
-        console.log(`Invitation retry ${i + 1}/${maxRetries} after ${delay}ms...`);
-        await new Promise(resolve => setTimeout(resolve, delay));
+        console.log(
+          `Invitation retry ${i + 1}/${maxRetries} after ${delay}ms...`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
-    throw new Error('Max retries exceeded');
+    throw new Error("Max retries exceeded");
   };
 
   try {
@@ -95,25 +99,32 @@ export const saveInvitationToSupabase = async (
       is_active: true,
     };
 
-    console.log("📤 Saving invitation to Supabase with retry logic...", invitationToSave);
+    console.log(
+      "📤 Saving invitation to Supabase with retry logic...",
+      invitationToSave,
+    );
 
     // Try to save with retry logic and longer timeout
-    const { data, error } = await retryWithBackoff(async () => {
-      // Create a promise that will timeout after 25 seconds for invitations
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => {
-          reject(new Error('Invitation operation timeout after 25 seconds'));
-        }, 25000); // Longer timeout for invitations
-      });
+    const { data, error } = await retryWithBackoff(
+      async () => {
+        // Create a promise that will timeout after 25 seconds for invitations
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          setTimeout(() => {
+            reject(new Error("Invitation operation timeout after 25 seconds"));
+          }, 25000); // Longer timeout for invitations
+        });
 
-      const savePromise = supabase
-        .from("invitations")
-        .insert(invitationToSave)
-        .select()
-        .single();
+        const savePromise = supabase
+          .from("invitations")
+          .insert(invitationToSave)
+          .select()
+          .single();
 
-      return Promise.race([savePromise, timeoutPromise]);
-    }, 3, 2000); // 3 retries with 2 second base delay
+        return Promise.race([savePromise, timeoutPromise]);
+      },
+      3,
+      2000,
+    ); // 3 retries with 2 second base delay
 
     if (error) {
       throw error;
@@ -128,7 +139,6 @@ export const saveInvitationToSupabase = async (
 
     console.log("✅ Invitation saved successfully:", data);
     return { success: true, data };
-
   } catch (err: any) {
     console.error("Invitation save error:", err);
     toast.dismiss("saving-invitation");
@@ -136,9 +146,10 @@ export const saveInvitationToSupabase = async (
     // Try localStorage fallback regardless of error type
     const fallbackResult = saveInvitationToLocalStorage(user, formData, slug);
 
-    if (err.message?.includes('timeout') || err.message?.includes('Timeout')) {
+    if (err.message?.includes("timeout") || err.message?.includes("Timeout")) {
       toast.warning("⚠️ Vaqt tugadi", {
-        description: "Taklifnoma mahalliy xotiraga saqlandi. Keyinroq internet orqali sinxronlanadi.",
+        description:
+          "Taklifnoma mahalliy xotiraga saqlandi. Keyinroq internet orqali sinxronlanadi.",
         duration: 6000,
       });
     } else {
@@ -152,7 +163,7 @@ export const saveInvitationToSupabase = async (
     return {
       success: true, // Return success since we saved to localStorage
       error: err?.message,
-      data: fallbackResult.data
+      data: fallbackResult.data,
     };
   }
 };
@@ -160,9 +171,8 @@ export const saveInvitationToSupabase = async (
 export const saveInvitationToLocalStorage = (
   user: any,
   formData: InvitationFormData,
-  slug: string
+  slug: string,
 ): { success: boolean; data: any } => {
-  
   const fallbackInvitation = {
     id: `local_${Date.now()}`,
     user_id: user.id,
@@ -187,7 +197,7 @@ export const saveInvitationToLocalStorage = (
   try {
     localStorage.setItem(
       `invitation_${fallbackInvitation.id}`,
-      JSON.stringify(fallbackInvitation)
+      JSON.stringify(fallbackInvitation),
     );
 
     // Update local count

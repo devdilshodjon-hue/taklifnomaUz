@@ -1,5 +1,5 @@
-import { supabase } from './supabase';
-import { toast } from 'sonner';
+import { supabase } from "./supabase";
+import { toast } from "sonner";
 
 export interface TemplateData {
   templateName: string;
@@ -23,7 +23,7 @@ export interface TemplateConfig {
 const retryWithBackoff = async <T>(
   fn: () => Promise<T>,
   maxRetries: number = 3,
-  baseDelay: number = 1000
+  baseDelay: number = 1000,
 ): Promise<T> => {
   for (let i = 0; i < maxRetries; i++) {
     try {
@@ -33,18 +33,17 @@ const retryWithBackoff = async <T>(
 
       const delay = baseDelay * Math.pow(2, i);
       console.log(`Retry ${i + 1}/${maxRetries} after ${delay}ms...`);
-      await new Promise(resolve => setTimeout(resolve, delay));
+      await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
-  throw new Error('Max retries exceeded');
+  throw new Error("Max retries exceeded");
 };
 
 export const saveTemplateToSupabase = async (
   user: any,
   templateData: TemplateData,
-  config: TemplateConfig
+  config: TemplateConfig,
 ): Promise<{ success: boolean; error?: string; data?: any }> => {
-
   // Always dismiss any existing saving toast
   toast.dismiss("saving-template");
 
@@ -87,25 +86,32 @@ export const saveTemplateToSupabase = async (
       is_active: true,
     };
 
-    console.log("📤 Saving template to Supabase with retry logic...", templateToSave);
+    console.log(
+      "📤 Saving template to Supabase with retry logic...",
+      templateToSave,
+    );
 
     // Try to save with retry logic and longer timeout
-    const { data, error } = await retryWithBackoff(async () => {
-      // Create a promise that will timeout after 20 seconds
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => {
-          reject(new Error('Operation timeout after 20 seconds'));
-        }, 20000); // Increased to 20 seconds
-      });
+    const { data, error } = await retryWithBackoff(
+      async () => {
+        // Create a promise that will timeout after 20 seconds
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          setTimeout(() => {
+            reject(new Error("Operation timeout after 20 seconds"));
+          }, 20000); // Increased to 20 seconds
+        });
 
-      const savePromise = supabase
-        .from("custom_templates")
-        .insert(templateToSave)
-        .select()
-        .single();
+        const savePromise = supabase
+          .from("custom_templates")
+          .insert(templateToSave)
+          .select()
+          .single();
 
-      return Promise.race([savePromise, timeoutPromise]);
-    }, 3, 2000); // 3 retries with 2 second base delay
+        return Promise.race([savePromise, timeoutPromise]);
+      },
+      3,
+      2000,
+    ); // 3 retries with 2 second base delay
 
     if (error) {
       throw error;
@@ -120,17 +126,21 @@ export const saveTemplateToSupabase = async (
 
     console.log("✅ Template saved successfully:", data);
     return { success: true, data };
-
   } catch (err: any) {
     console.error("Template save error after retries:", err);
     toast.dismiss("saving-template");
 
     // Try localStorage fallback regardless of error type
-    const fallbackResult = saveTemplateToLocalStorage(user, templateData, config);
+    const fallbackResult = saveTemplateToLocalStorage(
+      user,
+      templateData,
+      config,
+    );
 
-    if (err.message?.includes('timeout') || err.message?.includes('Timeout')) {
+    if (err.message?.includes("timeout") || err.message?.includes("Timeout")) {
       toast.warning("⚠️ Vaqt tugadi", {
-        description: "Shablon mahalliy xotiraga saqlandi. Keyinroq internet orqali sinxronlanadi.",
+        description:
+          "Shablon mahalliy xotiraga saqlandi. Keyinroq internet orqali sinxronlanadi.",
         duration: 6000,
       });
     } else {
@@ -144,7 +154,7 @@ export const saveTemplateToSupabase = async (
     return {
       success: true, // Return success since we saved to localStorage
       error: err?.message,
-      data: fallbackResult.data
+      data: fallbackResult.data,
     };
   }
 };
@@ -152,9 +162,8 @@ export const saveTemplateToSupabase = async (
 export const saveTemplateToLocalStorage = (
   user: any,
   templateData: TemplateData,
-  config: TemplateConfig
+  config: TemplateConfig,
 ): { success: boolean; data: any } => {
-  
   const fallbackTemplate = {
     id: `local_${Date.now()}`,
     name: templateData.templateName,
@@ -175,7 +184,7 @@ export const saveTemplateToLocalStorage = (
   try {
     localStorage.setItem(
       `custom_template_${fallbackTemplate.id}`,
-      JSON.stringify(fallbackTemplate)
+      JSON.stringify(fallbackTemplate),
     );
 
     console.log("✅ Template saved to localStorage:", fallbackTemplate);

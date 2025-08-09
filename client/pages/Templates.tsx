@@ -109,16 +109,6 @@ export default function Templates() {
       <Navigation showBackButton className="animate-slide-up" />
 
       <div className="max-w-6xl mx-auto p-6">
-        {/* Database Status Alert */}
-        {dbStatus === false && (
-          <Alert className="mb-6 border-orange-200 bg-orange-50">
-            <AlertCircle className="h-4 w-4 text-orange-600" />
-            <AlertDescription className="text-orange-800">
-              Ma'lumotlar bazasi ulangan emas. Default shablonlar ishlatilmoqda.
-              To'liq funksionallik uchun ma'lumotlar bazasini sozlang.
-            </AlertDescription>
-          </Alert>
-        )}
 
         {/* Error Alert */}
         {error && (

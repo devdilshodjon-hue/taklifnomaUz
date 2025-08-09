@@ -1,16 +1,16 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import cacheUtils, { cachedFetch, CACHE_TIMES, CACHE_TAGS } from "./cache";
 
-// Use environment variables or fallback to hardcoded values
+// Use environment variables or fallback to working hardcoded values
 const supabaseUrl =
   import.meta.env.VITE_SUPABASE_URL ||
   import.meta.env.NEXT_PUBLIC_SUPABASE_URL ||
-  "https://xjyqbhzekfvhebcgtlmz.supabase.co";
+  "https://tcilxdkolqodtgowlgrh.supabase.co";
 
 const supabaseAnonKey =
   import.meta.env.VITE_SUPABASE_ANON_KEY ||
   import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqeXFiaHpla2Z2aGViY2d0bG16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU2NDQwMzksImV4cCI6MjA3MTIyMDAzOX0.LyEqsexGFKWiQYMYlxAhDGlJ_QsKAn0oGW2lE7V4r1I";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjaWx4ZGtvbHFvZHRnb3dsZ3JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2NTM1NTEsImV4cCI6MjA3MDIyOTU1MX0.9LFErrgcBMKQVOrl0lndUfBXMdAWmq6206sbBzgk32A";
 
 // Simplified Supabase client configuration
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {

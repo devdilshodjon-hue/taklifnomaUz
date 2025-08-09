@@ -67,6 +67,48 @@ export const testConnection = async (): Promise<boolean> => {
   }
 };
 
+// Wrapper function to handle permission errors gracefully
+export const safeSupabaseOperation = async <T>(
+  operation: () => Promise<{ data: T; error: any }>
+): Promise<{ data: T | null; error: any; isPermissionError: boolean }> => {
+  try {
+    const result = await operation();
+
+    if (result.error) {
+      const isPermissionError =
+        result.error.message?.includes("permission denied") ||
+        result.error.message?.includes("schema public") ||
+        result.error.code === "42501";
+
+      console.warn("⚠️ Supabase operation failed:", result.error.message);
+
+      return {
+        data: null,
+        error: result.error,
+        isPermissionError
+      };
+    }
+
+    return {
+      data: result.data,
+      error: null,
+      isPermissionError: false
+    };
+  } catch (error: any) {
+    const isPermissionError =
+      error.message?.includes("permission denied") ||
+      error.message?.includes("schema public");
+
+    console.warn("⚠️ Supabase operation error:", error.message);
+
+    return {
+      data: null,
+      error: error,
+      isPermissionError
+    };
+  }
+};
+
 // Test connection on initialization (non-blocking)
 testConnection();
 

@@ -57,6 +57,10 @@ export const testSupabaseConnection = async (): Promise<boolean> => {
         .limit(1);
         
       if (profileError) {
+        // Suppress permission errors
+        if (profileError.message?.includes("permission denied") || profileError.message?.includes("schema public")) {
+          return false; // Silent fallback to localStorage
+        }
         console.error("❌ Supabase connection failed:", profileError.message);
         return false;
       }

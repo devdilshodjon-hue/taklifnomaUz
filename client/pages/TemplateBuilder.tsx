@@ -199,7 +199,7 @@ export default function TemplateBuilder() {
     },
     {
       name: "Klassik Qora",
-      emoji: "��",
+      emoji: "🖤",
       colors: {
         primary: "#1f2937",
         secondary: "#6b7280",
@@ -386,6 +386,19 @@ export default function TemplateBuilder() {
 
       console.log("📋 Template data to save:", templateToSave);
 
+      // Test Supabase connection first
+      console.log("🔗 Testing Supabase connection...");
+      try {
+        const { data: testData, error: testError } = await supabase
+          .from("custom_templates")
+          .select("id")
+          .limit(1);
+        console.log("🔗 Connection test:", { testData, testError });
+      } catch (connErr) {
+        console.error("🔗 Connection test failed:", connErr);
+      }
+
+      console.log("📤 Attempting insert...");
       const { data, error: saveError } = await supabase
         .from("custom_templates")
         .insert(templateToSave)

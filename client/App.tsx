@@ -16,7 +16,7 @@ import Settings from "./pages/Settings";
 import CreateInvitation from "./pages/CreateInvitation";
 import InvitationView from "./pages/InvitationView";
 import Templates from "./pages/Templates";
-import TemplateBuilderOptimized from "./pages/TemplateBuilderOptimized";
+import TemplateBuilder from "./pages/TemplateBuilder";
 import Pricing from "./pages/Pricing";
 import Features from "./pages/Features";
 import Privacy from "./pages/Privacy";

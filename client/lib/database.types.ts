@@ -172,7 +172,7 @@ export interface Database {
           category: string;
           colors: Json;
           fonts: Json;
-          layout_config: Json;
+          config: Json;
           preview_image_url: string | null;
           is_public: boolean;
           is_featured: boolean;

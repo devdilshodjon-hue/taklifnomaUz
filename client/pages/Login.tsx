@@ -43,8 +43,12 @@ export default function Login() {
     const { error } = await signIn(email, password);
 
     if (error) {
-      // Check if it's a network error
-      if (error.message?.includes('Internet ulanishi') || error.message?.includes('Failed to fetch')) {
+      // Report network error for status tracking
+      if (error.message?.includes('Internet ulanishi') ||
+          error.message?.includes('Failed to fetch') ||
+          error.message?.includes('Timeout') ||
+          error.message?.includes('ulanish')) {
+        reportNetworkError();
         setError(`${error.message} Demo rejimda davom etishingiz mumkin.`);
       } else {
         setError(error.message);

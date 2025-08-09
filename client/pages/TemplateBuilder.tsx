@@ -504,13 +504,13 @@ export default function TemplateBuilder() {
 
             {/* Names with real-time updates */}
             <div className="space-y-3">
-              <h1 className={`${previewDevice === 'mobile' ? 'text-xl' : 'text-2xl md:text-3xl'} font-bold tracking-wide transition-all duration-300`} style={headingStyle}>
+              <h1 className={`${previewDevice === 'mobile' ? 'text-2xl' : 'text-3xl md:text-4xl'} font-bold tracking-wide transition-all duration-300`} style={headingStyle}>
                 {templateData.groomName}
               </h1>
-              <div className="text-3xl" style={accentStyle}>
+              <div className={`${previewDevice === 'mobile' ? 'text-3xl' : 'text-4xl'}`} style={accentStyle}>
                 &
               </div>
-              <h1 className={`${previewDevice === 'mobile' ? 'text-xl' : 'text-2xl md:text-3xl'} font-bold tracking-wide transition-all duration-300`} style={headingStyle}>
+              <h1 className={`${previewDevice === 'mobile' ? 'text-2xl' : 'text-3xl md:text-4xl'} font-bold tracking-wide transition-all duration-300`} style={headingStyle}>
                 {templateData.brideName}
               </h1>
             </div>

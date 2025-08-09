@@ -577,14 +577,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password: string,
     metadata?: { first_name?: string; last_name?: string },
   ) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: metadata,
-      },
-    });
-    return { error };
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: metadata,
+        },
+      });
+      return { error };
+    } catch (networkError: any) {
+      console.error("Network error during sign up:", networkError);
+
+      if (networkError.name === 'AbortError') {
+        return { error: { message: "Ulanish vaqti tugadi. Iltimos, qayta urinib ko'ring." } as any };
+      }
+
+      if (networkError.message?.includes('Failed to fetch')) {
+        return { error: { message: "Internet ulanishi bilan muammo. Iltimos, ulanishni tekshiring." } as any };
+      }
+
+      return { error: { message: "Ro'yxatdan o'tishda xatolik. Qayta urinib ko'ring." } as any };
+    }
   };
 
   const signIn = async (email: string, password: string) => {

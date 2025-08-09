@@ -588,11 +588,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    return { error };
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      return { error };
+    } catch (networkError: any) {
+      console.error("Network error during sign in:", networkError);
+
+      // Handle network errors gracefully
+      if (networkError.name === 'AbortError') {
+        return { error: { message: "Ulanish vaqti tugadi. Iltimos, qayta urinib ko'ring." } as any };
+      }
+
+      if (networkError.message?.includes('Failed to fetch')) {
+        return { error: { message: "Internet ulanishi bilan muammo. Iltimos, ulanishni tekshiring." } as any };
+      }
+
+      return { error: { message: "Tizimga kirishda xatolik. Qayta urinib ko'ring." } as any };
+    }
   };
 
   const signInWithGoogle = async () => {

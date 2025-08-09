@@ -70,6 +70,9 @@ export default function Templates() {
 
     try {
       console.log("🔄 Shablonlarni yuklamoqda...");
+      console.log("👤 User:", !!user, user?.id);
+      console.log("📋 Session:", !!session, session?.user?.id);
+      console.log("📋 Profile:", !!profile, profile?.id);
 
       // Start with default templates
       let allTemplates: ExtendedTemplate[] = [...defaultWeddingTemplates];
@@ -151,7 +154,7 @@ export default function Templates() {
             ];
           }
         } catch (publicErr) {
-          console.warn("⚠��� Public templates yuklanmadi:", publicErr);
+          console.warn("⚠️ Public templates yuklanmadi:", publicErr);
         }
       }
 

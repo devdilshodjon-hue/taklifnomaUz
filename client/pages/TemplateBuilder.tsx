@@ -550,19 +550,19 @@ export default function TemplateBuilder() {
                 style={{ backgroundColor: config.colors.accent }}
               />
               <div
-                className={`${previewDevice === 'mobile' ? 'text-base' : 'text-lg'} font-medium transition-all duration-300`}
+                className={`${previewDevice === 'mobile' ? 'text-lg' : 'text-xl'} font-medium transition-all duration-300`}
                 style={{ color: config.colors.primary }}
               >
                 {templateData.venue}
               </div>
-              <div className={`${previewDevice === 'mobile' ? 'text-xs' : 'text-sm'} leading-relaxed transition-all duration-300`} style={{ color: config.colors.secondary }}>
+              <div className={`${previewDevice === 'mobile' ? 'text-sm' : 'text-base'} leading-relaxed transition-all duration-300`} style={{ color: config.colors.secondary }}>
                 {templateData.address}
               </div>
             </div>
 
             {/* Message with real-time updates */}
             <div
-              className={`${previewDevice === 'mobile' ? 'text-xs px-2' : 'text-sm px-4'} leading-relaxed italic transition-all duration-300`}
+              className={`${previewDevice === 'mobile' ? 'text-sm px-3' : 'text-base px-6'} leading-relaxed italic transition-all duration-300`}
               style={{ color: config.colors.text }}
             >
               "{templateData.customMessage}"

@@ -18,7 +18,6 @@ export default function Templates() {
   const [showPreview, setShowPreview] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [dbStatus, setDbStatus] = useState<boolean | null>(null);
 
   // Load templates on component mount
   useEffect(() => {

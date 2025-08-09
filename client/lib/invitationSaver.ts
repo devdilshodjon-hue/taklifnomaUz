@@ -95,16 +95,25 @@ export const saveInvitationToSupabase = async (
       is_active: true,
     };
 
-    console.log("📤 Saving invitation to Supabase...", invitationToSave);
+    console.log("📤 Saving invitation to Supabase with retry logic...", invitationToSave);
 
-    // Race between save operation and timeout
-    const savePromise = supabase
-      .from("invitations")
-      .insert(invitationToSave)
-      .select()
-      .single();
+    // Try to save with retry logic and longer timeout
+    const { data, error } = await retryWithBackoff(async () => {
+      // Create a promise that will timeout after 25 seconds for invitations
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => {
+          reject(new Error('Invitation operation timeout after 25 seconds'));
+        }, 25000); // Longer timeout for invitations
+      });
 
-    const { data, error } = await Promise.race([savePromise, timeoutPromise]);
+      const savePromise = supabase
+        .from("invitations")
+        .insert(invitationToSave)
+        .select()
+        .single();
+
+      return Promise.race([savePromise, timeoutPromise]);
+    }, 3, 2000); // 3 retries with 2 second base delay
 
     if (error) {
       throw error;

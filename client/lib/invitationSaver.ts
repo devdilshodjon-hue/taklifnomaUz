@@ -187,24 +187,30 @@ export const saveInvitationToSupabase = async (
     }
 
   } catch (err: any) {
-    console.error("❌ Invitation save process failed:", err);
-    
-    // Fallback to localStorage
-    const fallbackResult = saveInvitationToLocalStorage(user, formData, slug);
-    
-    toast.dismiss("saving-invitation");
-    
-    if (err.message?.includes("6 soniyalik vaqt tugadi")) {
-      toast.warning("⚠️ Vaqt tugadi", {
-        description: "Taklifnoma mahalliy xotiraga saqlandi",
-        duration: 6000,
+    console.error("❌ Unexpected error in invitation save process:", err);
+
+    // Emergency fallback - this should rarely be reached now
+    let fallbackResult;
+    try {
+      fallbackResult = saveInvitationToLocalStorage(user, formData, slug);
+    } catch (localErr) {
+      console.error("❌ Even localStorage failed:", localErr);
+      toast.dismiss("saving-invitation");
+      toast.error("❌ Taklifnoma saqlash muvaffaqiyatsiz", {
+        description: "Iltimos, qayta urinib ko'ring",
+        duration: 4000,
       });
-    } else {
-      toast.warning("⚠️ Kutilmagan xatolik", {
-        description: `Xatolik: ${err.message}. Mahalliy saqlandi.`,
-        duration: 6000,
-      });
+      return {
+        success: false,
+        error: err.message,
+      };
     }
+
+    toast.dismiss("saving-invitation");
+    toast.success("💾 Taklifnoma xavfsiz saqlandi!", {
+      description: "Ma'lumotlar mahalliy xotiraga saqlandi",
+      duration: 4000,
+    });
 
     return {
       success: true,

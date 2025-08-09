@@ -19,15 +19,35 @@ export interface TemplateConfig {
   animations: any;
 }
 
+// Retry function with exponential backoff
+const retryWithBackoff = async <T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  baseDelay: number = 1000
+): Promise<T> => {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+
+      const delay = baseDelay * Math.pow(2, i);
+      console.log(`Retry ${i + 1}/${maxRetries} after ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+  throw new Error('Max retries exceeded');
+};
+
 export const saveTemplateToSupabase = async (
   user: any,
   templateData: TemplateData,
   config: TemplateConfig
 ): Promise<{ success: boolean; error?: string; data?: any }> => {
-  
+
   // Always dismiss any existing saving toast
   toast.dismiss("saving-template");
-  
+
   // Input validation
   if (!user?.id) {
     toast.error("❌ Xatolik", {
@@ -51,13 +71,6 @@ export const saveTemplateToSupabase = async (
     id: "saving-template",
   });
 
-  // Create timeout promise
-  const timeoutPromise = new Promise<never>((_, reject) => {
-    setTimeout(() => {
-      reject(new Error('Timeout'));
-    }, 10000); // 10 second timeout
-  });
-
   try {
     const templateToSave = {
       user_id: user.id,
@@ -74,16 +87,25 @@ export const saveTemplateToSupabase = async (
       is_active: true,
     };
 
-    console.log("📤 Saving template to Supabase...", templateToSave);
+    console.log("📤 Saving template to Supabase with retry logic...", templateToSave);
 
-    // Race between save operation and timeout
-    const savePromise = supabase
-      .from("custom_templates")
-      .insert(templateToSave)
-      .select()
-      .single();
+    // Try to save with retry logic and longer timeout
+    const { data, error } = await retryWithBackoff(async () => {
+      // Create a promise that will timeout after 20 seconds
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => {
+          reject(new Error('Operation timeout after 20 seconds'));
+        }, 20000); // Increased to 20 seconds
+      });
 
-    const { data, error } = await Promise.race([savePromise, timeoutPromise]);
+      const savePromise = supabase
+        .from("custom_templates")
+        .insert(templateToSave)
+        .select()
+        .single();
+
+      return Promise.race([savePromise, timeoutPromise]);
+    }, 3, 2000); // 3 retries with 2 second base delay
 
     if (error) {
       throw error;
@@ -100,33 +122,29 @@ export const saveTemplateToSupabase = async (
     return { success: true, data };
 
   } catch (err: any) {
-    console.error("Template save error:", err);
+    console.error("Template save error after retries:", err);
     toast.dismiss("saving-template");
 
-    // Handle different error types
-    if (err.message === 'Timeout') {
-      // Try localStorage fallback on timeout
-      const fallbackResult = saveTemplateToLocalStorage(user, templateData, config);
+    // Try localStorage fallback regardless of error type
+    const fallbackResult = saveTemplateToLocalStorage(user, templateData, config);
+
+    if (err.message?.includes('timeout') || err.message?.includes('Timeout')) {
       toast.warning("⚠️ Vaqt tugadi", {
-        description: "Shablon mahalliy xotiraga saqlandi",
-        duration: 5000,
+        description: "Shablon mahalliy xotiraga saqlandi. Keyinroq internet orqali sinxronlanadi.",
+        duration: 6000,
       });
-      return fallbackResult;
+    } else {
+      const errorMessage = err?.message || "Noma'lum xatolik";
+      toast.warning("⚠️ Shablon mahalliy xotiraga saqlandi", {
+        description: `Bazaga ulanib bo'lmadi: ${errorMessage}`,
+        duration: 6000,
+      });
     }
 
-    // For other errors, also fallback to localStorage
-    const fallbackResult = saveTemplateToLocalStorage(user, templateData, config);
-    
-    const errorMessage = err?.message || "Noma'lum xatolik";
-    toast.warning("⚠️ Shablon mahalliy xotiraga saqlandi", {
-      description: `Bazaga ulanib bo'lmadi: ${errorMessage}`,
-      duration: 5000,
-    });
-
-    return { 
-      success: false, 
-      error: errorMessage,
-      data: fallbackResult.data 
+    return {
+      success: true, // Return success since we saved to localStorage
+      error: err?.message,
+      data: fallbackResult.data
     };
   }
 };

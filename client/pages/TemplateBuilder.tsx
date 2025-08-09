@@ -393,7 +393,7 @@ export default function TemplateBuilder() {
           category: "custom",
           colors: config.colors,
           fonts: config.fonts,
-          layout_config: config,
+          config: config,
           is_public: false,
           is_featured: false,
           usage_count: 0,

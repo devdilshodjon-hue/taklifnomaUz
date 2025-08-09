@@ -1048,8 +1048,10 @@ export default function TemplateBuilder() {
                     </div>
                   </div>
 
-                  <div className="border border-border rounded-lg p-6 bg-gradient-to-br from-muted/30 to-card min-h-[600px] flex items-center justify-center">
-                    <TemplatePreview />
+                  <div className="border border-border rounded-lg p-8 bg-gradient-to-br from-muted/30 to-card min-h-[700px] flex items-center justify-center">
+                    <div className="w-full max-w-lg">
+                      <TemplatePreview />
+                    </div>
                   </div>
 
                   <div className="flex gap-2 mt-4">

@@ -456,4 +456,3 @@ templateManager.initializeLocalStorage();
 
 // Backward compatibility exports
 export const weddingTemplates = defaultWeddingTemplates;
-export { templateCategories };

@@ -5,12 +5,12 @@ import cacheUtils, { cachedFetch, CACHE_TIMES, CACHE_TAGS } from "./cache";
 const supabaseUrl =
   import.meta.env.VITE_SUPABASE_URL ||
   import.meta.env.NEXT_PUBLIC_SUPABASE_URL ||
-  "https://tcilxdkolqodtgowlgrh.supabase.co";
+  "https://xjyqbhzekfvhebcgtlmz.supabase.co";
 
 const supabaseAnonKey =
   import.meta.env.VITE_SUPABASE_ANON_KEY ||
   import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjaWx4ZGtvbHFvZHRnb3dsZ3JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2NTM1NTEsImV4cCI6MjA3MDIyOTU1MX0.9LFErrgcBMKQVOrl0lndUfBXMdAWmq6206sbBzgk32A";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqeXFiaHpla2Z2aGViY2d0bG16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU2NDQwMzksImV4cCI6MjA3MTIyMDAzOX0.LyEqsexGFKWiQYMYlxAhDGlJ_QsKAn0oGW2lE7V4r1I";
 
 // Enhanced Supabase client with performance optimizations
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {

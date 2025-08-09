@@ -71,7 +71,11 @@ export const testSupabaseConnection = async (): Promise<boolean> => {
     
     console.log("✅ Supabase connection successful:", data);
     return true;
-  } catch (err) {
+  } catch (err: any) {
+    // Suppress permission errors
+    if (err.message?.includes("permission denied") || err.message?.includes("schema public")) {
+      return false; // Silent fallback
+    }
     console.error("❌ Supabase connection error:", err);
     return false;
   }

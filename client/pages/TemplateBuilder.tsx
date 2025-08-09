@@ -89,6 +89,7 @@ export default function TemplateBuilder() {
   const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">(
     "desktop",
   );
+  const [fullScreenPreview, setFullScreenPreview] = useState(false);
 
   // Template data for real-time preview
   const [templateData, setTemplateData] = useState<InvitationData>({

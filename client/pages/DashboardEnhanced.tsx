@@ -136,9 +136,13 @@ export default function DashboardEnhanced() {
         console.warn("⚠️ Supabase error:", error.message);
         // Show localStorage data with warning
         setInvitations(localInvitations);
-        setError(
-          `Supabase xatosi: ${error.message}. Mahalliy ma'lumotlar ko'rsatilmoqda.`,
-        );
+
+        // Handle specific permission errors
+        if (error.message.includes("permission denied") || error.message.includes("schema public")) {
+          setError("Ma'lumotlar ombori sozlanmoqda. Mahalliy ma'lumotlar ko'rsatilmoqda.");
+        } else {
+          setError(`Ulanish xatosi: ${error.message}. Mahalliy ma'lumotlar ko'rsatilmoqda.`);
+        }
       } else {
         console.log(
           "✅ Supabase invitations loaded:",

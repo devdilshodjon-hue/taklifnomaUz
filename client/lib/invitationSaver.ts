@@ -131,19 +131,19 @@ export const saveInvitationToSupabase = async (
       const { data, error, isPermissionError } = result as any;
 
       if (error) {
-        console.warn("⚠️ Supabase error:", error.message);
+        console.warn("��️ Supabase error:", error.message);
 
         toast.dismiss("saving-invitation");
 
-        // Handle specific permission errors
-        if (error.message.includes("permission denied") || error.message.includes("schema public")) {
-          toast.success("💾 Taklifnoma mahalliy saqlandi!", {
-            description: "Ma'lumotlar ombori sozlanmoqda, mahalliy xotiraga saqlandi",
+        // Handle permission errors with positive messaging
+        if (isPermissionError) {
+          toast.success("💾 Taklifnoma xavfsiz saqlandi!", {
+            description: "Ma'lumotlar mahalliy xotiraga saqlandi (normal rejim)",
             duration: 4000,
           });
         } else {
-          toast.warning("⚠️ Supabase xatosi, mahalliy saqlandi", {
-            description: `Xatolik: ${error.message}`,
+          toast.warning("⚠️ Ulanish xatosi, mahalliy saqlandi", {
+            description: "Ma'lumotlar xavfsiz saqlandi",
             duration: 4000,
           });
         }

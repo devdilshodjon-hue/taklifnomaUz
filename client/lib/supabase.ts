@@ -104,35 +104,76 @@ const connectionManager = ConnectionManager.getInstance();
 export const checkDatabaseSetup = async (): Promise<boolean> => {
   const cached = cacheUtils.getConfig("database_setup");
   if (cached !== null) {
+    console.log("📋 Using cached database setup status:", cached);
     return cached;
   }
+
+  console.log("🔍 Ma'lumotlar bazasi ulanishi va sozlamalarini tekshirmoqda...");
 
   try {
     const result = await connectionManager.executeQuery(
       "db_setup_check",
       async () => {
-        const { error } = await supabase
-          .from("invitations")
-          .select("id")
-          .limit(1);
+        // Test multiple critical tables
+        const tableTests = [
+          { name: "profiles", query: () => supabase.from("profiles").select("id").limit(1) },
+          { name: "invitations", query: () => supabase.from("invitations").select("id").limit(1) },
+          { name: "custom_templates", query: () => supabase.from("custom_templates").select("id").limit(1) },
+        ];
 
-        if (
-          (error &&
-            error.message.includes("table") &&
-            error.message.includes("does not exist")) ||
-          error.message.includes("does not exist")
-        ) {
-          return false;
+        let tablesExist = 0;
+        const tableResults = [];
+
+        for (const table of tableTests) {
+          try {
+            const { error } = await table.query();
+            if (error) {
+              if (error.message.includes("does not exist") ||
+                  (error.message.includes("table") && error.message.includes("does not exist"))) {
+                console.warn(`❌ Jadval "${table.name}" mavjud emas`);
+                tableResults.push({ name: table.name, exists: false, error: error.message });
+              } else {
+                console.log(`✅ Jadval "${table.name}" mavjud lekin kirish xatosi:`, error.message);
+                tableResults.push({ name: table.name, exists: true, error: error.message });
+                tablesExist++;
+              }
+            } else {
+              console.log(`✅ Jadval "${table.name}" mavjud va kirish mumkin`);
+              tableResults.push({ name: table.name, exists: true, error: null });
+              tablesExist++;
+            }
+          } catch (tableError) {
+            console.warn(`❌ Jadval "${table.name}" tekshirishda xatolik:`, tableError);
+            tableResults.push({ name: table.name, exists: false, error: tableError });
+          }
         }
-        return true;
+
+        const isSetup = tablesExist >= 2; // At least 2 tables should exist
+
+        console.log("🔍 Ma'lumotlar bazasi tekshiruv natijalari:", {
+          topilganJadvallar: tablesExist,
+          jami: tableTests.length,
+          sozlangan: isSetup,
+          tafsilotlar: tableResults
+        });
+
+        return isSetup;
       },
     );
 
-    // Cache result for 5 minutes
+    // Cache result for 3 minutes (shorter cache for faster updates)
     cacheUtils.setConfig("database_setup", result);
+
+    if (result) {
+      console.log("✅ Ma'lumotlar bazasi to'g'ri sozlangan");
+    } else {
+      console.log("⚠️ Ma'lumotlar bazasi sozlanmagan, fallback rejimda ishlaymiz");
+    }
+
     return result;
   } catch (error) {
-    console.log("Database tekshiruvida xatolik:", error);
+    console.error("❌ Ma'lumotlar bazasi ulanish testi muvaffaqiyatsiz:", error);
+    cacheUtils.setConfig("database_setup", false);
     return false;
   }
 };

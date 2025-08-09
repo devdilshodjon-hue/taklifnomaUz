@@ -52,7 +52,7 @@ function App() {
                     <Route path="/templates" element={<Templates />} />
                     <Route
                       path="/template-builder"
-                      element={<TemplateBuilder />}
+                      element={<TemplateBuilderOptimized />}
                     />
                     <Route path="/pricing" element={<Pricing />} />
                     <Route path="/features" element={<Features />} />

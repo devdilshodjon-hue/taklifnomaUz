@@ -370,11 +370,15 @@ export default function TemplateBuilder() {
         tags: [config.layout.style, "maxsus", "real-time"],
       };
 
+      console.log("📋 Template data to save:", templateToSave);
+
       const { data, error: saveError } = await supabase
         .from("custom_templates")
         .insert(templateToSave)
         .select()
         .single();
+
+      console.log("📤 Supabase response:", { data, error: saveError });
 
       if (saveError) {
         throw saveError;

@@ -18,12 +18,18 @@ import {
   Smartphone,
   Heart,
   Star,
+  Settings,
+  Download,
+  Share2,
+  Zap,
+  Layers,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -53,6 +59,12 @@ interface TemplateConfig {
     spacing: number;
     borderRadius: number;
     shadowIntensity: number;
+    padding: number;
+  };
+  animations: {
+    enabled: boolean;
+    type: "fade" | "slide" | "scale" | "bounce";
+    duration: number;
   };
 }
 
@@ -106,12 +118,19 @@ export default function TemplateBuilder() {
       spacing: 24,
       borderRadius: 16,
       shadowIntensity: 12,
+      padding: 32,
+    },
+    animations: {
+      enabled: true,
+      type: "fade",
+      duration: 0.5,
     },
   });
 
   const colorPresets = [
     {
       name: "Romantik Pushti",
+      emoji: "🌸",
       colors: {
         primary: "#be185d",
         secondary: "#fda4af",
@@ -122,6 +141,7 @@ export default function TemplateBuilder() {
     },
     {
       name: "Zamonaviy Ko'k",
+      emoji: "💙",
       colors: {
         primary: "#2563eb",
         secondary: "#60a5fa",
@@ -132,6 +152,7 @@ export default function TemplateBuilder() {
     },
     {
       name: "Zarhal Oltin",
+      emoji: "✨",
       colors: {
         primary: "#d97706",
         secondary: "#fbbf24",
@@ -142,6 +163,7 @@ export default function TemplateBuilder() {
     },
     {
       name: "Tabiat Yashil",
+      emoji: "🌿",
       colors: {
         primary: "#059669",
         secondary: "#34d399",
@@ -152,6 +174,7 @@ export default function TemplateBuilder() {
     },
     {
       name: "Hashamatli Binafsha",
+      emoji: "💜",
       colors: {
         primary: "#7c3aed",
         secondary: "#a78bfa",
@@ -162,6 +185,7 @@ export default function TemplateBuilder() {
     },
     {
       name: "Klassik Qora",
+      emoji: "🖤",
       colors: {
         primary: "#1f2937",
         secondary: "#6b7280",
@@ -173,43 +197,43 @@ export default function TemplateBuilder() {
   ];
 
   const fontOptions = [
-    "Inter",
-    "Poppins", 
-    "Playfair Display",
-    "Dancing Script",
-    "Montserrat",
-    "Lora",
-    "Open Sans",
-    "Roboto",
-    "Merriweather",
-    "Crimson Text",
-    "Great Vibes",
-    "Libre Baskerville",
+    { value: "Inter", label: "Inter (Zamonaviy)" },
+    { value: "Poppins", label: "Poppins (Yumaloq)" },
+    { value: "Playfair Display", label: "Playfair Display (Klassik)" },
+    { value: "Dancing Script", label: "Dancing Script (Qo'lyozma)" },
+    { value: "Montserrat", label: "Montserrat (Aniq)" },
+    { value: "Lora", label: "Lora (O'qish uchun)" },
+    { value: "Open Sans", label: "Open Sans (Sodda)" },
+    { value: "Roboto", label: "Roboto (Texnologik)" },
+    { value: "Merriweather", label: "Merriweather (Jurnalistik)" },
+    { value: "Crimson Text", label: "Crimson Text (Akademik)" },
+    { value: "Great Vibes", label: "Great Vibes (Nafis)" },
+    { value: "Libre Baskerville", label: "Libre Baskerville (Klassik)" },
   ];
 
   const layoutStyles = [
     {
       value: "classic",
       label: "Klassik",
-      description: "An'anaviy va sodda dizayn",
+      description: "An'anaviy va rasmiiy dizayn",
       icon: "📜",
     },
     {
       value: "modern", 
       label: "Zamonaviy",
-      description: "Minimalistik va zamonaviy",
+      description: "Minimalistik va sodda",
       icon: "✨",
     },
     { 
       value: "elegant", 
       label: "Nafis", 
-      description: "Chiroyli va nafis",
+      description: "Chiroyli va mukammal",
       icon: "💎",
     },
     { 
       value: "rustic", 
       label: "Tabiy", 
-      description: "Tabiy va issiq",
+      description: "Tabiy va issiq his",
       icon: "🌿",
     },
     { 
@@ -218,6 +242,13 @@ export default function TemplateBuilder() {
       description: "Dabdabali va noyob",
       icon: "👑",
     },
+  ];
+
+  const animationTypes = [
+    { value: "fade", label: "Fade (Paydo bo'lish)" },
+    { value: "slide", label: "Slide (Sirpanish)" },
+    { value: "scale", label: "Scale (Kattayish)" },
+    { value: "bounce", label: "Bounce (Sakrash)" },
   ];
 
   const handleColorChange = (
@@ -255,6 +286,19 @@ export default function TemplateBuilder() {
       layout: {
         ...prev.layout,
         [layoutKey]: value,
+      },
+    }));
+  };
+
+  const handleAnimationChange = (
+    animKey: keyof TemplateConfig["animations"],
+    value: any,
+  ) => {
+    setConfig((prev) => ({
+      ...prev,
+      animations: {
+        ...prev.animations,
+        [animKey]: value,
       },
     }));
   };
@@ -303,7 +347,7 @@ export default function TemplateBuilder() {
         layout: config.layout,
         is_public: false,
         is_featured: false,
-        tags: [config.layout.style, "maxsus"],
+        tags: [config.layout.style, "maxsus", "real-time"],
       };
 
       const { data, error: saveError } = await supabase
@@ -316,7 +360,7 @@ export default function TemplateBuilder() {
         throw saveError;
       }
 
-      setSuccess("Shablon muvaffaqiyatli saqlandi! 🎉");
+      setSuccess("🎉 Shablon muvaffaqiyatli saqlandi!");
       
       setTimeout(() => {
         navigate("/templates");
@@ -339,7 +383,7 @@ export default function TemplateBuilder() {
         JSON.stringify(fallbackTemplate),
       );
 
-      setSuccess("Shablon vaqtincha saqlandi (mahalliy xotira)");
+      setSuccess("✅ Shablon vaqtincha saqlandi (mahalliy xotira)");
       
       setTimeout(() => {
         navigate("/templates");
@@ -368,30 +412,40 @@ export default function TemplateBuilder() {
         spacing: 24,
         borderRadius: 16,
         shadowIntensity: 12,
+        padding: 32,
+      },
+      animations: {
+        enabled: true,
+        type: "fade",
+        duration: 0.5,
       },
     });
   };
 
-  // Real-time Template Preview Component
+  // Real-time Template Preview Component with device switching
   const TemplatePreview = () => {
     const containerStyle = {
       backgroundColor: config.colors.background,
       color: config.colors.text,
       fontFamily: config.fonts.body,
-      padding: `${config.layout.spacing}px`,
+      padding: `${config.layout.padding}px`,
       borderRadius: `${config.layout.borderRadius}px`,
       boxShadow: `0 ${config.layout.shadowIntensity}px ${config.layout.shadowIntensity * 2}px rgba(0,0,0,0.1)`,
       border: `2px solid ${config.colors.accent}20`,
+      transition: config.animations.enabled ? `all ${config.animations.duration}s ease-in-out` : 'none',
+      transform: config.animations.enabled && config.animations.type === 'scale' ? 'scale(1.02)' : 'scale(1)',
     };
 
     const headingStyle = {
       fontFamily: config.fonts.heading,
       color: config.colors.primary,
+      transition: config.animations.enabled ? `all ${config.animations.duration}s ease-in-out` : 'none',
     };
 
     const accentStyle = {
       fontFamily: config.fonts.accent,
       color: config.colors.accent,
+      transition: config.animations.enabled ? `all ${config.animations.duration}s ease-in-out` : 'none',
     };
 
     const getLayoutClass = () => {
@@ -405,108 +459,122 @@ export default function TemplateBuilder() {
       }
     };
 
+    const deviceClass = previewDevice === "mobile" ? "max-w-xs" : "max-w-md";
+
     return (
-      <div
-        className={`w-full max-w-md mx-auto transition-all duration-300 ${previewDevice === "mobile" ? "max-w-xs" : "max-w-md"}`}
-        style={containerStyle}
-      >
-        <div className={getLayoutClass()}>
-          {/* Decorative Header */}
-          <div className="flex justify-center items-center space-x-2 mb-4">
-            <div
-              className="w-12 h-0.5"
-              style={{ backgroundColor: config.colors.accent }}
-            />
-            <Heart className="w-4 h-4" style={{ color: config.colors.accent }} />
-            <div
-              className="w-12 h-0.5"
-              style={{ backgroundColor: config.colors.accent }}
-            />
-          </div>
+      <div className={`w-full ${deviceClass} mx-auto transition-all duration-500`}>
+        <div
+          className="transition-all duration-500 hover:shadow-xl"
+          style={containerStyle}
+        >
+          <div className={getLayoutClass()}>
+            {/* Decorative Header */}
+            <div className="flex justify-center items-center space-x-2 mb-4">
+              <div
+                className="w-12 h-0.5 transition-all duration-300"
+                style={{ backgroundColor: config.colors.accent }}
+              />
+              <Heart className="w-4 h-4 animate-pulse" style={{ color: config.colors.accent }} />
+              <div
+                className="w-12 h-0.5 transition-all duration-300"
+                style={{ backgroundColor: config.colors.accent }}
+              />
+            </div>
 
-          {/* Header Text */}
-          <div className="space-y-2">
+            {/* Header Text */}
+            <div className="space-y-2">
+              <div
+                className="text-xs font-medium tracking-widest uppercase opacity-75"
+                style={{ color: config.colors.secondary }}
+              >
+                To'y Taklifnomasi
+              </div>
+            </div>
+
+            {/* Names with real-time updates */}
+            <div className="space-y-3">
+              <h1 className={`${previewDevice === 'mobile' ? 'text-xl' : 'text-2xl md:text-3xl'} font-bold tracking-wide transition-all duration-300`} style={headingStyle}>
+                {templateData.groomName}
+              </h1>
+              <div className="text-3xl" style={accentStyle}>
+                &
+              </div>
+              <h1 className={`${previewDevice === 'mobile' ? 'text-xl' : 'text-2xl md:text-3xl'} font-bold tracking-wide transition-all duration-300`} style={headingStyle}>
+                {templateData.brideName}
+              </h1>
+            </div>
+
+            {/* Decorative Divider */}
+            <div className="flex justify-center items-center space-x-2">
+              <Star className="w-3 h-3 animate-spin" style={{ color: config.colors.accent, animationDuration: '3s' }} />
+              <div
+                className="w-8 h-0.5 transition-all duration-300"
+                style={{ backgroundColor: config.colors.accent }}
+              />
+              <Sparkles className="w-3 h-3 animate-pulse" style={{ color: config.colors.accent }} />
+              <div
+                className="w-8 h-0.5 transition-all duration-300"
+                style={{ backgroundColor: config.colors.accent }}
+              />
+              <Star className="w-3 h-3 animate-spin" style={{ color: config.colors.accent, animationDuration: '3s', animationDirection: 'reverse' }} />
+            </div>
+
+            {/* Date and Time with real-time updates */}
+            <div className="space-y-2">
+              <div
+                className={`${previewDevice === 'mobile' ? 'text-base' : 'text-lg'} font-semibold transition-all duration-300`}
+                style={{ color: config.colors.primary }}
+              >
+                {templateData.weddingDate}
+              </div>
+              <div className={`${previewDevice === 'mobile' ? 'text-sm' : 'text-md'} transition-all duration-300`} style={{ color: config.colors.secondary }}>
+                {templateData.weddingTime}
+              </div>
+            </div>
+
+            {/* Venue with real-time updates */}
+            <div className="space-y-3">
+              <div
+                className="w-12 h-0.5 mx-auto transition-all duration-300"
+                style={{ backgroundColor: config.colors.accent }}
+              />
+              <div
+                className={`${previewDevice === 'mobile' ? 'text-base' : 'text-lg'} font-medium transition-all duration-300`}
+                style={{ color: config.colors.primary }}
+              >
+                {templateData.venue}
+              </div>
+              <div className={`${previewDevice === 'mobile' ? 'text-xs' : 'text-sm'} leading-relaxed transition-all duration-300`} style={{ color: config.colors.secondary }}>
+                {templateData.address}
+              </div>
+            </div>
+
+            {/* Message with real-time updates */}
             <div
-              className="text-xs font-medium tracking-widest uppercase"
-              style={{ color: config.colors.secondary }}
+              className={`${previewDevice === 'mobile' ? 'text-xs px-2' : 'text-sm px-4'} leading-relaxed italic transition-all duration-300`}
+              style={{ color: config.colors.text }}
             >
-              To'y Taklifnomasi
+              "{templateData.customMessage}"
             </div>
-          </div>
 
-          {/* Names */}
-          <div className="space-y-3">
-            <h1 className="text-2xl md:text-3xl font-bold tracking-wide" style={headingStyle}>
-              {templateData.groomName}
-            </h1>
-            <div className="text-3xl" style={accentStyle}>
-              &
+            {/* Footer Decoration */}
+            <div className="flex justify-center items-center space-x-2 mt-6">
+              <div
+                className="w-16 h-0.5 transition-all duration-300"
+                style={{ backgroundColor: config.colors.accent }}
+              />
+              <Heart className="w-4 h-4 animate-bounce" style={{ color: config.colors.accent }} />
+              <div
+                className="w-16 h-0.5 transition-all duration-300"
+                style={{ backgroundColor: config.colors.accent }}
+              />
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-wide" style={headingStyle}>
-              {templateData.brideName}
-            </h1>
-          </div>
 
-          {/* Decorative Divider */}
-          <div className="flex justify-center items-center space-x-2">
-            <Star className="w-3 h-3" style={{ color: config.colors.accent }} />
-            <div
-              className="w-8 h-0.5"
-              style={{ backgroundColor: config.colors.accent }}
-            />
-            <Sparkles className="w-3 h-3" style={{ color: config.colors.accent }} />
-            <div
-              className="w-8 h-0.5"
-              style={{ backgroundColor: config.colors.accent }}
-            />
-            <Star className="w-3 h-3" style={{ color: config.colors.accent }} />
-          </div>
-
-          {/* Date and Time */}
-          <div className="space-y-2">
-            <div
-              className="text-lg font-semibold"
-              style={{ color: config.colors.primary }}
-            >
-              {templateData.weddingDate}
+            {/* Real-time indicator */}
+            <div className="flex justify-center items-center mt-4 opacity-50">
+              <Zap className="w-3 h-3 text-green-500 animate-pulse mr-1" />
+              <span className="text-xs" style={{ color: config.colors.text }}>Real-time</span>
             </div>
-            <div className="text-md" style={{ color: config.colors.secondary }}>
-              {templateData.weddingTime}
-            </div>
-          </div>
-
-          {/* Venue */}
-          <div className="space-y-3">
-            <div
-              className="text-lg font-medium"
-              style={{ color: config.colors.primary }}
-            >
-              {templateData.venue}
-            </div>
-            <div className="text-sm leading-relaxed" style={{ color: config.colors.secondary }}>
-              {templateData.address}
-            </div>
-          </div>
-
-          {/* Message */}
-          <div
-            className="text-sm leading-relaxed italic px-4"
-            style={{ color: config.colors.text }}
-          >
-            "{templateData.customMessage}"
-          </div>
-
-          {/* Footer Decoration */}
-          <div className="flex justify-center items-center space-x-2 mt-6">
-            <div
-              className="w-16 h-0.5"
-              style={{ backgroundColor: config.colors.accent }}
-            />
-            <Heart className="w-4 h-4" style={{ color: config.colors.accent }} />
-            <div
-              className="w-16 h-0.5"
-              style={{ backgroundColor: config.colors.accent }}
-            />
           </div>
         </div>
       </div>
@@ -516,21 +584,26 @@ export default function TemplateBuilder() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gradient-to-br from-rose-50 via-background to-purple-50/30">
-        {/* Elegant Header */}
-        <nav className="bg-white/80 backdrop-blur-md border-b border-rose-200/50 p-4 sticky top-0 z-50 shadow-sm">
+        {/* Beautiful Header */}
+        <nav className="bg-white/90 backdrop-blur-md border-b border-rose-200/50 p-4 sticky top-0 z-50 shadow-lg">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" asChild className="hover:bg-rose-100">
+              <Button variant="ghost" size="sm" asChild className="hover:bg-rose-100 transition-colors">
                 <Link to="/templates">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Shablonlar
                 </Link>
               </Button>
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-rose-500" />
-                <h1 className="font-heading text-xl font-bold text-foreground">
-                  Shablon Yaratuvchi
-                </h1>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-rose-500 to-pink-500 rounded-lg flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h1 className="font-heading text-xl font-bold text-foreground">
+                    Shablon Yaratuvchi
+                  </h1>
+                  <p className="text-xs text-muted-foreground">Real-time oldindan ko'rish</p>
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -538,7 +611,7 @@ export default function TemplateBuilder() {
                 onClick={resetToDefaults}
                 variant="outline"
                 size="sm"
-                className="hover:bg-rose-50"
+                className="hover:bg-rose-50 border-rose-200"
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
                 Qayta tiklash
@@ -546,7 +619,7 @@ export default function TemplateBuilder() {
               <Button
                 onClick={saveTemplate}
                 disabled={loading}
-                className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white"
+                className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all"
               >
                 {loading ? (
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -562,7 +635,7 @@ export default function TemplateBuilder() {
         <div className="max-w-7xl mx-auto p-6">
           {/* Success/Error Messages */}
           {success && (
-            <Alert className="mb-6 border-green-200 bg-green-50/80">
+            <Alert className="mb-6 border-green-200 bg-green-50/80 shadow-sm">
               <Check className="h-4 w-4 text-green-600" />
               <AlertDescription className="text-green-800">
                 {success}
@@ -571,7 +644,7 @@ export default function TemplateBuilder() {
           )}
 
           {error && (
-            <Alert className="mb-6 border-red-200 bg-red-50/80">
+            <Alert className="mb-6 border-red-200 bg-red-50/80 shadow-sm">
               <X className="h-4 w-4 text-red-600" />
               <AlertDescription className="text-red-800">
                 {error}
@@ -584,29 +657,33 @@ export default function TemplateBuilder() {
             <div className="lg:col-span-3 space-y-6">
               
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-4 bg-white/80 p-1">
-                  <TabsTrigger value="info" className="flex items-center gap-2">
-                    <Eye className="w-4 h-4" />
+                <TabsList className="grid w-full grid-cols-5 bg-white/80 p-1 shadow-sm">
+                  <TabsTrigger value="info" className="flex items-center gap-2 text-xs">
+                    <Settings className="w-4 h-4" />
                     Ma'lumot
                   </TabsTrigger>
-                  <TabsTrigger value="colors" className="flex items-center gap-2">
+                  <TabsTrigger value="colors" className="flex items-center gap-2 text-xs">
                     <Palette className="w-4 h-4" />
                     Ranglar
                   </TabsTrigger>
-                  <TabsTrigger value="fonts" className="flex items-center gap-2">
+                  <TabsTrigger value="fonts" className="flex items-center gap-2 text-xs">
                     <Type className="w-4 h-4" />
                     Shriftlar
                   </TabsTrigger>
-                  <TabsTrigger value="layout" className="flex items-center gap-2">
+                  <TabsTrigger value="layout" className="flex items-center gap-2 text-xs">
                     <Layout className="w-4 h-4" />
                     Layout
+                  </TabsTrigger>
+                  <TabsTrigger value="effects" className="flex items-center gap-2 text-xs">
+                    <Layers className="w-4 h-4" />
+                    Effektlar
                   </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="info" className="mt-6">
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
                     <h2 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <Eye className="w-5 h-5 text-rose-500" />
+                      <Settings className="w-5 h-5 text-rose-500" />
                       Shablon Ma'lumotlari
                     </h2>
                     <div className="space-y-4">
@@ -693,7 +770,7 @@ export default function TemplateBuilder() {
                 </TabsContent>
 
                 <TabsContent value="colors" className="space-y-6 mt-6">
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
                     <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                       <Palette className="w-5 h-5 text-rose-500" />
                       Rang Shablonlari
@@ -703,21 +780,24 @@ export default function TemplateBuilder() {
                         <button
                           key={index}
                           onClick={() => applyColorPreset(preset)}
-                          className="p-4 border border-rose-200 rounded-lg hover:border-rose-400 transition-all hover:shadow-md"
+                          className="p-4 border border-rose-200 rounded-lg hover:border-rose-400 transition-all hover:shadow-md group"
                         >
-                          <div className="flex items-center gap-2 mb-2">
-                            <div
-                              className="w-4 h-4 rounded-full border border-white shadow-sm"
-                              style={{ backgroundColor: preset.colors.primary }}
-                            />
-                            <div
-                              className="w-4 h-4 rounded-full border border-white shadow-sm"
-                              style={{ backgroundColor: preset.colors.secondary }}
-                            />
-                            <div
-                              className="w-4 h-4 rounded-full border border-white shadow-sm"
-                              style={{ backgroundColor: preset.colors.accent }}
-                            />
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className="text-lg">{preset.emoji}</span>
+                            <div className="flex gap-1">
+                              <div
+                                className="w-4 h-4 rounded-full border border-white shadow-sm group-hover:scale-110 transition-transform"
+                                style={{ backgroundColor: preset.colors.primary }}
+                              />
+                              <div
+                                className="w-4 h-4 rounded-full border border-white shadow-sm group-hover:scale-110 transition-transform"
+                                style={{ backgroundColor: preset.colors.secondary }}
+                              />
+                              <div
+                                className="w-4 h-4 rounded-full border border-white shadow-sm group-hover:scale-110 transition-transform"
+                                style={{ backgroundColor: preset.colors.accent }}
+                              />
+                            </div>
                           </div>
                           <div className="text-xs font-medium text-foreground text-left">
                             {preset.name}
@@ -755,7 +835,7 @@ export default function TemplateBuilder() {
                 </TabsContent>
 
                 <TabsContent value="fonts" className="space-y-4 mt-6">
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
                     <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                       <Type className="w-5 h-5 text-rose-500" />
                       Shrift Sozlamalari
@@ -776,11 +856,11 @@ export default function TemplateBuilder() {
                           <SelectContent>
                             {fontOptions.map((font) => (
                               <SelectItem
-                                key={font}
-                                value={font}
-                                style={{ fontFamily: font }}
+                                key={font.value}
+                                value={font.value}
+                                style={{ fontFamily: font.value }}
                               >
-                                {font}
+                                {font.label}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -791,7 +871,7 @@ export default function TemplateBuilder() {
                 </TabsContent>
 
                 <TabsContent value="layout" className="space-y-6 mt-6">
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
                     <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                       <Layout className="w-5 h-5 text-rose-500" />
                       Layout Sozlamalari
@@ -839,6 +919,19 @@ export default function TemplateBuilder() {
                         </div>
                         <div>
                           <Label className="text-sm font-medium">
+                            Padding: {config.layout.padding}px
+                          </Label>
+                          <Slider
+                            value={[config.layout.padding]}
+                            onValueChange={(value) => handleLayoutChange("padding", value[0])}
+                            max={60}
+                            min={16}
+                            step={4}
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-sm font-medium">
                             Burchak radiusi: {config.layout.borderRadius}px
                           </Label>
                           <Slider
@@ -867,17 +960,73 @@ export default function TemplateBuilder() {
                     </div>
                   </div>
                 </TabsContent>
+
+                <TabsContent value="effects" className="space-y-6 mt-6">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                    <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Layers className="w-5 h-5 text-rose-500" />
+                      Animatsiya va Effektlar
+                    </h3>
+                    
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm font-medium">Animatsiyani yoqish</Label>
+                        <Switch
+                          checked={config.animations.enabled}
+                          onCheckedChange={(checked) => handleAnimationChange("enabled", checked)}
+                        />
+                      </div>
+
+                      {config.animations.enabled && (
+                        <>
+                          <div>
+                            <Label className="text-sm font-medium">Animatsiya turi</Label>
+                            <Select
+                              value={config.animations.type}
+                              onValueChange={(val) => handleAnimationChange("type", val)}
+                            >
+                              <SelectTrigger className="mt-2 border-rose-200 focus:border-rose-400">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {animationTypes.map((anim) => (
+                                  <SelectItem key={anim.value} value={anim.value}>
+                                    {anim.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div>
+                            <Label className="text-sm font-medium">
+                              Animatsiya davomiyligi: {config.animations.duration}s
+                            </Label>
+                            <Slider
+                              value={[config.animations.duration]}
+                              onValueChange={(value) => handleAnimationChange("duration", value[0])}
+                              max={2}
+                              min={0.1}
+                              step={0.1}
+                              className="mt-2"
+                            />
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </TabsContent>
               </Tabs>
             </div>
 
             {/* Right Panel - Live Preview (2/5) */}
             <div className="lg:col-span-2">
               <div className="sticky top-24">
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-lg">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="font-heading text-lg font-semibold text-foreground flex items-center gap-2">
                       <Eye className="w-5 h-5 text-rose-500" />
-                      Jonli Ko'rinish
+                      Jonli Oldindan Ko'rish
                     </h2>
                     <div className="flex items-center gap-2">
                       <Button
@@ -903,7 +1052,27 @@ export default function TemplateBuilder() {
                     <TemplatePreview />
                   </div>
 
-                  <div className="text-center mt-4 text-xs text-muted-foreground">
+                  <div className="flex gap-2 mt-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 hover:bg-rose-50 border-rose-200 text-xs"
+                    >
+                      <Download className="w-4 h-4 mr-1" />
+                      Yuklab olish
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 hover:bg-rose-50 border-rose-200 text-xs"
+                    >
+                      <Share2 className="w-4 h-4 mr-1" />
+                      Ulashish
+                    </Button>
+                  </div>
+
+                  <div className="text-center mt-4 text-xs text-muted-foreground flex items-center justify-center gap-1">
+                    <Zap className="w-3 h-3 text-green-500 animate-pulse" />
                     Real vaqtda yangilanadi • {previewDevice === "desktop" ? "Kompyuter" : "Mobil"} ko'rinish
                   </div>
                 </div>

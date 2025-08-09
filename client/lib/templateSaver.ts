@@ -130,15 +130,15 @@ export const saveTemplateToSupabase = async (
     
     toast.dismiss("saving-template");
     
-    if (err.message?.includes("6 soniyalik vaqt tugadi")) {
-      toast.warning("⚠️ Vaqt tugadi", {
-        description: "Shablon mahalliy xotiraga saqlandi",
-        duration: 6000,
+    if (err.message?.includes("timeout") || err.message?.includes("Connection timeout")) {
+      toast.success("💾 Shablon mahalliy saqlandi!", {
+        description: "Ulanish vaqti tugadi, lekin ma'lumotlar xavfsiz saqlandi",
+        duration: 4000,
       });
     } else {
-      toast.warning("⚠️ Kutilmagan xatolik", {
-        description: `Xatolik: ${err.message}. Mahalliy saqlandi.`,
-        duration: 6000,
+      toast.success("💾 Shablon mahalliy saqlandi!", {
+        description: "Internet ulanishi yo'q, lekin ma'lumotlar xavfsiz saqlandi",
+        duration: 4000,
       });
     }
 

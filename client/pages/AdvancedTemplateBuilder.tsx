@@ -946,7 +946,7 @@ export default function AdvancedTemplateBuilder() {
                     onClick={saveToLocalStorageDirectly}
                     variant="outline"
                     size="sm"
-                    className="hover:bg-orange-50 border-orange-300 text-orange-700"
+                    className="hover:bg-orange-50 dark:hover:bg-orange-900 border-orange-300 dark:border-orange-700 text-orange-700 dark:text-orange-300"
                   >
                     <Download className="w-4 h-4 mr-1" />
                     Tez Saqlash

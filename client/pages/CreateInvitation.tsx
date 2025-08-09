@@ -53,7 +53,7 @@ export default function CreateInvitation() {
   const [newGuest, setNewGuest] = useState({ name: "", email: "", phone: "" });
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [filteredTemplates, setFilteredTemplates] =
-    useState<TemplateData[]>(weddingTemplates);
+    useState<DefaultTemplate[]>(defaultWeddingTemplates);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 

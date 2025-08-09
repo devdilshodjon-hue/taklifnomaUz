@@ -70,6 +70,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const initializeAuth = async () => {
       try {
+        // Check for demo user first
+        const demoUser = localStorage.getItem('demo_user');
+        if (demoUser) {
+          console.log("Demo user found, setting up demo session...");
+          const parsedDemoUser = JSON.parse(demoUser);
+
+          // Create demo user and profile
+          const demoUserData = {
+            id: parsedDemoUser.id,
+            email: parsedDemoUser.email,
+            created_at: parsedDemoUser.created_at,
+            user_metadata: {
+              first_name: "Demo",
+              last_name: "User"
+            }
+          };
+
+          const demoProfile = {
+            id: parsedDemoUser.id,
+            email: parsedDemoUser.email,
+            first_name: "Demo",
+            last_name: "User",
+            avatar_url: null,
+            created_at: parsedDemoUser.created_at,
+            updated_at: parsedDemoUser.created_at,
+            phone: null,
+            company_name: null,
+            is_active: true,
+            settings: {},
+            metadata: {},
+          };
+
+          setUser(demoUserData as any);
+          setProfile(demoProfile);
+          setSession({
+            user: demoUserData,
+            access_token: 'demo_token',
+            refresh_token: 'demo_refresh',
+            expires_at: Date.now() / 1000 + 3600,
+            token_type: 'bearer'
+          } as any);
+          setLoading(false);
+          setIsInitialized(true);
+          return;
+        }
+
         // Test database connection first
         const testDatabaseConnection = async () => {
           try {

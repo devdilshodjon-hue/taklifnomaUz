@@ -147,10 +147,11 @@ export default function Templates() {
             );
 
             // Add popular templates after custom templates
+            const customCount = allTemplates.filter(t => t.isCustom).length;
             allTemplates = [
-              ...allTemplates.slice(0, customTemplates?.length || 0),
+              ...allTemplates.slice(0, customCount),
               ...convertedPublicTemplates,
-              ...allTemplates.slice(customTemplates?.length || 0)
+              ...allTemplates.slice(customCount)
             ];
           }
         } catch (publicErr) {

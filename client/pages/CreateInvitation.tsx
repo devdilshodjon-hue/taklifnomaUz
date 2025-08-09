@@ -25,11 +25,12 @@ import { supabase, invitationOperations } from "@/lib/supabase";
 import cacheUtils from "@/lib/cache";
 import { generateDemoUUID, generateUUIDFromSlug } from "@/lib/utils";
 import {
-  weddingTemplates,
+  templateManager,
+  defaultWeddingTemplates,
   templateCategories,
   getTemplatesByCategory,
-  type TemplateData,
-} from "@/lib/templates";
+  type DefaultTemplate,
+} from "@/lib/defaultTemplates";
 import TemplateRenderer from "@/components/TemplateRenderer";
 import ProtectedRoute from "@/components/ProtectedRoute";
 

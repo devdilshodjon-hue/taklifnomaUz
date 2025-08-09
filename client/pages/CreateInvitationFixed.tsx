@@ -71,13 +71,7 @@ export default function CreateInvitation() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [previewOpen, setPreviewOpen] = useState(false);
 
-  // Generate a unique slug for the invitation
-  const generateSlug = () => {
-    const name1 = formData.groomName.toLowerCase().replace(/[^a-z0-9]/g, "");
-    const name2 = formData.brideName.toLowerCase().replace(/[^a-z0-9]/g, "");
-    const timestamp = Date.now().toString().slice(-6);
-    return `${name1}-${name2}-${timestamp}`;
-  };
+  // URL generation is now handled in invitationSaver.ts
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({

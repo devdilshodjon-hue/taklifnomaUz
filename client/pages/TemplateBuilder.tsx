@@ -882,9 +882,9 @@ export default function TemplateBuilder() {
                 </TabsContent>
 
                 <TabsContent value="layout" className="space-y-6 mt-4 lg:mt-6">
-                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 lg:p-6 xl:p-8 border border-border shadow-sm">
-                    <h3 className="font-heading text-lg xl:text-xl font-semibold text-foreground mb-6 flex items-center gap-3">
-                      <Layout className="w-5 h-5 xl:w-6 xl:h-6 text-primary" />
+                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 lg:p-5 border border-border shadow-sm">
+                    <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Layout className="w-5 h-5 text-primary" />
                       Layout Sozlamalari
                     </h3>
                     

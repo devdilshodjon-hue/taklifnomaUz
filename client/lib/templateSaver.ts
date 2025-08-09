@@ -91,27 +91,33 @@ export const saveTemplateToSupabase = async (
       templateToSave,
     );
 
-    // Try to save with retry logic and longer timeout
-    const { data, error } = await retryWithBackoff(
-      async () => {
-        // Create a promise that will timeout after 20 seconds
-        const timeoutPromise = new Promise<never>((_, reject) => {
-          setTimeout(() => {
-            reject(new Error("Operation timeout after 20 seconds"));
-          }, 20000); // Increased to 20 seconds
-        });
+    // Try direct save first (no timeout race condition)
+    console.log("📤 Attempting direct save to Supabase...");
+    let result;
 
-        const savePromise = supabase
+    try {
+      const { data, error } = await supabase
+        .from("custom_templates")
+        .insert(templateToSave)
+        .select()
+        .single();
+
+      result = { data, error };
+      console.log("✅ Direct save result:", result);
+    } catch (directError) {
+      console.log("❌ Direct save failed, trying with retry logic...", directError);
+
+      // If direct save fails, try with retry (but no timeout race)
+      result = await retryWithBackoff(async () => {
+        return await supabase
           .from("custom_templates")
           .insert(templateToSave)
           .select()
           .single();
+      }, 2, 3000); // 2 retries with 3 second delay
+    }
 
-        return Promise.race([savePromise, timeoutPromise]);
-      },
-      3,
-      2000,
-    ); // 3 retries with 2 second base delay
+    const { data, error } = result;
 
     if (error) {
       throw error;

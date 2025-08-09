@@ -263,42 +263,20 @@ export default function TemplateBuilder() {
     let timeoutId: NodeJS.Timeout;
 
     try {
-      // Check authentication session first
-      const {
-        data: { session },
-        error: sessionError,
-      } = await supabase.auth.getSession();
-      if (sessionError) {
-        console.error("Session error:", sessionError);
-        setError(
-          "Autentifikatsiya sessiyasida xatolik. Iltimos, qayta kiring.",
-        );
-        return;
-      }
-
-      if (!session) {
-        console.error("No active session found");
-        setError("Sessiya tugagan. Iltimos, qayta kiring.");
-        return;
-      }
-
-      console.log(
-        "Session verified for template save:",
-        !!session,
-        "User ID:",
-        session.user?.id,
-      );
+      console.log("Starting optimized template save...");
 
       const templateToSave = {
         user_id: user.id,
         name: templateData.templateName.trim(),
         description: `Custom template created on ${new Date().toLocaleDateString("uz-UZ")}`,
         category: "custom",
+        config: config, // Store full config as JSONB
         colors: config.colors,
         fonts: config.fonts,
-        layout_config: config.layout,
+        layout: config.layout,
         is_public: false,
         is_featured: false,
+        tags: [], // Add tags if needed
       };
 
       console.log("Template data to save:", templateToSave);
@@ -310,7 +288,18 @@ export default function TemplateBuilder() {
         setError(
           "Saqlash jarayoni uzun davom etmoqda. Iltimos, qayta urinib ko'ring.",
         );
-      }, 15000); // 15 seconds timeout
+      }, 10000); // 10 seconds timeout
+
+      // Use optimized template operations with caching
+      const { data, error: saveError } = await templateOperations.create(templateToSave);
+
+      clearTimeout(timeoutId);
+
+      if (saveError) {
+        console.error("Template save error:", saveError?.message || saveError);
+        setError(saveError?.message || "Shablon saqlanishda xatolik yuz berdi");
+        return;
+      }
 
       // Test connection first
       const { data: testData, error: testError } = await supabase

@@ -247,8 +247,8 @@ export default function CreateInvitation() {
             {/* Left Panel - Form */}
             <div className="space-y-6">
               {/* Basic Information */}
-              <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
-                <h2 className="text-xl font-semibold text-slate-900 mb-4 flex items-center gap-2">
+              <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
                   <Users className="w-5 h-5 text-blue-500" />
                   Asosiy Ma'lumotlar
                 </h2>
@@ -448,8 +448,8 @@ export default function CreateInvitation() {
               </div>
 
               {/* Template Selection */}
-              <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
-                <h2 className="text-xl font-semibold text-slate-900 mb-4 flex items-center gap-2">
+              <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-purple-500" />
                   Shablon Tanlash
                 </h2>
@@ -582,8 +582,8 @@ export default function CreateInvitation() {
 
             {/* Right Panel - Preview */}
             <div className="lg:sticky lg:top-24 lg:self-start">
-              <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
-                <h2 className="text-xl font-semibold text-slate-900 mb-4 flex items-center gap-2">
+              <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
                   <Eye className="w-5 h-5 text-blue-500" />
                   Oldindan Ko'rish
                 </h2>

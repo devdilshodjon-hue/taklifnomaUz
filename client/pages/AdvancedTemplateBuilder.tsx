@@ -9,7 +9,7 @@ import {
 } from "@/lib/supabaseAuth";
 import {
   runSupabaseIntegrationTest,
-  displayTestResults,
+  displayBasicTestResults,
   quickConnectionTest,
 } from "@/lib/supabaseTest";
 import { runDatabaseHealthCheck, setupDemoData } from "@/lib/databaseSetup";

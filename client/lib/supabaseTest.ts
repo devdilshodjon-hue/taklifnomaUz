@@ -216,8 +216,8 @@ export const runSupabaseIntegrationTest = async (): Promise<TestResult[]> => {
   return results;
 };
 
-// Display test results with toast notifications
-export const displayTestResults = (results: TestResult[]) => {
+// Display basic test results with toast notifications
+export const displayBasicTestResults = (results: TestResult[]) => {
   const successCount = results.filter((r) => r.status === "success").length;
   const errorCount = results.filter((r) => r.status === "error").length;
   const warningCount = results.filter((r) => r.status === "warning").length;

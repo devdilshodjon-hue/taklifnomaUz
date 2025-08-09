@@ -368,6 +368,8 @@ export default function TemplateBuilder() {
     }, 5000); // 5 seconds timeout for debugging
 
     console.log("✅ Starting save with user ID:", user.id);
+    console.log("🔧 Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
+    console.log("🔧 Supabase Key length:", import.meta.env.VITE_SUPABASE_ANON_KEY?.length);
 
     try {
       const templateToSave = {

@@ -239,7 +239,7 @@ export default function TemplateBuilder() {
       value: "elegant", 
       label: "Nafis", 
       description: "Chiroyli va mukammal",
-      icon: "���",
+      icon: "💎",
     },
     { 
       value: "rustic", 
@@ -817,7 +817,7 @@ export default function TemplateBuilder() {
                       ))}
                     </div>
 
-                    <div className="mt-8 space-y-6">
+                    <div className="mt-6 space-y-4">
                       <h4 className="font-medium text-foreground">Maxsus Ranglar</h4>
                       {Object.entries(config.colors).map(([key, value]) => (
                         <div key={key} className="flex items-center gap-3">

@@ -87,32 +87,34 @@ export default function CreateInvitation() {
   };
 
   const handleSave = async () => {
-    console.log("🚀 Starting invitation creation...");
+    console.log("🚀 Enhanced invitation creation started...");
 
     setIsLoading(true);
     setError("");
     setSuccess("");
 
-    const slug = generateSlug();
-    console.log("🔗 Generated slug:", slug);
-
-    // Use the dedicated invitation saver utility
-    const result = await saveInvitationToSupabase(user, formData, slug);
+    // Enhanced invitation save with URL generation
+    const result = await saveInvitationToSupabase(user, formData);
 
     if (result.success) {
-      setSuccess("Taklifnoma muvaffaqiyatli yaratildi!");
+      if (result.url) {
+        setSuccess(`Taklifnoma yaratildi! URL: ${result.url}`);
+        console.log("🔗 Invitation URL generated:", result.url);
+      } else {
+        setSuccess("Taklifnoma muvaffaqiyatli yaratildi!");
+      }
 
       // Navigate to dashboard after success
       setTimeout(() => {
         navigate("/dashboard");
-      }, 1500);
+      }, 2000); // Slightly longer to show URL
     } else {
-      if (result.data) {
-        // Saved to localStorage as fallback
-        setSuccess("Taklifnoma mahalliy xotiraga saqlandi");
+      if (result.data && result.url) {
+        // Saved to localStorage as fallback but still has URL
+        setSuccess(`Taklifnoma mahalliy saqlandi. URL: ${result.url}`);
         setTimeout(() => {
           navigate("/dashboard");
-        }, 1500);
+        }, 2000);
       } else {
         setError(result.error || "Taklifnoma yaratishda xatolik");
       }

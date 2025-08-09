@@ -996,35 +996,35 @@ export default function AdvancedTemplateBuilder() {
                   </TabsTrigger>
                   <TabsTrigger
                     value="colors"
-                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-green-100 data-[state=active]:text-green-800"
+                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-green-100 data-[state=active]:text-green-800 dark:data-[state=active]:bg-green-900 dark:data-[state=active]:text-green-200 dark:text-slate-300 dark:hover:text-slate-100"
                   >
                     <Palette className="w-4 h-4" />
                     <span className="text-xs font-medium">Ranglar</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="fonts"
-                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-purple-100 data-[state=active]:text-purple-800"
+                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-purple-100 data-[state=active]:text-purple-800 dark:data-[state=active]:bg-purple-900 dark:data-[state=active]:text-purple-200 dark:text-slate-300 dark:hover:text-slate-100"
                   >
                     <Type className="w-4 h-4" />
                     <span className="text-xs font-medium">Shrift</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="layout"
-                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-indigo-100 data-[state=active]:text-indigo-800"
+                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-indigo-100 data-[state=active]:text-indigo-800 dark:data-[state=active]:bg-indigo-900 dark:data-[state=active]:text-indigo-200 dark:text-slate-300 dark:hover:text-slate-100"
                   >
                     <Layout className="w-4 h-4" />
                     <span className="text-xs font-medium">Layout</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="effects"
-                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-orange-100 data-[state=active]:text-orange-800"
+                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-orange-100 data-[state=active]:text-orange-800 dark:data-[state=active]:bg-orange-900 dark:data-[state=active]:text-orange-200 dark:text-slate-300 dark:hover:text-slate-100"
                   >
                     <Layers className="w-4 h-4" />
                     <span className="text-xs font-medium">Effekt</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="animation"
-                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-pink-100 data-[state=active]:text-pink-800"
+                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-pink-100 data-[state=active]:text-pink-800 dark:data-[state=active]:bg-pink-900 dark:data-[state=active]:text-pink-200 dark:text-slate-300 dark:hover:text-slate-100"
                   >
                     <Sparkles className="w-4 h-4" />
                     <span className="text-xs font-medium">Animatsiya</span>

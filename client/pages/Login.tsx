@@ -20,6 +20,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function Login() {
   const { signIn, signInWithGoogle, user, loading: authLoading } = useAuth();
+  const { isOnline, hasNetworkError, reportNetworkError } = useNetworkStatus();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

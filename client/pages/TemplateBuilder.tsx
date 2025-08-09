@@ -129,6 +129,17 @@ export default function TemplateBuilder() {
 
   const colorPresets = [
     {
+      name: "TaklifNoma Asosiy",
+      emoji: "💎",
+      colors: {
+        primary: "hsl(220, 91%, 56%)",
+        secondary: "hsl(220, 14%, 96%)",
+        accent: "hsl(220, 91%, 66%)",
+        background: "hsl(0, 0%, 100%)",
+        text: "hsl(224, 71%, 4%)",
+      },
+    },
+    {
       name: "Romantik Pushti",
       emoji: "🌸",
       colors: {

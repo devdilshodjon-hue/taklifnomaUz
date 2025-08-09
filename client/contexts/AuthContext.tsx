@@ -40,7 +40,9 @@ export function useAuth() {
       isInitialized: false,
       signUp: async () => ({ error: new Error("Auth not available") }),
       signIn: async () => ({ error: new Error("Auth not available") }),
-      signInWithGoogle: async () => ({ error: new Error("Auth not available") }),
+      signInWithGoogle: async () => ({
+        error: new Error("Auth not available"),
+      }),
       signOut: async () => ({ error: new Error("Auth not available") }),
       updateProfile: async () => ({ error: new Error("Auth not available") }),
     };

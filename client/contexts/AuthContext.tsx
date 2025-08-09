@@ -157,6 +157,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(null);
           setProfile(null);
           setLoading(false);
+          setIsInitialized(true);
         }
       }
     };

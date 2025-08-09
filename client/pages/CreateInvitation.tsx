@@ -227,15 +227,39 @@ export default function CreateInvitation() {
 
       console.log("📋 Invitation data prepared:", invitationData);
 
+      console.log("📤 Sending invitation data:", invitationData);
+
       // Use optimized invitation operations with automatic caching and fallback
       const { data: invitation, error } =
         await invitationOperations.create(invitationData);
 
       if (error) {
         console.error("❌ Invitation creation error:", error);
-        throw new Error(
-          error.message || "Taklifnoma yaratishda xatolik yuz berdi",
-        );
+
+        // Try direct database insert as backup
+        console.log("🔄 Trying direct database insert...");
+        try {
+          const { data: directInvitation, error: directError } = await supabase
+            .from("invitations")
+            .insert(invitationData)
+            .select()
+            .single();
+
+          if (directError) {
+            console.error("❌ Direct insert also failed:", directError);
+            throw new Error(
+              `Database error: ${directError.message || "Taklifnoma yaratishda xatolik yuz berdi"}`,
+            );
+          }
+
+          console.log("✅ Direct insert successful:", directInvitation);
+          invitation = directInvitation;
+        } catch (directErr: any) {
+          console.error("❌ All creation methods failed:", directErr);
+          throw new Error(
+            directErr?.message || error?.message || "Taklifnoma yaratishda xatolik yuz berdi",
+          );
+        }
       }
 
       console.log("✅ Invitation created successfully:", invitation);

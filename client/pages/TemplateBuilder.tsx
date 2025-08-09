@@ -533,12 +533,12 @@ export default function TemplateBuilder() {
             {/* Date and Time with real-time updates */}
             <div className="space-y-2">
               <div
-                className={`${previewDevice === 'mobile' ? 'text-base' : 'text-lg'} font-semibold transition-all duration-300`}
+                className={`${previewDevice === 'mobile' ? 'text-lg' : 'text-xl'} font-semibold transition-all duration-300`}
                 style={{ color: config.colors.primary }}
               >
                 {templateData.weddingDate}
               </div>
-              <div className={`${previewDevice === 'mobile' ? 'text-sm' : 'text-md'} transition-all duration-300`} style={{ color: config.colors.secondary }}>
+              <div className={`${previewDevice === 'mobile' ? 'text-base' : 'text-lg'} transition-all duration-300`} style={{ color: config.colors.secondary }}>
                 {templateData.weddingTime}
               </div>
             </div>

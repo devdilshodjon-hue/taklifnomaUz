@@ -1397,6 +1397,56 @@ export default function TemplateBuilder() {
           </div>
         </div>
       </div>
+
+      {/* Full-Screen Preview Modal */}
+      {fullScreenPreview && (
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center">
+          <div className="absolute top-4 right-4 z-10">
+            <Button
+              onClick={() => setFullScreenPreview(false)}
+              variant="outline"
+              size="sm"
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+            >
+              <X className="w-4 h-4 mr-2" />
+              Yopish
+            </Button>
+          </div>
+
+          <div className="absolute top-4 left-4 z-10 flex gap-2">
+            <Button
+              onClick={() => setPreviewDevice("desktop")}
+              variant={previewDevice === "desktop" ? "default" : "outline"}
+              size="sm"
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+            >
+              <Monitor className="w-4 h-4 mr-2" />
+              Desktop
+            </Button>
+            <Button
+              onClick={() => setPreviewDevice("mobile")}
+              variant={previewDevice === "mobile" ? "default" : "outline"}
+              size="sm"
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+            >
+              <Smartphone className="w-4 h-4 mr-2" />
+              Mobil
+            </Button>
+          </div>
+
+          <div className="w-full h-full p-8 overflow-auto">
+            <div className={`mx-auto transition-all duration-300 ${
+              previewDevice === "mobile"
+                ? "max-w-sm"
+                : "max-w-4xl"
+            }`}>
+              <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
+                <TemplatePreview />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </ProtectedRoute>
   );
 }

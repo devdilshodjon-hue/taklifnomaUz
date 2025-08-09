@@ -567,6 +567,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     profile,
     session,
     loading,
+    isInitialized,
     signUp,
     signIn,
     signInWithGoogle,

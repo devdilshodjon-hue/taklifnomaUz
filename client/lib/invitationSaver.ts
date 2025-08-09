@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { supabase } from "./supabaseClient";
 import { toast } from "sonner";
 
 export interface InvitationFormData {
@@ -16,15 +16,35 @@ export interface InvitationFormData {
   rsvpDeadline?: string;
 }
 
+// Generate unique slug for invitation URL
+const generateInvitationSlug = (groomName: string, brideName: string): string => {
+  const cleanName = (name: string) => 
+    name.toLowerCase()
+        .replace(/[^\w\s-]/g, '') // Remove special characters
+        .replace(/[\s_-]+/g, '-') // Replace spaces with hyphens
+        .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+
+  const groomSlug = cleanName(groomName);
+  const brideSlug = cleanName(brideName);
+  const timestamp = Date.now().toString().slice(-6); // Last 6 digits of timestamp
+  
+  return `${groomSlug}-${brideSlug}-${timestamp}`;
+};
+
+// Generate invitation view URL
+export const generateInvitationURL = (slug: string): string => {
+  const baseUrl = window.location.origin;
+  return `${baseUrl}/invitation/${slug}`;
+};
+
+// Direct Supabase save with URL generation
 export const saveInvitationToSupabase = async (
   user: any,
   formData: InvitationFormData,
-  slug: string,
-): Promise<{ success: boolean; error?: string; data?: any }> => {
-  // Always dismiss any existing saving toast
-  toast.dismiss("saving-invitation");
+): Promise<{ success: boolean; error?: string; data?: any; url?: string }> => {
+  console.log("🚀 Direct Supabase invitation save started...");
 
-  // Input validation
+  // Validate inputs
   if (!user?.id) {
     toast.error("❌ Xatolik", {
       description: "Tizimga kirishingiz kerak",
@@ -52,35 +72,18 @@ export const saveInvitationToSupabase = async (
     };
   }
 
+  // Generate unique slug
+  const slug = generateInvitationSlug(formData.groomName, formData.brideName);
+  const invitationURL = generateInvitationURL(slug);
+
   // Show loading toast
-  toast.loading("💾 Taklifnoma saqlanmoqda...", {
-    description: "Iltimos, kuting...",
+  toast.loading("💾 Supabase ga taklifnoma saqlanmoqda...", {
+    description: "URL yaratilmoqda...",
     id: "saving-invitation",
   });
 
-  // Retry function for invitations
-  const retryWithBackoff = async <T>(
-    fn: () => Promise<T>,
-    maxRetries: number = 3,
-    baseDelay: number = 1000,
-  ): Promise<T> => {
-    for (let i = 0; i < maxRetries; i++) {
-      try {
-        return await fn();
-      } catch (error) {
-        if (i === maxRetries - 1) throw error;
-
-        const delay = baseDelay * Math.pow(2, i);
-        console.log(
-          `Invitation retry ${i + 1}/${maxRetries} after ${delay}ms...`,
-        );
-        await new Promise((resolve) => setTimeout(resolve, delay));
-      }
-    }
-    throw new Error("Max retries exceeded");
-  };
-
   try {
+    // Prepare invitation data for Supabase
     const invitationToSave = {
       user_id: user.id,
       groom_name: formData.groomName.trim(),
@@ -99,106 +102,92 @@ export const saveInvitationToSupabase = async (
       is_active: true,
     };
 
-    console.log(
-      "📤 Saving invitation to Supabase with retry logic...",
-      invitationToSave,
+    console.log("📤 Saving invitation to Supabase:", invitationToSave);
+    console.log("🔗 Generated URL:", invitationURL);
+
+    // Direct insert to Supabase with timeout
+    const savePromise = supabase
+      .from("invitations")
+      .insert(invitationToSave)
+      .select()
+      .single();
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("6 soniyalik vaqt tugadi")), 6000)
     );
 
-    // Try direct save first (no timeout race condition)
-    console.log("📤 Attempting direct invitation save to Supabase...");
-    let result;
-
-    try {
-      // Add 6-second timeout as requested
-      const savePromise = supabase
-        .from("invitations")
-        .insert(invitationToSave)
-        .select()
-        .single();
-
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("6 soniyalik vaqt tugadi")), 6000),
-      );
-
-      const { data, error } = (await Promise.race([
-        savePromise,
-        timeoutPromise,
-      ])) as any;
-      result = { data, error };
-      console.log("✅ Direct invitation save result:", result);
-    } catch (directError) {
-      console.log(
-        "❌ Direct invitation save failed, trying with retry logic...",
-        directError,
-      );
-
-      // If direct save fails, try with retry (with 6-second timeout)
-      result = await retryWithBackoff(
-        async () => {
-          const retryPromise = supabase
-            .from("invitations")
-            .insert(invitationToSave)
-            .select()
-            .single();
-
-          const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(
-              () => reject(new Error("6 soniyalik vaqt tugadi")),
-              6000,
-            ),
-          );
-
-          return (await Promise.race([retryPromise, timeoutPromise])) as any;
-        },
-        2,
-        3000,
-      ); // 2 retries with 3 second delay
-    }
-
-    const { data, error } = result;
+    const { data, error } = await Promise.race([savePromise, timeoutPromise]) as any;
 
     if (error) {
-      throw error;
+      console.error("❌ Supabase invitation save error:", error);
+      
+      // Try fallback save to localStorage
+      const fallbackResult = saveInvitationToLocalStorage(user, formData, slug);
+      
+      toast.dismiss("saving-invitation");
+      toast.warning("⚠️ Supabase xatosi, mahalliy saqlandi", {
+        description: `Xatolik: ${error.message}`,
+        duration: 6000,
+      });
+
+      return {
+        success: true, // Still success because saved locally
+        error: error.message,
+        data: fallbackResult.data,
+        url: invitationURL
+      };
     }
 
-    // Success
+    // Success!
     toast.dismiss("saving-invitation");
-    toast.success("🎉 Taklifnoma muvaffaqiyatli yaratildi!", {
-      description: "Taklifnoma Dashboard'da ko'rish mumkin.",
-      duration: 4000,
+    toast.success("🎉 Taklifnoma Supabase ga saqlandi!", {
+      description: `URL: ${invitationURL}`,
+      duration: 6000,
+      action: {
+        label: "Ko'rish",
+        onClick: () => window.open(invitationURL, '_blank')
+      }
     });
 
-    console.log("✅ Invitation saved successfully:", data);
-    return { success: true, data };
+    console.log("✅ Invitation successfully saved to Supabase:", data);
+    console.log("🔗 Invitation URL:", invitationURL);
+    
+    return { 
+      success: true, 
+      data: { ...data, url: invitationURL },
+      url: invitationURL 
+    };
+
   } catch (err: any) {
-    console.error("Invitation save error:", err);
-    toast.dismiss("saving-invitation");
-
-    // Try localStorage fallback regardless of error type
+    console.error("❌ Invitation save process failed:", err);
+    
+    // Fallback to localStorage
     const fallbackResult = saveInvitationToLocalStorage(user, formData, slug);
-
-    if (err.message?.includes("timeout") || err.message?.includes("Timeout")) {
+    
+    toast.dismiss("saving-invitation");
+    
+    if (err.message?.includes("6 soniyalik vaqt tugadi")) {
       toast.warning("⚠️ Vaqt tugadi", {
-        description:
-          "Taklifnoma mahalliy xotiraga saqlandi. Keyinroq internet orqali sinxronlanadi.",
+        description: "Taklifnoma mahalliy xotiraga saqlandi",
         duration: 6000,
       });
     } else {
-      const errorMessage = err?.message || "Noma'lum xatolik";
-      toast.warning("⚠️ Taklifnoma mahalliy xotiraga saqlandi", {
-        description: `Bazaga ulanib bo'lmadi: ${errorMessage}`,
+      toast.warning("⚠️ Kutilmagan xatolik", {
+        description: `Xatolik: ${err.message}. Mahalliy saqlandi.`,
         duration: 6000,
       });
     }
 
     return {
-      success: true, // Return success since we saved to localStorage
-      error: err?.message,
+      success: true,
+      error: err.message,
       data: fallbackResult.data,
+      url: invitationURL
     };
   }
 };
 
+// Fallback localStorage save
 export const saveInvitationToLocalStorage = (
   user: any,
   formData: InvitationFormData,
@@ -223,6 +212,7 @@ export const saveInvitationToLocalStorage = (
     is_active: true,
     is_local: true,
     created_at: new Date().toISOString(),
+    url: generateInvitationURL(slug)
   };
 
   try {
@@ -240,10 +230,66 @@ export const saveInvitationToLocalStorage = (
       (currentCount + 1).toString(),
     );
 
-    console.log("✅ Invitation saved to localStorage:", fallbackInvitation);
+    console.log("��� Invitation saved to localStorage:", fallbackInvitation);
     return { success: true, data: fallbackInvitation };
   } catch (err) {
-    console.error("Failed to save to localStorage:", err);
+    console.error("❌ Failed to save invitation to localStorage:", err);
     return { success: false, data: null };
+  }
+};
+
+// Test invitation table access
+export const testInvitationTableAccess = async () => {
+  try {
+    console.log("🔍 Testing invitations table access...");
+    
+    const { data, error } = await supabase
+      .from("invitations")
+      .select("id, groom_name, bride_name")
+      .limit(1);
+    
+    if (error) {
+      console.error("❌ Invitation table access failed:", error);
+      return { accessible: false, error: error.message };
+    }
+    
+    console.log("✅ Invitation table accessible, found:", data?.length || 0, "invitations");
+    return { accessible: true, count: data?.length || 0 };
+    
+  } catch (err: any) {
+    console.error("❌ Invitation table test failed:", err);
+    return { accessible: false, error: err.message };
+  }
+};
+
+// Get invitation by slug for public viewing
+export const getInvitationBySlug = async (slug: string) => {
+  try {
+    const { data, error } = await supabase
+      .from("invitations")
+      .select(`
+        *,
+        custom_templates (
+          name,
+          colors,
+          fonts,
+          config
+        )
+      `)
+      .eq("slug", slug)
+      .eq("is_active", true)
+      .single();
+    
+    if (error) {
+      console.error("❌ Error fetching invitation:", error);
+      return { success: false, error: error.message };
+    }
+    
+    console.log("✅ Invitation loaded:", data);
+    return { success: true, data };
+    
+  } catch (err: any) {
+    console.error("❌ Error in getInvitationBySlug:", err);
+    return { success: false, error: err.message };
   }
 };

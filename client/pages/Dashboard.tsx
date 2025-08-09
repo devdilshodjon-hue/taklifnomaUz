@@ -309,6 +309,9 @@ export default function Dashboard() {
             </p>
           </div>
 
+          {/* Database Status */}
+          <DatabaseStatus className="mb-6" />
+
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="flex items-center gap-2 animate-fade-in">

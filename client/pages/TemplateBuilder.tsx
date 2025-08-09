@@ -692,12 +692,12 @@ export default function TemplateBuilder() {
                 </TabsList>
 
                 <TabsContent value="info" className="mt-4 lg:mt-6">
-                  <div className="card-modern p-4 lg:p-6 xl:p-8 shadow-sm">
-                    <h2 className="font-heading text-lg xl:text-xl font-semibold text-foreground mb-6 flex items-center gap-3">
-                      <Settings className="w-5 h-5 xl:w-6 xl:h-6 text-primary" />
+                  <div className="card-modern p-4 lg:p-5 shadow-sm">
+                    <h2 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Settings className="w-5 h-5 text-primary" />
                       Shablon Ma'lumotlari
                     </h2>
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                       <div>
                         <Label htmlFor="templateName" className="text-sm font-medium">Shablon Nomi</Label>
                         <Input

@@ -949,7 +949,7 @@ export default function AdvancedTemplateBuilder() {
               <Button
                 onClick={async () => {
                   const results = await runSupabaseIntegrationTest();
-                  displayTestResults(results);
+                  displayBasicTestResults(results);
                 }}
                 variant="outline"
                 size="sm"

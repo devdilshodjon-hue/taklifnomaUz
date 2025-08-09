@@ -757,6 +757,15 @@ export default function TemplateBuilder() {
             </div>
             <div className="flex items-center gap-3">
               <Button
+                onClick={() => setFullScreenPreview(true)}
+                variant="outline"
+                size="sm"
+                className="hover:bg-muted"
+              >
+                <Monitor className="w-4 h-4 mr-2" />
+                To'liq Ekran
+              </Button>
+              <Button
                 onClick={resetToDefaults}
                 variant="outline"
                 size="sm"

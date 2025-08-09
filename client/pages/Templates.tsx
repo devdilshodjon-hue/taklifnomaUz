@@ -105,13 +105,6 @@ export default function Templates() {
 
       <div className="max-w-6xl mx-auto p-6">
 
-        {/* Error Alert */}
-        {error && (
-          <Alert className="mb-6 border-red-200 bg-red-50">
-            <AlertCircle className="h-4 w-4 text-red-600" />
-            <AlertDescription className="text-red-800">{error}</AlertDescription>
-          </Alert>
-        )}
       </div>
 
       <div className="max-w-6xl mx-auto p-6">

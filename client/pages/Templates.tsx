@@ -68,13 +68,24 @@ export default function Templates() {
   };
 
   // Template kategoriya filter
-  const handleCategoryChange = (categoryId: string) => {
+  const handleCategoryChange = async (categoryId: string) => {
     setSelectedCategory(categoryId);
-    if (categoryId === "all") {
-      setFilteredTemplates(weddingTemplates);
-    } else {
-      const filtered = getTemplatesByCategory(categoryId);
-      setFilteredTemplates(filtered);
+    try {
+      if (categoryId === "all") {
+        setFilteredTemplates(templates);
+      } else {
+        const filtered = await templateManager.getTemplatesByCategory(categoryId);
+        setFilteredTemplates(filtered);
+      }
+    } catch (err) {
+      console.error("❌ Template filterlashda xatolik:", err);
+      // Fallback to client-side filtering
+      if (categoryId === "all") {
+        setFilteredTemplates(templates);
+      } else {
+        const filtered = templates.filter(t => t.category === categoryId);
+        setFilteredTemplates(filtered);
+      }
     }
   };
 

@@ -734,8 +734,13 @@ export default function AdvancedTemplateBuilder() {
       }
     };
 
-    // Initialize auth on mount
-    initializeAuth();
+    // Initialize auth and setup demo data
+    const initializeApp = async () => {
+      await initializeAuth();
+      await setupDemoData();
+    };
+
+    initializeApp();
     checkConnection();
 
     const interval = setInterval(checkConnection, 30000); // Check every 30 seconds

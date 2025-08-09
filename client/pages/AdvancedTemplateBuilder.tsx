@@ -868,7 +868,7 @@ export default function AdvancedTemplateBuilder() {
             </div>
             <div className="flex items-center gap-3">
               {/* Connection Status */}
-              <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-slate-100">
+              <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800">
                 {connectionStatus === "checking" && (
                   <>
                     <Loader2 className="w-3 h-3 animate-spin text-slate-500" />

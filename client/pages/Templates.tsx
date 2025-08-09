@@ -36,24 +36,14 @@ export default function Templates() {
     try {
       console.log("🔄 Shablonlarni yuklamoqda...");
 
-      // Check database status
-      const dbSetup = await checkDatabaseSetup();
-      setDbStatus(dbSetup);
+      // Always use default templates for now
+      console.log("✅ Default shablonlarni ishlatmoqda...");
 
-      if (dbSetup) {
-        console.log("✅ Ma'lumotlar bazasi mavjud, shablonlarni bazadan yuklamoqda...");
-        // TODO: Load from database when available
-        // For now, use default templates
-      } else {
-        console.log("⚠️ Ma'lumotlar bazasi mavjud emas, default shablonlarni ishlatmoqda...");
-      }
+      // Use default templates directly
+      setTemplates(defaultWeddingTemplates);
+      setFilteredTemplates(defaultWeddingTemplates);
 
-      // Load default templates
-      const loadedTemplates = await templateManager.getAllTemplates();
-      setTemplates(loadedTemplates);
-      setFilteredTemplates(loadedTemplates);
-
-      console.log("✅ Shablonlar muvaffaqiyatli yuklandi:", loadedTemplates.length);
+      console.log("✅ Shablonlar muvaffaqiyatli yuklandi:", defaultWeddingTemplates.length);
 
     } catch (err) {
       console.error("❌ Shablonlarni yuklashda xatolik:", err);

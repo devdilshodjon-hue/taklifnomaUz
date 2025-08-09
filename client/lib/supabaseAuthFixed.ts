@@ -111,20 +111,9 @@ export const createAnonymousSession = async (): Promise<string> => {
   }
 };
 
-// Get current user ID (anonymous or authenticated)
+// Get current user ID (using localStorage for safety)
 export const getCurrentUserId = (): string => {
-  try {
-    // Try to get session from auth (sync method)
-    const session = supabase.auth.getSession();
-
-    if (session && session.data?.session?.user) {
-      return session.data.session.user.id;
-    }
-  } catch (err) {
-    // Ignore auth errors and fall back to anonymous
-  }
-
-  // Return anonymous user ID
+  // Always use anonymous user ID for safety
   let anonymousId = localStorage.getItem('taklifnoma_anonymous_user_id');
   if (!anonymousId) {
     anonymousId = `anon_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;

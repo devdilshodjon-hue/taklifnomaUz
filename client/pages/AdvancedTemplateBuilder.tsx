@@ -182,6 +182,7 @@ export default function AdvancedTemplateBuilder() {
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
   const [history, setHistory] = useState<TemplateConfig[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const [connectionStatus, setConnectionStatus] = useState<"checking" | "online" | "offline">("checking");
 
   // Template data for real-time preview
   const [templateData, setTemplateData] = useState<InvitationData>({

@@ -27,6 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import DatabaseStatus from "@/components/DatabaseStatus";
 
 interface Invitation {
   id: string;

@@ -441,6 +441,7 @@ export default function TemplateBuilder() {
         `Shablon bazaga saqlanmadi: ${errorMessage}. Vaqtincha mahalliy xotiraga saqlandi.`,
       );
     } finally {
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   };

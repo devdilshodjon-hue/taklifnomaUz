@@ -583,7 +583,7 @@ export default function TemplateBuilder() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-rose-50 via-background to-purple-50/30">
+      <div className="min-h-screen hero-gradient">
         {/* Beautiful Header */}
         <nav className="bg-white/90 backdrop-blur-md border-b border-rose-200/50 p-4 sticky top-0 z-50 shadow-lg">
           <div className="max-w-7xl mx-auto flex items-center justify-between">

@@ -43,24 +43,12 @@ const AuthContext = createContext<AuthContextType>(defaultAuthContextValue);
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    console.error("useAuth called outside of AuthProvider");
-    // Return a safe default instead of throwing to prevent app crashes
-    return {
-      user: null,
-      profile: null,
-      session: null,
-      loading: false,
-      isInitialized: false,
-      signUp: async () => ({ error: new Error("Auth not available") }),
-      signIn: async () => ({ error: new Error("Auth not available") }),
-      signInWithGoogle: async () => ({
-        error: new Error("Auth not available"),
-      }),
-      signOut: async () => ({ error: new Error("Auth not available") }),
-      updateProfile: async () => ({ error: new Error("Auth not available") }),
-    };
+
+  // Context should never be undefined now due to default value
+  if (!context.isInitialized) {
+    console.warn("useAuth called before AuthProvider initialization");
   }
+
   return context;
 }
 

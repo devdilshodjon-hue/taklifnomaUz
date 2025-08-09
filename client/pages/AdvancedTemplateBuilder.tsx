@@ -872,7 +872,7 @@ export default function AdvancedTemplateBuilder() {
                 {connectionStatus === "checking" && (
                   <>
                     <Loader2 className="w-3 h-3 animate-spin text-slate-500" />
-                    <span className="text-xs text-slate-600">
+                    <span className="text-xs text-slate-600 dark:text-slate-400">
                       Tekshirilmoqda
                     </span>
                   </>

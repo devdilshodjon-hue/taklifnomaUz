@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNetworkStatus } from "@/hooks/useNetworkStatus";
 import {
   Sparkles,
   Mail,
@@ -9,6 +10,8 @@ import {
   EyeOff,
   ArrowRight,
   Loader2,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +20,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function Login() {
   const { signIn, signInWithGoogle, user, loading: authLoading } = useAuth();
+  const { isOnline, hasNetworkError, reportNetworkError } = useNetworkStatus();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,12 +43,33 @@ export default function Login() {
     const { error } = await signIn(email, password);
 
     if (error) {
-      setError(error.message);
+      // Report network error for status tracking
+      if (error.message?.includes('Internet ulanishi') ||
+          error.message?.includes('Failed to fetch') ||
+          error.message?.includes('Timeout') ||
+          error.message?.includes('ulanish')) {
+        reportNetworkError();
+        setError(`${error.message} Demo rejimda davom etishingiz mumkin.`);
+      } else {
+        setError(error.message);
+      }
     } else {
       navigate("/dashboard");
     }
 
     setLoading(false);
+  };
+
+  // Demo mode login
+  const handleDemoLogin = () => {
+    console.log("Demo rejimda kirish...");
+    // Create a demo user session
+    localStorage.setItem('demo_user', JSON.stringify({
+      id: 'demo_user_123',
+      email: 'demo@taklifnoma.uz',
+      created_at: new Date().toISOString()
+    }));
+    navigate("/dashboard");
   };
 
   const handleGoogleLogin = async () => {
@@ -100,6 +125,28 @@ export default function Login() {
 
         {/* Login Form */}
         <div className="card-modern p-8 shadow-2xl backdrop-blur-sm border-primary/10 animate-slide-up">
+          {/* Network Status Indicator */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2 text-xs">
+              {isOnline ? (
+                <>
+                  <Wifi className="w-3 h-3 text-green-500" />
+                  <span className="text-green-600">Online</span>
+                </>
+              ) : (
+                <>
+                  <WifiOff className="w-3 h-3 text-red-500" />
+                  <span className="text-red-600">Offline</span>
+                </>
+              )}
+            </div>
+            {hasNetworkError && (
+              <span className="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded">
+                Ulanish muammosi
+              </span>
+            )}
+          </div>
+
           {error && (
             <Alert className="mb-6 border-red-200 bg-red-50/50 animate-shake">
               <AlertDescription className="text-red-800">
@@ -224,6 +271,22 @@ export default function Login() {
             </button>
           </div>
         </div>
+
+        {/* Demo Mode Button */}
+        {(hasNetworkError || !isOnline || (error && (error.includes('Internet ulanishi') || error.includes('ulanish') || error.includes('Timeout')))) && (
+          <div className="text-center mt-6 animate-fade-in">
+            <Button
+              onClick={handleDemoLogin}
+              variant="outline"
+              className="w-full h-12 border-2 border-orange-200 bg-orange-50 hover:bg-orange-100 text-orange-700"
+            >
+              🚀 Demo rejimda davom etish
+            </Button>
+            <p className="text-xs text-muted-foreground mt-2">
+              Internet aloqasi yo'q? Demo rejimda barcha xususiyatlarni sinab ko'ring
+            </p>
+          </div>
+        )}
 
         {/* Register Link */}
         <div className="text-center mt-8 animate-fade-in delay-300">

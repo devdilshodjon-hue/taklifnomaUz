@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/lib/supabase";
+import { supabase, templateOperations } from "@/lib/supabase";
+import { saveTemplateToSupabase } from "@/lib/templateSaver";
 import {
   ArrowLeft,
   Save,
@@ -32,6 +33,7 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -80,7 +82,7 @@ interface InvitationData {
 }
 
 export default function TemplateBuilder() {
-  const { user } = useAuth();
+  const { user, session, profile } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
@@ -89,6 +91,7 @@ export default function TemplateBuilder() {
   const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">(
     "desktop",
   );
+  const [fullScreenPreview, setFullScreenPreview] = useState(false);
 
   // Template data for real-time preview
   const [templateData, setTemplateData] = useState<InvitationData>({
@@ -335,19 +338,39 @@ export default function TemplateBuilder() {
   };
 
   const saveTemplate = async () => {
-    if (!user) {
-      setError("Shablon saqlash uchun tizimga kirishingiz kerak");
-      return;
-    }
+    console.log("🚀 Starting template save process...");
 
-    if (!templateData.templateName.trim()) {
-      setError("Iltimos, shablon nomini kiriting");
-      return;
-    }
+    // Clear any existing errors
+    setError("");
+    setSuccess("");
 
     setLoading(true);
     setError("");
     setSuccess("");
+
+    // Set timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      console.log("⏰ Template save timeout!");
+      setLoading(false);
+      toast.error("⏰ Vaqt tugadi", {
+        description: "Shablon saqlash jarayoni juda uzoq davom etdi. Qayta urinib ko'ring.",
+        duration: 5000,
+      });
+      setError("Vaqt tugadi. Iltimos, qayta urinib ko'ring.");
+    }, 5000); // 5 seconds timeout (reduced)
+
+    console.log("✅ Starting save with user ID:", user.id);
+    console.log("🔧 Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
+    console.log(
+      "🔧 Supabase Key length:",
+      import.meta.env.VITE_SUPABASE_ANON_KEY?.length,
+    );
+
+    // Show progress toast
+    toast.loading("💾 Shablon saqlanmoqda...", {
+      description: "Iltimos, kuting...",
+      id: "saving-template",
+    });
 
     try {
       const templateToSave = {
@@ -355,34 +378,91 @@ export default function TemplateBuilder() {
         name: templateData.templateName.trim(),
         description: `Maxsus shablon - ${new Date().toLocaleDateString("uz-UZ")}`,
         category: "custom",
-        config: config,
         colors: config.colors,
         fonts: config.fonts,
-        layout: config.layout,
+        config: config,
         is_public: false,
         is_featured: false,
+        usage_count: 0,
         tags: [config.layout.style, "maxsus", "real-time"],
       };
 
+      console.log("📋 Template data to save:", templateToSave);
+
+      // Test Supabase connection first
+      console.log("���� Testing Supabase connection...");
+      try {
+        const { data: testData, error: testError } = await supabase
+          .from("custom_templates")
+          .select("id")
+          .limit(1);
+        console.log("🔗 Connection test:", { testData, testError });
+      } catch (connErr) {
+        console.error("🔗 Connection test failed:", connErr);
+      }
+
+      console.log("📤 Attempting insert...");
       const { data, error: saveError } = await supabase
         .from("custom_templates")
         .insert(templateToSave)
         .select()
         .single();
 
+      console.log("📤 Supabase response:", { data, error: saveError });
+
       if (saveError) {
         throw saveError;
       }
 
-      setSuccess("🎉 Shablon muvaffaqiyatli saqlandi!");
+      // Dismiss loading toast and show success
+      toast.dismiss("saving-template");
+      toast.success("🎉 Shablon muvaffaqiyatli saqlandi!", {
+        description: "Shablon Templates sahifasida ko'rish mumkin.",
+        duration: 4000,
+      });
 
       setTimeout(() => {
         navigate("/templates");
-      }, 2000);
+      }, 1500);
     } catch (err: any) {
       console.error("Template save error:", err);
+      const errorMessage =
+        err?.message || err?.toString() || "Noma'lum xatolik";
 
-      // Save to localStorage as fallback
+      // Try using templateOperations as fallback
+      try {
+        console.log("🔄 Trying template operations fallback...");
+        const { data: fallbackData, error: fallbackError } =
+          await templateOperations.create({
+            user_id: user.id,
+            name: templateData.templateName.trim(),
+            description: `Maxsus shablon - ${new Date().toLocaleDateString("uz-UZ")}`,
+            category: "custom",
+            colors: config.colors,
+            fonts: config.fonts,
+            config: config,
+            is_public: false,
+            is_featured: false,
+            usage_count: 0,
+            tags: [config.layout.style, "maxsus", "real-time"],
+          });
+
+        if (fallbackData && !fallbackError) {
+          toast.dismiss("saving-template");
+          toast.success("🎉 Shablon muvaffaqiyatli saqlandi!", {
+            description: "Fallback sistemda saqlandi.",
+            duration: 4000,
+          });
+          setTimeout(() => {
+            navigate("/templates");
+          }, 1500);
+          return;
+        }
+      } catch (fallbackErr) {
+        console.warn("Template operations fallback also failed:", fallbackErr);
+      }
+
+      // Final fallback to localStorage
       const fallbackTemplate = {
         id: `local_${Date.now()}`,
         ...templateData,
@@ -396,12 +476,17 @@ export default function TemplateBuilder() {
         JSON.stringify(fallbackTemplate),
       );
 
-      setSuccess("✅ Shablon vaqtincha saqlandi (mahalliy xotira)");
+      toast.dismiss("saving-template");
+      toast.warning("⚠️ Shablon mahalliy xotiraga saqlandi", {
+        description: `Bazaga ulanib bo'lmadi: ${errorMessage}`,
+        duration: 5000,
+      });
 
-      setTimeout(() => {
-        navigate("/templates");
-      }, 2000);
+      setError(
+        `Shablon bazaga saqlanmadi: ${errorMessage}. Vaqtincha mahalliy xotiraga saqlandi.`,
+      );
     } finally {
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   };
@@ -683,6 +768,15 @@ export default function TemplateBuilder() {
               </div>
             </div>
             <div className="flex items-center gap-3">
+              <Button
+                onClick={() => setFullScreenPreview(true)}
+                variant="outline"
+                size="sm"
+                className="hover:bg-muted"
+              >
+                <Monitor className="w-4 h-4 mr-2" />
+                To'liq Ekran
+              </Button>
               <Button
                 onClick={resetToDefaults}
                 variant="outline"
@@ -1315,6 +1409,56 @@ export default function TemplateBuilder() {
           </div>
         </div>
       </div>
+
+      {/* Full-Screen Preview Modal */}
+      {fullScreenPreview && (
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center">
+          <div className="absolute top-4 right-4 z-10">
+            <Button
+              onClick={() => setFullScreenPreview(false)}
+              variant="outline"
+              size="sm"
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+            >
+              <X className="w-4 h-4 mr-2" />
+              Yopish
+            </Button>
+          </div>
+
+          <div className="absolute top-4 left-4 z-10 flex gap-2">
+            <Button
+              onClick={() => setPreviewDevice("desktop")}
+              variant={previewDevice === "desktop" ? "default" : "outline"}
+              size="sm"
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+            >
+              <Monitor className="w-4 h-4 mr-2" />
+              Desktop
+            </Button>
+            <Button
+              onClick={() => setPreviewDevice("mobile")}
+              variant={previewDevice === "mobile" ? "default" : "outline"}
+              size="sm"
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+            >
+              <Smartphone className="w-4 h-4 mr-2" />
+              Mobil
+            </Button>
+          </div>
+
+          <div className="w-full h-full p-8 overflow-auto">
+            <div className={`mx-auto transition-all duration-300 ${
+              previewDevice === "mobile"
+                ? "max-w-sm"
+                : "max-w-4xl"
+            }`}>
+              <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
+                <TemplatePreview />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </ProtectedRoute>
   );
 }

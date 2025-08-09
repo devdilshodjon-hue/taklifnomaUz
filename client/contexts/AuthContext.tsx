@@ -70,6 +70,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const initializeAuth = async () => {
       try {
+        // Check for demo user first
+        const demoUser = localStorage.getItem('demo_user');
+        if (demoUser) {
+          console.log("Demo user found, setting up demo session...");
+          const parsedDemoUser = JSON.parse(demoUser);
+
+          // Create demo user and profile
+          const demoUserData = {
+            id: parsedDemoUser.id,
+            email: parsedDemoUser.email,
+            created_at: parsedDemoUser.created_at,
+            user_metadata: {
+              first_name: "Demo",
+              last_name: "User"
+            }
+          };
+
+          const demoProfile = {
+            id: parsedDemoUser.id,
+            email: parsedDemoUser.email,
+            first_name: "Demo",
+            last_name: "User",
+            avatar_url: null,
+            created_at: parsedDemoUser.created_at,
+            updated_at: parsedDemoUser.created_at,
+            phone: null,
+            company_name: null,
+            is_active: true,
+            settings: {},
+            metadata: {},
+          };
+
+          setUser(demoUserData as any);
+          setProfile(demoProfile);
+          setSession({
+            user: demoUserData,
+            access_token: 'demo_token',
+            refresh_token: 'demo_refresh',
+            expires_at: Date.now() / 1000 + 3600,
+            token_type: 'bearer'
+          } as any);
+          setLoading(false);
+          setIsInitialized(true);
+          return;
+        }
+
         // Test database connection first
         const testDatabaseConnection = async () => {
           try {
@@ -577,22 +623,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password: string,
     metadata?: { first_name?: string; last_name?: string },
   ) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: metadata,
-      },
-    });
-    return { error };
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: metadata,
+        },
+      });
+      return { error };
+    } catch (networkError: any) {
+      console.error("Network error during sign up:", networkError);
+
+      if (networkError.name === 'AbortError') {
+        return { error: { message: "Ulanish vaqti tugadi. Iltimos, qayta urinib ko'ring." } as any };
+      }
+
+      if (networkError.message?.includes('Failed to fetch')) {
+        return { error: { message: "Internet ulanishi bilan muammo. Iltimos, ulanishni tekshiring." } as any };
+      }
+
+      return { error: { message: "Ro'yxatdan o'tishda xatolik. Qayta urinib ko'ring." } as any };
+    }
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    return { error };
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      return { error };
+    } catch (networkError: any) {
+      console.error("Network error during sign in:", networkError);
+
+      // Handle network errors
+      if (networkError.name === 'TypeError' && networkError.message?.includes('fetch')) {
+        return { error: { message: "Internet ulanishi bilan muammo. Iltimos, ulanishni tekshiring." } as any };
+      }
+
+      return { error: { message: "Tizimga kirishda xatolik. Qayta urinib ko'ring." } as any };
+    }
   };
 
   const signInWithGoogle = async () => {
@@ -613,15 +684,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       return { error };
-    } catch (err) {
-      console.error("Google sign-in error:", err);
-      return { error: err as any };
+    } catch (networkError: any) {
+      console.error("Network error during Google sign-in:", networkError);
+
+      if (networkError.name === 'AbortError') {
+        return { error: { message: "Ulanish vaqti tugadi. Iltimos, qayta urinib ko'ring." } as any };
+      }
+
+      if (networkError.message?.includes('Failed to fetch')) {
+        return { error: { message: "Internet ulanishi bilan muammo. Google orqali kirishda xatolik." } as any };
+      }
+
+      return { error: { message: "Google orqali kirishda xatolik. Qayta urinib ko'ring." } as any };
     }
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    return { error };
+    // Clear demo user if exists
+    localStorage.removeItem('demo_user');
+
+    try {
+      const { error } = await supabase.auth.signOut();
+      return { error };
+    } catch (networkError: any) {
+      console.warn("Network error during sign out:", networkError);
+      // Even if network fails, clear local state
+      setUser(null);
+      setProfile(null);
+      setSession(null);
+      return { error: null };
+    }
   };
 
   const updateProfile = async (updates: Partial<Profile>) => {

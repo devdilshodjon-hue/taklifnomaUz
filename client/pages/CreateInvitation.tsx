@@ -24,6 +24,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { supabase, invitationOperations } from "@/lib/supabase";
 import cacheUtils from "@/lib/cache";
 import { generateDemoUUID, generateUUIDFromSlug } from "@/lib/utils";
+import { saveInvitationToSupabase } from "@/lib/invitationSaver";
 import {
   templateManager,
   defaultWeddingTemplates,
@@ -180,28 +181,11 @@ export default function CreateInvitation() {
   };
 
   const handleSave = async () => {
-    console.log("🚀 Starting optimized invitation creation...");
-
-    if (!user) {
-      setError("Taklifnoma yaratish uchun tizimga kirishingiz kerak");
-      return;
-    }
-
-    if (
-      !formData.groomName ||
-      !formData.brideName ||
-      !formData.weddingDate ||
-      !formData.venue ||
-      !formData.address
-    ) {
-      setError("Iltimos, barcha majburiy maydonlarni to'ldiring");
-      return;
-    }
+    console.log("🚀 Starting invitation creation...");
 
     setIsLoading(true);
     setError("");
-    console.log("📋 Starting high-performance invitation creation...");
-    console.log("👤 User authenticated:", !!user, "User ID:", user?.id);
+    setSuccess("");
 
     try {
       const slug = generateSlug();
@@ -223,13 +207,11 @@ export default function CreateInvitation() {
         rsvp_deadline: formData.rsvpDeadline || null,
         slug: slug,
         is_active: true,
-        metadata: {
-          created_with: "CreateInvitation v2.0",
-          performance_optimized: true,
-        },
       };
 
       console.log("📋 Invitation data prepared:", invitationData);
+
+      console.log("📤 Sending invitation data:", invitationData);
 
       // Use optimized invitation operations with automatic caching and fallback
       const { data: invitation, error } =
@@ -237,9 +219,33 @@ export default function CreateInvitation() {
 
       if (error) {
         console.error("❌ Invitation creation error:", error);
-        throw new Error(
-          error.message || "Taklifnoma yaratishda xatolik yuz berdi",
-        );
+
+        // Try direct database insert as backup
+        console.log("🔄 Trying direct database insert...");
+        try {
+          const { data: directInvitation, error: directError } = await supabase
+            .from("invitations")
+            .insert(invitationData)
+            .select()
+            .single();
+
+          if (directError) {
+            console.error("❌ Direct insert also failed:", directError);
+            throw new Error(
+              `Database error: ${directError.message || "Taklifnoma yaratishda xatolik yuz berdi"}`,
+            );
+          }
+
+          console.log("✅ Direct insert successful:", directInvitation);
+          invitation = directInvitation;
+        } catch (directErr: any) {
+          console.error("❌ All creation methods failed:", directErr);
+          throw new Error(
+            directErr?.message ||
+              error?.message ||
+              "Taklifnoma yaratishda xatolik yuz berdi",
+          );
+        }
       }
 
       console.log("✅ Invitation created successfully:", invitation);

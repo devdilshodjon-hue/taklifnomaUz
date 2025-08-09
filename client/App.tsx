@@ -10,13 +10,13 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/DashboardEnhancedFixed";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
-import CreateInvitation from "./pages/CreateInvitation";
+import CreateInvitation from "./pages/CreateInvitationFixed";
 import InvitationView from "./pages/InvitationView";
 import Templates from "./pages/Templates";
-import TemplateBuilder from "./pages/TemplateBuilder";
+import TemplateBuilder from "./pages/AdvancedTemplateBuilder";
 import Pricing from "./pages/Pricing";
 import Features from "./pages/Features";
 import Privacy from "./pages/Privacy";
@@ -62,7 +62,7 @@ function App() {
                     <Route path="/help" element={<Help />} />
                     <Route path="/purchase" element={<Purchase />} />
                     <Route
-                      path="/invitation/:id"
+                      path="/invitation/:slug"
                       element={<InvitationView />}
                     />
                     {/* Admin Routes */}

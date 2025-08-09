@@ -1,23 +1,51 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Eye, ArrowRight, Sparkles, Loader2 } from "lucide-react";
+import { Eye, ArrowRight, Sparkles, Loader2, Star, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import TemplateRenderer from "@/components/TemplateRenderer";
 import Navigation from "@/components/Navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabase";
 import {
   defaultWeddingTemplates,
   templateCategories,
   type DefaultTemplate,
 } from "@/lib/defaultTemplates";
 
+interface CustomTemplate {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  colors: any;
+  fonts: any;
+  config: any;
+  is_public: boolean;
+  is_featured: boolean;
+  usage_count: number;
+  tags: string[];
+  created_at: string;
+  preview_image?: string;
+  user_id?: string;
+}
+
+interface ExtendedTemplate extends DefaultTemplate {
+  isCustom?: boolean;
+  customData?: CustomTemplate;
+  usage_count?: number;
+  is_featured?: boolean;
+}
+
 export default function Templates() {
+  const { user, session, profile } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [templates, setTemplates] = useState<DefaultTemplate[]>([]);
-  const [filteredTemplates, setFilteredTemplates] = useState<DefaultTemplate[]>(
-    [],
-  );
+  const [templates, setTemplates] = useState<ExtendedTemplate[]>([]);
+  const [filteredTemplates, setFilteredTemplates] = useState<
+    ExtendedTemplate[]
+  >([]);
   const [previewTemplate, setPreviewTemplate] =
-    useState<DefaultTemplate | null>(null);
+    useState<ExtendedTemplate | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -31,20 +59,177 @@ export default function Templates() {
     setLoading(true);
     setError("");
 
-    try {
-      console.log("🔄 Shablonlarni yuklamoqda...");
-
-      // Always use default templates for now
-      console.log("✅ Default shablonlarni ishlatmoqda...");
-
-      // Use default templates directly
+    // Set timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      console.log("⏰ Templates loading timeout!");
+      setLoading(false);
+      setError(
+        "Shablonlar yuklash juda uzoq davom etdi. Default shablonlar ko'rsatiladi.",
+      );
       setTemplates(defaultWeddingTemplates);
       setFilteredTemplates(defaultWeddingTemplates);
+    }, 5000); // 5 seconds timeout (reduced)
 
-      console.log(
-        "✅ Shablonlar muvaffaqiyatli yuklandi:",
-        defaultWeddingTemplates.length,
-      );
+    try {
+      console.log("🔄 Shablonlarni yuklamoqda...");
+      console.log("👤 User:", !!user, user?.id);
+      console.log("📋 Session:", !!session, session?.user?.id);
+      console.log("📋 Profile:", !!profile, profile?.id);
+
+      // Start with default templates
+      let allTemplates: ExtendedTemplate[] = [...defaultWeddingTemplates];
+
+      // Try to load custom templates from Supabase
+      let customTemplatesData: CustomTemplate[] = [];
+      try {
+        console.log("🔄 Custom shablonlarni Supabase dan yuklamoqda...");
+
+        const { data: customTemplates, error: customError } = await supabase
+          .from("custom_templates")
+          .select("*")
+          .eq("is_active", true)
+          .order("created_at", { ascending: false });
+
+        if (customError) {
+          console.warn("⚠️ Custom templates yuklashda xatolik:", customError);
+        } else if (customTemplates && customTemplates.length > 0) {
+          console.log("✅ Custom templates topildi:", customTemplates.length);
+          customTemplatesData = customTemplates;
+
+          // Convert custom templates to ExtendedTemplate format
+          const convertedCustomTemplates: ExtendedTemplate[] =
+            customTemplates.map((custom: CustomTemplate) => ({
+              id: custom.id,
+              name: custom.name,
+              description: custom.description,
+              category: custom.category || "custom",
+              colors: custom.colors || {},
+              fonts: custom.fonts || {},
+              preview: "🎨", // Custom icon for custom templates
+              isCustom: true,
+              customData: custom,
+              usage_count: custom.usage_count || 0,
+              is_featured: custom.is_featured || false,
+            }));
+
+          // Add custom templates to the beginning
+          allTemplates = [...convertedCustomTemplates, ...allTemplates];
+        }
+      } catch (customErr) {
+        console.warn("⚠️ Custom templates yuklanmadi:", customErr);
+      }
+
+      // Also load from localStorage (fallback templates)
+      try {
+        console.log("🔄 LocalStorage'dan shablonlarni yuklamoqda...");
+        const localTemplates: ExtendedTemplate[] = [];
+
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (
+            key &&
+            (key.startsWith("custom_template_") ||
+              key.startsWith("demo_template_"))
+          ) {
+            try {
+              const templateData = localStorage.getItem(key);
+              if (templateData) {
+                const parsedTemplate = JSON.parse(templateData);
+
+                const isDemoTemplate = key.startsWith("demo_template_");
+                const localTemplate: ExtendedTemplate = {
+                  id: parsedTemplate.id,
+                  name:
+                    parsedTemplate.name +
+                    (isDemoTemplate ? " (Demo)" : " (Mahalliy)"),
+                  description:
+                    parsedTemplate.description ||
+                    (isDemoTemplate
+                      ? "Demo shablon"
+                      : "Mahalliy saqlangan shablon"),
+                  category:
+                    parsedTemplate.category ||
+                    (isDemoTemplate ? "demo" : "local"),
+                  colors: parsedTemplate.colors || {},
+                  fonts: parsedTemplate.fonts || {},
+                  preview: isDemoTemplate ? "🎭" : "💾", // Demo vs Local storage icon
+                  isCustom: true,
+                  customData: parsedTemplate,
+                  usage_count: 0,
+                  is_featured: false,
+                };
+
+                localTemplates.push(localTemplate);
+              }
+            } catch (parseErr) {
+              console.warn("LocalStorage template parse error:", parseErr);
+            }
+          }
+        }
+
+        if (localTemplates.length > 0) {
+          console.log(
+            "✅ LocalStorage templates topildi:",
+            localTemplates.length,
+          );
+          // Add local templates after Supabase templates
+          allTemplates = [
+            ...allTemplates.slice(0, customTemplatesData.length),
+            ...localTemplates,
+            ...allTemplates.slice(customTemplatesData.length),
+          ];
+        }
+      } catch (localErr) {
+        console.warn("⚠️ LocalStorage templates yuklanmadi:", localErr);
+      }
+
+      // Also load popular public templates if user is logged in
+      if (user) {
+        try {
+          const { data: publicTemplates, error: publicError } = await supabase
+            .from("custom_templates")
+            .select("*")
+            .eq("is_public", true)
+            .eq("is_active", true)
+            .order("usage_count", { ascending: false })
+            .limit(10);
+
+          if (!publicError && publicTemplates && publicTemplates.length > 0) {
+            console.log("✅ Public templates topildi:", publicTemplates.length);
+
+            const convertedPublicTemplates: ExtendedTemplate[] =
+              publicTemplates.map((pub: CustomTemplate) => ({
+                id: `public_${pub.id}`,
+                name: `${pub.name} (Ommaviy)`,
+                description: pub.description,
+                category: pub.category || "popular",
+                colors: pub.colors || {},
+                fonts: pub.fonts || {},
+                preview: "⭐", // Star icon for popular templates
+                isCustom: true,
+                customData: pub,
+                usage_count: pub.usage_count || 0,
+                is_featured: true,
+              }));
+
+            // Add popular templates after custom templates
+            const customCount = customTemplatesData.length;
+            allTemplates = [
+              ...allTemplates.slice(0, customCount),
+              ...convertedPublicTemplates,
+              ...allTemplates.slice(customCount),
+            ];
+          }
+        } catch (publicErr) {
+          console.warn("⚠️ Public templates yuklanmadi:", publicErr);
+        }
+      }
+
+      setTemplates(allTemplates);
+      setFilteredTemplates(allTemplates);
+
+      console.log("✅ Barcha shablonlar yuklandi:", allTemplates.length);
+      clearTimeout(timeoutId); // Clear timeout on success
     } catch (err) {
       console.error("❌ Shablonlarni yuklashda xatolik:", err);
       setError("Shablonlarni yuklashda xatolik yuz berdi");
@@ -52,6 +237,7 @@ export default function Templates() {
       // Fallback to default templates
       setTemplates(defaultWeddingTemplates);
       setFilteredTemplates(defaultWeddingTemplates);
+      clearTimeout(timeoutId); // Clear timeout on error
     } finally {
       setLoading(false);
     }
@@ -172,6 +358,36 @@ export default function Templates() {
                 className="aspect-[3/4] mb-4 rounded-lg overflow-hidden border-2 border-border relative"
                 style={{ backgroundColor: template.colors.background }}
               >
+                {/* Template Type Indicators */}
+                <div className="absolute top-2 left-2 z-10 flex gap-2">
+                  {template.isCustom && (
+                    <Badge
+                      variant="secondary"
+                      className="text-xs bg-purple-100 text-purple-800 border-purple-200"
+                    >
+                      <Star className="w-3 h-3 mr-1" />
+                      Maxsus
+                    </Badge>
+                  )}
+                  {template.is_featured && (
+                    <Badge
+                      variant="secondary"
+                      className="text-xs bg-yellow-100 text-yellow-800 border-yellow-200"
+                    >
+                      ⭐ Mashhur
+                    </Badge>
+                  )}
+                  {template.usage_count && template.usage_count > 0 && (
+                    <Badge
+                      variant="outline"
+                      className="text-xs bg-white/80 backdrop-blur-sm"
+                    >
+                      <Users className="w-3 h-3 mr-1" />
+                      {template.usage_count}
+                    </Badge>
+                  )}
+                </div>
+
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <div className="text-6xl mb-2">{template.preview}</div>

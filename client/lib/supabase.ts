@@ -1,40 +1,9 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+// Re-export enhanced Supabase client
+export { supabase } from "./supabaseClient";
+export type { SupabaseClient } from "./supabaseClient";
+
 import cacheUtils, { cachedFetch, CACHE_TIMES, CACHE_TAGS } from "./cache";
-
-// Use environment variables or fallback to hardcoded values
-const supabaseUrl =
-  import.meta.env.VITE_SUPABASE_URL ||
-  import.meta.env.NEXT_PUBLIC_SUPABASE_URL ||
-  "https://tcilxdkolqodtgowlgrh.supabase.co";
-
-const supabaseAnonKey =
-  import.meta.env.VITE_SUPABASE_ANON_KEY ||
-  import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjaWx4ZGtvbHFvZHRnb3dsZ3JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2NTM1NTEsImV4cCI6MjA3MDIyOTU1MX0.9LFErrgcBMKQVOrl0lndUfBXMdAWmq6206sbBzgk32A";
-
-// Enhanced Supabase client with performance optimizations
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  db: {
-    schema: "public",
-  },
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
-    flowType: "pkce",
-  },
-  global: {
-    headers: {
-      "X-Client-Info": "taklifnoma-app",
-      "X-Cache-Control": "max-age=300", // 5 minutes cache
-    },
-  },
-  realtime: {
-    params: {
-      eventsPerSecond: 10,
-    },
-  },
-});
+import { supabase } from "./supabaseClient";
 
 // Enhanced database operations with caching and performance optimizations
 // ===================================================================
@@ -220,6 +189,9 @@ export const checkDatabaseSetup = async (): Promise<boolean> => {
   }
 };
 
+// Global flag for demo mode
+export let isDemoMode = false;
+
 // Test database connection health
 export const testDatabaseConnection = async (): Promise<{
   connected: boolean;
@@ -234,6 +206,8 @@ export const testDatabaseConnection = async (): Promise<{
     const latency = Date.now() - startTime;
 
     if (error) {
+      console.warn("Database connection failed:", error.message);
+      isDemoMode = true; // Enable demo mode
       return {
         connected: false,
         latency,
@@ -241,11 +215,14 @@ export const testDatabaseConnection = async (): Promise<{
       };
     }
 
+    isDemoMode = false; // Disable demo mode
     return {
       connected: true,
       latency,
     };
   } catch (error: any) {
+    console.warn("Database connection error:", error?.message);
+    isDemoMode = true; // Enable demo mode
     return {
       connected: false,
       latency: Date.now() - startTime,

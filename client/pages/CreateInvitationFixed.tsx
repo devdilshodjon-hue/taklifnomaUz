@@ -22,7 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { saveInvitationToSupabase } from "@/lib/invitationSaver";
+import { saveInvitation } from "@/lib/invitationSaverFixed";
 import {
   templateManager,
   defaultWeddingTemplates,

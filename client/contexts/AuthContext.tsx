@@ -10,6 +10,7 @@ interface AuthContextType {
   profile: Profile | null;
   session: Session | null;
   loading: boolean;
+  isInitialized: boolean;
   signUp: (
     email: string,
     password: string,

@@ -1,9 +1,9 @@
 // Re-export enhanced Supabase client
-export { supabase } from './supabaseClient'
-export type { SupabaseClient } from './supabaseClient'
+export { supabase } from "./supabaseClient";
+export type { SupabaseClient } from "./supabaseClient";
 
 import cacheUtils, { cachedFetch, CACHE_TIMES, CACHE_TAGS } from "./cache";
-import { supabase } from './supabaseClient'
+import { supabase } from "./supabaseClient";
 
 // Enhanced database operations with caching and performance optimizations
 // ===================================================================

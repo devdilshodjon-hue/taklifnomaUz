@@ -69,13 +69,13 @@ export const saveTemplateToSupabase = async (
         effects: config.effects || {},
         border: config.border || {},
         background: config.background || {},
-        typography: config.typography || {}
+        typography: config.typography || {},
       },
       is_public: false,
       is_featured: false,
       usage_count: 0,
       tags: [config.layout?.style || "modern", "custom", "professional"],
-      is_active: true
+      is_active: true,
     };
 
     console.log("📤 Saving to Supabase:", templateToSave);
@@ -87,18 +87,26 @@ export const saveTemplateToSupabase = async (
       .select()
       .single();
 
-    const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("Connection timeout")), 5000) // Reduced to 5 seconds
+    const timeoutPromise = new Promise<never>(
+      (_, reject) =>
+        setTimeout(() => reject(new Error("Connection timeout")), 5000), // Reduced to 5 seconds
     );
 
-    const { data, error } = await Promise.race([savePromise, timeoutPromise]) as any;
+    const { data, error } = (await Promise.race([
+      savePromise,
+      timeoutPromise,
+    ])) as any;
 
     if (error) {
       console.error("❌ Supabase save error:", error);
-      
+
       // Try fallback save to localStorage
-      const fallbackResult = saveTemplateToLocalStorage(user, templateData, config);
-      
+      const fallbackResult = saveTemplateToLocalStorage(
+        user,
+        templateData,
+        config,
+      );
+
       toast.dismiss("saving-template");
       toast.warning("⚠️ Supabase xatosi, mahalliy saqlandi", {
         description: `Xatolik: ${error.message}`,
@@ -121,23 +129,30 @@ export const saveTemplateToSupabase = async (
 
     console.log("✅ Template successfully saved to Supabase:", data);
     return { success: true, data };
-
   } catch (err: any) {
     console.error("❌ Template save process failed:", err);
-    
+
     // Fallback to localStorage
-    const fallbackResult = saveTemplateToLocalStorage(user, templateData, config);
-    
+    const fallbackResult = saveTemplateToLocalStorage(
+      user,
+      templateData,
+      config,
+    );
+
     toast.dismiss("saving-template");
-    
-    if (err.message?.includes("timeout") || err.message?.includes("Connection timeout")) {
+
+    if (
+      err.message?.includes("timeout") ||
+      err.message?.includes("Connection timeout")
+    ) {
       toast.success("💾 Shablon mahalliy saqlandi!", {
         description: "Ulanish vaqti tugadi, lekin ma'lumotlar xavfsiz saqlandi",
         duration: 4000,
       });
     } else {
       toast.success("💾 Shablon mahalliy saqlandi!", {
-        description: "Internet ulanishi yo'q, lekin ma'lumotlar xavfsiz saqlandi",
+        description:
+          "Internet ulanishi yo'q, lekin ma'lumotlar xavfsiz saqlandi",
         duration: 4000,
       });
     }
@@ -191,20 +206,23 @@ export const saveTemplateToLocalStorage = (
 export const testTemplateTableAccess = async () => {
   try {
     console.log("🔍 Testing custom_templates table access...");
-    
+
     const { data, error } = await supabase
       .from("custom_templates")
       .select("id, name")
       .limit(1);
-    
+
     if (error) {
       console.error("❌ Template table access failed:", error);
       return { accessible: false, error: error.message };
     }
-    
-    console.log("✅ Template table accessible, found:", data?.length || 0, "templates");
+
+    console.log(
+      "✅ Template table accessible, found:",
+      data?.length || 0,
+      "templates",
+    );
     return { accessible: true, count: data?.length || 0 };
-    
   } catch (err: any) {
     console.error("❌ Template table test failed:", err);
     return { accessible: false, error: err.message };

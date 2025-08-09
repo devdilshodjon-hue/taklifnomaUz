@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Calendar, MapPin, Clock, Share2, Download, Heart, ArrowLeft } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  Clock,
+  Share2,
+  Download,
+  Heart,
+  ArrowLeft,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -46,13 +54,13 @@ export default function InvitationView() {
       setError("");
 
       console.log("🔍 Loading invitation with slug:", invitationSlug);
-      
+
       const result = await getInvitationBySlug(invitationSlug);
-      
+
       if (result.success && result.data) {
         setInvitation(result.data);
         console.log("✅ Invitation loaded:", result.data);
-        
+
         // Record page view (optional analytics)
         recordPageView(result.data.id);
       } else {
@@ -79,7 +87,7 @@ export default function InvitationView() {
 
   const shareInvitation = async () => {
     const url = window.location.href;
-    
+
     if (navigator.share) {
       try {
         await navigator.share({
@@ -198,7 +206,7 @@ export default function InvitationView() {
                       <p className="text-sm text-slate-600">To'y sanasi</p>
                     </div>
                   </div>
-                  
+
                   {invitation.wedding_time && (
                     <div className="flex items-start gap-3">
                       <Clock className="w-5 h-5 text-blue-500 mt-0.5" />
@@ -210,7 +218,7 @@ export default function InvitationView() {
                       </div>
                     </div>
                   )}
-                  
+
                   <div className="flex items-start gap-3">
                     <MapPin className="w-5 h-5 text-green-500 mt-0.5" />
                     <div>
@@ -248,7 +256,10 @@ export default function InvitationView() {
                   <h3 className="text-lg font-semibold text-slate-900 mb-3">
                     Javob Berish Muddati
                   </h3>
-                  <Badge variant="outline" className="text-orange-600 border-orange-300">
+                  <Badge
+                    variant="outline"
+                    className="text-orange-600 border-orange-300"
+                  >
                     {formatDate(invitation.rsvp_deadline)}
                   </Badge>
                 </CardContent>
@@ -264,11 +275,12 @@ export default function InvitationView() {
                   <TemplateRenderer
                     template={{
                       id: invitation.template_id,
-                      name: invitation.custom_templates?.name || "Classic Template",
+                      name:
+                        invitation.custom_templates?.name || "Classic Template",
                       colors: invitation.custom_templates?.colors || {},
                       fonts: invitation.custom_templates?.fonts || {},
                       preview: "💒",
-                      category: "wedding"
+                      category: "wedding",
                     }}
                     data={{
                       id: invitation.id,
@@ -284,7 +296,7 @@ export default function InvitationView() {
                       image_url: null,
                       rsvp_deadline: invitation.rsvp_deadline,
                       is_active: true,
-                      slug: slug || ""
+                      slug: slug || "",
                     }}
                     className="w-full h-full"
                   />
@@ -296,7 +308,10 @@ export default function InvitationView() {
 
         {/* Action Buttons */}
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-          <Button onClick={shareInvitation} className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600">
+          <Button
+            onClick={shareInvitation}
+            className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600"
+          >
             <Share2 className="w-4 h-4 mr-2" />
             Taklifnomani Ulashish
           </Button>

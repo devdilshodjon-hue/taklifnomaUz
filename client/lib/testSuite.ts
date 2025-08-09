@@ -1,6 +1,13 @@
 import { supabase } from "./supabaseClient";
-import { saveTemplateToSupabase, testTemplateTableAccess } from "./templateSaver";
-import { saveInvitationToSupabase, testInvitationTableAccess, getInvitationBySlug } from "./invitationSaver";
+import {
+  saveTemplateToSupabase,
+  testTemplateTableAccess,
+} from "./templateSaver";
+import {
+  saveInvitationToSupabase,
+  testInvitationTableAccess,
+  getInvitationBySlug,
+} from "./invitationSaver";
 import { toast } from "sonner";
 
 interface TestResult {
@@ -19,7 +26,7 @@ export const runFullTestSuite = async (): Promise<TestResult[]> => {
   // Test 1: Basic Supabase Connection
   try {
     const startTime = Date.now();
-    const { error } = await supabase.from('profiles').select('count').limit(1);
+    const { error } = await supabase.from("profiles").select("count").limit(1);
     const timing = Date.now() - startTime;
 
     if (error) {
@@ -28,14 +35,14 @@ export const runFullTestSuite = async (): Promise<TestResult[]> => {
         status: "error",
         message: `Connection failed: ${error.message}`,
         details: error,
-        timing
+        timing,
       });
     } else {
       results.push({
         name: "Supabase Connection",
         status: "success",
         message: `Connection successful (${timing}ms)`,
-        timing
+        timing,
       });
     }
   } catch (err: any) {
@@ -43,33 +50,36 @@ export const runFullTestSuite = async (): Promise<TestResult[]> => {
       name: "Supabase Connection",
       status: "error",
       message: err.message || "Connection failed",
-      details: err
+      details: err,
     });
   }
 
   // Test 2: Authentication Check
   try {
-    const { data: { user }, error } = await supabase.auth.getUser();
-    
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
     if (error) {
       results.push({
         name: "Authentication",
         status: "warning",
         message: "No authenticated user",
-        details: error
+        details: error,
       });
     } else if (user) {
       results.push({
         name: "Authentication",
         status: "success",
         message: `User authenticated: ${user.email}`,
-        details: { userId: user.id, email: user.email }
+        details: { userId: user.id, email: user.email },
       });
     } else {
       results.push({
         name: "Authentication",
         status: "warning",
-        message: "Anonymous access mode"
+        message: "Anonymous access mode",
       });
     }
   } catch (err: any) {
@@ -77,27 +87,27 @@ export const runFullTestSuite = async (): Promise<TestResult[]> => {
       name: "Authentication",
       status: "error",
       message: err.message || "Auth check failed",
-      details: err
+      details: err,
     });
   }
 
   // Test 3: Custom Templates Table
   try {
     const templateResult = await testTemplateTableAccess();
-    
+
     if (templateResult.accessible) {
       results.push({
         name: "Custom Templates Table",
         status: "success",
         message: `Table accessible, ${templateResult.count || 0} templates found`,
-        details: templateResult
+        details: templateResult,
       });
     } else {
       results.push({
         name: "Custom Templates Table",
         status: "error",
         message: templateResult.error || "Table not accessible",
-        details: templateResult
+        details: templateResult,
       });
     }
   } catch (err: any) {
@@ -105,27 +115,27 @@ export const runFullTestSuite = async (): Promise<TestResult[]> => {
       name: "Custom Templates Table",
       status: "error",
       message: err.message || "Table test failed",
-      details: err
+      details: err,
     });
   }
 
   // Test 4: Invitations Table
   try {
     const invitationResult = await testInvitationTableAccess();
-    
+
     if (invitationResult.accessible) {
       results.push({
         name: "Invitations Table",
         status: "success",
         message: `Table accessible, ${invitationResult.count || 0} invitations found`,
-        details: invitationResult
+        details: invitationResult,
       });
     } else {
       results.push({
         name: "Invitations Table",
         status: "error",
         message: invitationResult.error || "Table not accessible",
-        details: invitationResult
+        details: invitationResult,
       });
     }
   } catch (err: any) {
@@ -133,12 +143,12 @@ export const runFullTestSuite = async (): Promise<TestResult[]> => {
       name: "Invitations Table",
       status: "error",
       message: err.message || "Table test failed",
-      details: err
+      details: err,
     });
   }
 
   // Test 5: Template Save Test (if authenticated)
-  const authResult = results.find(r => r.name === "Authentication");
+  const authResult = results.find((r) => r.name === "Authentication");
   if (authResult?.status === "success") {
     try {
       const testTemplateData = {
@@ -149,39 +159,48 @@ export const runFullTestSuite = async (): Promise<TestResult[]> => {
         weddingTime: "18:00",
         venue: "Test Joy",
         address: "Test Manzil",
-        customMessage: "Test xabar"
+        customMessage: "Test xabar",
       };
 
       const testConfig = {
         colors: { primary: "#007bff", secondary: "#6c757d" },
         fonts: { heading: "Arial", body: "Helvetica" },
         layout: { style: "test", spacing: 16 },
-        animations: { enabled: false }
+        animations: { enabled: false },
       };
 
-      const { data: { user } } = await supabase.auth.getUser();
-      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (user) {
-        const saveResult = await saveTemplateToSupabase(user, testTemplateData, testConfig);
-        
+        const saveResult = await saveTemplateToSupabase(
+          user,
+          testTemplateData,
+          testConfig,
+        );
+
         if (saveResult.success) {
           results.push({
             name: "Template Save Test",
             status: "success",
             message: "Template save operation successful",
-            details: saveResult
+            details: saveResult,
           });
 
           // Clean up test template
           if (saveResult.data?.id) {
-            await supabase.from('custom_templates').delete().eq('id', saveResult.data.id);
+            await supabase
+              .from("custom_templates")
+              .delete()
+              .eq("id", saveResult.data.id);
           }
         } else {
           results.push({
             name: "Template Save Test",
             status: "error",
             message: saveResult.error || "Template save failed",
-            details: saveResult
+            details: saveResult,
           });
         }
       }
@@ -190,7 +209,7 @@ export const runFullTestSuite = async (): Promise<TestResult[]> => {
         name: "Template Save Test",
         status: "error",
         message: err.message || "Template save test failed",
-        details: err
+        details: err,
       });
     }
   } else {
@@ -213,45 +232,55 @@ export const runFullTestSuite = async (): Promise<TestResult[]> => {
         address: "Test Manzil",
         city: "Toshkent",
         customMessage: "Test taklifnoma xabari",
-        selectedTemplate: "classic"
+        selectedTemplate: "classic",
       };
 
-      const { data: { user } } = await supabase.auth.getUser();
-      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (user) {
-        const saveResult = await saveInvitationToSupabase(user, testInvitationData);
-        
+        const saveResult = await saveInvitationToSupabase(
+          user,
+          testInvitationData,
+        );
+
         if (saveResult.success) {
           results.push({
             name: "Invitation Save Test",
             status: "success",
             message: `Invitation save successful, URL: ${saveResult.url}`,
-            details: saveResult
+            details: saveResult,
           });
 
           // Test invitation retrieval by slug
           if (saveResult.data?.slug) {
-            const retrieveResult = await getInvitationBySlug(saveResult.data.slug);
-            
+            const retrieveResult = await getInvitationBySlug(
+              saveResult.data.slug,
+            );
+
             if (retrieveResult.success) {
               results.push({
                 name: "Invitation Retrieval Test",
                 status: "success",
                 message: "Invitation retrieval by slug successful",
-                details: retrieveResult
+                details: retrieveResult,
               });
             } else {
               results.push({
                 name: "Invitation Retrieval Test",
                 status: "error",
                 message: retrieveResult.error || "Invitation retrieval failed",
-                details: retrieveResult
+                details: retrieveResult,
               });
             }
 
             // Clean up test invitation
             if (saveResult.data?.id) {
-              await supabase.from('invitations').delete().eq('id', saveResult.data.id);
+              await supabase
+                .from("invitations")
+                .delete()
+                .eq("id", saveResult.data.id);
             }
           }
         } else {
@@ -259,7 +288,7 @@ export const runFullTestSuite = async (): Promise<TestResult[]> => {
             name: "Invitation Save Test",
             status: "error",
             message: saveResult.error || "Invitation save failed",
-            details: saveResult
+            details: saveResult,
           });
         }
       }
@@ -268,7 +297,7 @@ export const runFullTestSuite = async (): Promise<TestResult[]> => {
         name: "Invitation Save Test",
         status: "error",
         message: err.message || "Invitation save test failed",
-        details: err
+        details: err,
       });
     }
   } else {
@@ -283,9 +312,9 @@ export const runFullTestSuite = async (): Promise<TestResult[]> => {
   try {
     // Test public template access
     const { data: publicTemplates, error } = await supabase
-      .from('custom_templates')
-      .select('id, name')
-      .eq('is_public', true)
+      .from("custom_templates")
+      .select("id, name")
+      .eq("is_public", true)
       .limit(5);
 
     if (error) {
@@ -293,14 +322,14 @@ export const runFullTestSuite = async (): Promise<TestResult[]> => {
         name: "RLS Policies Test",
         status: "error",
         message: `RLS test failed: ${error.message}`,
-        details: error
+        details: error,
       });
     } else {
       results.push({
         name: "RLS Policies Test",
         status: "success",
         message: `RLS working, ${publicTemplates?.length || 0} public templates accessible`,
-        details: { publicTemplates: publicTemplates?.length || 0 }
+        details: { publicTemplates: publicTemplates?.length || 0 },
       });
     }
   } catch (err: any) {
@@ -308,7 +337,7 @@ export const runFullTestSuite = async (): Promise<TestResult[]> => {
       name: "RLS Policies Test",
       status: "error",
       message: err.message || "RLS test failed",
-      details: err
+      details: err,
     });
   }
 
@@ -318,35 +347,37 @@ export const runFullTestSuite = async (): Promise<TestResult[]> => {
 
 // Display test results with notifications
 export const displayTestResults = (results: TestResult[]) => {
-  const successCount = results.filter(r => r.status === "success").length;
-  const errorCount = results.filter(r => r.status === "error").length;
-  const warningCount = results.filter(r => r.status === "warning").length;
+  const successCount = results.filter((r) => r.status === "success").length;
+  const errorCount = results.filter((r) => r.status === "error").length;
+  const warningCount = results.filter((r) => r.status === "warning").length;
 
   // Summary notification
   if (errorCount === 0) {
     toast.success("🎉 All Tests Passed!", {
       description: `${successCount} tests successful, ${warningCount} warnings`,
-      duration: 5000
+      duration: 5000,
     });
   } else if (errorCount < results.length / 2) {
     toast.warning("⚠️ Some Tests Failed", {
       description: `${errorCount} errors, ${successCount} passed, ${warningCount} warnings`,
-      duration: 6000
+      duration: 6000,
     });
   } else {
     toast.error("❌ Major Issues Detected", {
       description: `${errorCount} errors out of ${results.length} tests`,
-      duration: 8000
+      duration: 8000,
     });
   }
 
   // Individual notifications for critical errors
-  results.forEach(result => {
-    if (result.status === "error" && 
-        (result.name.includes("Connection") || result.name.includes("Table"))) {
+  results.forEach((result) => {
+    if (
+      result.status === "error" &&
+      (result.name.includes("Connection") || result.name.includes("Table"))
+    ) {
       toast.error(`❌ ${result.name}`, {
         description: result.message,
-        duration: 6000
+        duration: 6000,
       });
     }
   });
@@ -356,14 +387,14 @@ export const displayTestResults = (results: TestResult[]) => {
     success: successCount,
     errors: errorCount,
     warnings: warningCount,
-    results
+    results,
   };
 };
 
 // Quick health check
 export const quickHealthCheck = async (): Promise<boolean> => {
   try {
-    const { error } = await supabase.from('profiles').select('count').limit(1);
+    const { error } = await supabase.from("profiles").select("count").limit(1);
     return !error;
   } catch {
     return false;

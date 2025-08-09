@@ -17,17 +17,21 @@ export interface InvitationFormData {
 }
 
 // Generate unique slug for invitation URL
-const generateInvitationSlug = (groomName: string, brideName: string): string => {
-  const cleanName = (name: string) => 
-    name.toLowerCase()
-        .replace(/[^\w\s-]/g, '') // Remove special characters
-        .replace(/[\s_-]+/g, '-') // Replace spaces with hyphens
-        .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+const generateInvitationSlug = (
+  groomName: string,
+  brideName: string,
+): string => {
+  const cleanName = (name: string) =>
+    name
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, "") // Remove special characters
+      .replace(/[\s_-]+/g, "-") // Replace spaces with hyphens
+      .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
 
   const groomSlug = cleanName(groomName);
   const brideSlug = cleanName(brideName);
   const timestamp = Date.now().toString().slice(-6); // Last 6 digits of timestamp
-  
+
   return `${groomSlug}-${brideSlug}-${timestamp}`;
 };
 
@@ -117,8 +121,9 @@ export const saveInvitationToSupabase = async (
         .select()
         .single();
 
-      const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("Connection timeout")), 5000) // Reduced to 5 seconds
+      const timeoutPromise = new Promise<never>(
+        (_, reject) =>
+          setTimeout(() => reject(new Error("Connection timeout")), 5000), // Reduced to 5 seconds
       );
 
       const result = await Promise.race([savePromise, timeoutPromise]);
@@ -137,7 +142,7 @@ export const saveInvitationToSupabase = async (
           success: true, // Still success because saved locally
           error: error.message,
           data: fallbackResult.data,
-          url: invitationURL
+          url: invitationURL,
         };
       }
 
@@ -148,8 +153,8 @@ export const saveInvitationToSupabase = async (
         duration: 4000,
         action: {
           label: "Ko'rish",
-          onClick: () => window.open(invitationURL, '_blank')
-        }
+          onClick: () => window.open(invitationURL, "_blank"),
+        },
       });
 
       console.log("✅ Invitation successfully saved to Supabase:", data);
@@ -158,22 +163,26 @@ export const saveInvitationToSupabase = async (
       return {
         success: true,
         data: { ...data, url: invitationURL },
-        url: invitationURL
+        url: invitationURL,
       };
-
     } catch (supabaseError: any) {
       console.warn("⚠️ Supabase connection failed:", supabaseError.message);
 
       toast.dismiss("saving-invitation");
 
-      if (supabaseError.message?.includes("timeout") || supabaseError.message?.includes("Connection timeout")) {
+      if (
+        supabaseError.message?.includes("timeout") ||
+        supabaseError.message?.includes("Connection timeout")
+      ) {
         toast.success("💾 Taklifnoma mahalliy saqlandi!", {
-          description: "Ulanish vaqti tugadi, lekin ma'lumotlar xavfsiz saqlandi",
+          description:
+            "Ulanish vaqti tugadi, lekin ma'lumotlar xavfsiz saqlandi",
           duration: 4000,
         });
       } else {
         toast.success("💾 Taklifnoma mahalliy saqlandi!", {
-          description: "Internet ulanishi yo'q, lekin ma'lumotlar xavfsiz saqlandi",
+          description:
+            "Internet ulanishi yo'q, lekin ma'lumotlar xavfsiz saqlandi",
           duration: 4000,
         });
       }
@@ -182,10 +191,9 @@ export const saveInvitationToSupabase = async (
         success: true, // Always success since we have localStorage backup
         error: supabaseError.message,
         data: fallbackResult.data,
-        url: invitationURL
+        url: invitationURL,
       };
     }
-
   } catch (err: any) {
     console.error("❌ Unexpected error in invitation save process:", err);
 
@@ -216,7 +224,7 @@ export const saveInvitationToSupabase = async (
       success: true,
       error: err.message,
       data: fallbackResult.data,
-      url: invitationURL
+      url: invitationURL,
     };
   }
 };
@@ -246,7 +254,7 @@ export const saveInvitationToLocalStorage = (
     is_active: true,
     is_local: true,
     created_at: new Date().toISOString(),
-    url: generateInvitationURL(slug)
+    url: generateInvitationURL(slug),
   };
 
   try {
@@ -276,20 +284,23 @@ export const saveInvitationToLocalStorage = (
 export const testInvitationTableAccess = async () => {
   try {
     console.log("🔍 Testing invitations table access...");
-    
+
     const { data, error } = await supabase
       .from("invitations")
       .select("id, groom_name, bride_name")
       .limit(1);
-    
+
     if (error) {
       console.error("❌ Invitation table access failed:", error);
       return { accessible: false, error: error.message };
     }
-    
-    console.log("✅ Invitation table accessible, found:", data?.length || 0, "invitations");
+
+    console.log(
+      "✅ Invitation table accessible, found:",
+      data?.length || 0,
+      "invitations",
+    );
     return { accessible: true, count: data?.length || 0 };
-    
   } catch (err: any) {
     console.error("❌ Invitation table test failed:", err);
     return { accessible: false, error: err.message };
@@ -301,7 +312,8 @@ export const getInvitationBySlug = async (slug: string) => {
   try {
     const { data, error } = await supabase
       .from("invitations")
-      .select(`
+      .select(
+        `
         *,
         custom_templates (
           name,
@@ -309,19 +321,19 @@ export const getInvitationBySlug = async (slug: string) => {
           fonts,
           config
         )
-      `)
+      `,
+      )
       .eq("slug", slug)
       .eq("is_active", true)
       .single();
-    
+
     if (error) {
       console.error("❌ Error fetching invitation:", error);
       return { success: false, error: error.message };
     }
-    
+
     console.log("✅ Invitation loaded:", data);
     return { success: true, data };
-    
   } catch (err: any) {
     console.error("❌ Error in getInvitationBySlug:", err);
     return { success: false, error: err.message };

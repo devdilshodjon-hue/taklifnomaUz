@@ -17,7 +17,7 @@ import {
   Loader2,
   ExternalLink,
   Copy,
-  RefreshCw
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -71,16 +71,19 @@ export default function DashboardEnhanced() {
   // Get invitations from localStorage
   const getLocalStorageInvitations = (): Invitation[] => {
     const localInvitations: Invitation[] = [];
-    
+
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key && (key.startsWith("invitation_") || key.startsWith("demo_invitation_"))) {
+      if (
+        key &&
+        (key.startsWith("invitation_") || key.startsWith("demo_invitation_"))
+      ) {
         try {
           const invitationData = JSON.parse(localStorage.getItem(key) || "");
           if (invitationData && invitationData.user_id === user?.id) {
             localInvitations.push({
               ...invitationData,
-              url: generateInvitationURL(invitationData.slug)
+              url: generateInvitationURL(invitationData.slug),
             });
           }
         } catch (error) {
@@ -88,9 +91,10 @@ export default function DashboardEnhanced() {
         }
       }
     }
-    
-    return localInvitations.sort((a, b) => 
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+
+    return localInvitations.sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     );
   };
 
@@ -120,8 +124,9 @@ export default function DashboardEnhanced() {
         .order("created_at", { ascending: false });
 
       // Use a more reasonable timeout with better handling
-      const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("Connection timeout")), 5000) // Reduced to 5 seconds
+      const timeoutPromise = new Promise<never>(
+        (_, reject) =>
+          setTimeout(() => reject(new Error("Connection timeout")), 5000), // Reduced to 5 seconds
       );
 
       const result = await Promise.race([loadPromise, timeoutPromise]);
@@ -131,19 +136,25 @@ export default function DashboardEnhanced() {
         console.warn("⚠️ Supabase error:", error.message);
         // Show localStorage data with warning
         setInvitations(localInvitations);
-        setError(`Supabase xatosi: ${error.message}. Mahalliy ma'lumotlar ko'rsatilmoqda.`);
+        setError(
+          `Supabase xatosi: ${error.message}. Mahalliy ma'lumotlar ko'rsatilmoqda.`,
+        );
       } else {
-        console.log("✅ Supabase invitations loaded:", supabaseInvitations?.length || 0);
+        console.log(
+          "✅ Supabase invitations loaded:",
+          supabaseInvitations?.length || 0,
+        );
 
         // Combine Supabase and localStorage data
         const allInvitations = [
           ...(supabaseInvitations || []).map((inv: any) => ({
             ...inv,
-            url: generateInvitationURL(inv.slug)
+            url: generateInvitationURL(inv.slug),
           })),
-          ...localInvitations.filter(local =>
-            !supabaseInvitations?.some((sb: any) => sb.slug === local.slug)
-          )
+          ...localInvitations.filter(
+            (local) =>
+              !supabaseInvitations?.some((sb: any) => sb.slug === local.slug),
+          ),
         ];
 
         setInvitations(allInvitations);
@@ -151,11 +162,11 @@ export default function DashboardEnhanced() {
 
         // Load stats for each invitation (mock for now)
         const mockStats: Record<string, InvitationStats> = {};
-        allInvitations.forEach(inv => {
+        allInvitations.forEach((inv) => {
           mockStats[inv.id] = {
             views: Math.floor(Math.random() * 100),
             rsvps: Math.floor(Math.random() * 20),
-            guests: Math.floor(Math.random() * 50)
+            guests: Math.floor(Math.random() * 50),
           };
         });
         setStats(mockStats);
@@ -166,20 +177,25 @@ export default function DashboardEnhanced() {
       // Gracefully fall back to localStorage
       setInvitations(localInvitations);
 
-      if (err.message?.includes("timeout") || err.message?.includes("Connection timeout")) {
+      if (
+        err.message?.includes("timeout") ||
+        err.message?.includes("Connection timeout")
+      ) {
         setError("Ulanish vaqti tugadi. Mahalliy ma'lumotlar ko'rsatilmoqda.");
       } else {
-        setError("Internet ulanishi yo'q. Mahalliy ma'lumotlar ko'rsatilmoqda.");
+        setError(
+          "Internet ulanishi yo'q. Mahalliy ma'lumotlar ko'rsatilmoqda.",
+        );
       }
 
       // Generate mock stats for local invitations too
       if (localInvitations.length > 0) {
         const mockStats: Record<string, InvitationStats> = {};
-        localInvitations.forEach(inv => {
+        localInvitations.forEach((inv) => {
           mockStats[inv.id] = {
             views: Math.floor(Math.random() * 50), // Lower numbers for local
             rsvps: Math.floor(Math.random() * 10),
-            guests: Math.floor(Math.random() * 25)
+            guests: Math.floor(Math.random() * 25),
           };
         });
         setStats(mockStats);
@@ -195,7 +211,7 @@ export default function DashboardEnhanced() {
       const url = invitation.url || generateInvitationURL(invitation.slug);
       await navigator.clipboard.writeText(url);
       toast.success("Havola nusxalandi!", {
-        description: "Taklifnoma havolasi clipboard ga nusxalandi"
+        description: "Taklifnoma havolasi clipboard ga nusxalandi",
       });
     } catch (err) {
       toast.error("Havolani nusxalashda xatolik");
@@ -205,7 +221,7 @@ export default function DashboardEnhanced() {
   // Open invitation in new tab
   const openInvitation = (invitation: Invitation) => {
     const url = invitation.url || generateInvitationURL(invitation.slug);
-    window.open(url, '_blank');
+    window.open(url, "_blank");
   };
 
   // Calculate total stats
@@ -213,14 +229,14 @@ export default function DashboardEnhanced() {
     invitations: invitations.length,
     views: Object.values(stats).reduce((sum, stat) => sum + stat.views, 0),
     rsvps: Object.values(stats).reduce((sum, stat) => sum + stat.rsvps, 0),
-    guests: Object.values(stats).reduce((sum, stat) => sum + stat.guests, 0)
+    guests: Object.values(stats).reduce((sum, stat) => sum + stat.guests, 0),
   };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("uz-UZ", {
       year: "numeric",
       month: "long",
-      day: "numeric"
+      day: "numeric",
     });
   };
 
@@ -243,15 +259,23 @@ export default function DashboardEnhanced() {
                 </p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Button
+                    variant="ghost"
+                    className="relative h-8 w-8 rounded-full"
+                  >
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={profile?.avatar_url || ""} alt="Profile" />
+                      <AvatarImage
+                        src={profile?.avatar_url || ""}
+                        alt="Profile"
+                      />
                       <AvatarFallback>
-                        {profile?.first_name?.[0] || user?.email?.[0]?.toUpperCase() || "U"}
+                        {profile?.first_name?.[0] ||
+                          user?.email?.[0]?.toUpperCase() ||
+                          "U"}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
@@ -270,7 +294,10 @@ export default function DashboardEnhanced() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={signOut} className="cursor-pointer">
+                  <DropdownMenuItem
+                    onClick={signOut}
+                    className="cursor-pointer"
+                  >
                     <LogOut className="mr-2 h-4 w-4" />
                     Chiqish
                   </DropdownMenuItem>
@@ -285,26 +312,34 @@ export default function DashboardEnhanced() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Taklifnomalar</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Taklifnomalar
+                </CardTitle>
                 <Calendar className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{totalStats.invitations}</div>
+                <div className="text-2xl font-bold">
+                  {totalStats.invitations}
+                </div>
                 <p className="text-xs text-muted-foreground">Jami yaratilgan</p>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Ko'rishlar</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Ko'rishlar
+                </CardTitle>
                 <Eye className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{totalStats.views}</div>
-                <p className="text-xs text-muted-foreground">Umumiy ko'rishlar</p>
+                <p className="text-xs text-muted-foreground">
+                  Umumiy ko'rishlar
+                </p>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">RSVP</CardTitle>
@@ -315,7 +350,7 @@ export default function DashboardEnhanced() {
                 <p className="text-xs text-muted-foreground">Javob berganlar</p>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Mehmonlar</CardTitle>
@@ -347,7 +382,9 @@ export default function DashboardEnhanced() {
               {loading && (
                 <div className="flex items-center justify-center py-12">
                   <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-                  <span className="ml-2 text-slate-600 dark:text-slate-400">Yuklanmoqda...</span>
+                  <span className="ml-2 text-slate-600 dark:text-slate-400">
+                    Yuklanmoqda...
+                  </span>
                 </div>
               )}
 
@@ -368,7 +405,8 @@ export default function DashboardEnhanced() {
                         <div className="flex items-center justify-between mt-3">
                           {invitations.length > 0 && (
                             <p className="text-xs text-blue-600 dark:text-blue-400">
-                              ✓ {invitations.length} ta taklifnoma mahalliy xotiradan yuklandi
+                              ✓ {invitations.length} ta taklifnoma mahalliy
+                              xotiradan yuklandi
                             </p>
                           )}
                           <Button
@@ -416,10 +454,14 @@ export default function DashboardEnhanced() {
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
                               <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                                {invitation.groom_name} ♥ {invitation.bride_name}
+                                {invitation.groom_name} ♥{" "}
+                                {invitation.bride_name}
                               </h3>
                               {invitation.url && (
-                                <Badge variant="outline" className="text-green-600 border-green-300">
+                                <Badge
+                                  variant="outline"
+                                  className="text-green-600 border-green-300"
+                                >
                                   URL mavjud
                                 </Badge>
                               )}
@@ -441,7 +483,7 @@ export default function DashboardEnhanced() {
                               )}
                             </div>
                           </div>
-                          
+
                           <div className="flex items-center gap-2">
                             {invitation.url && (
                               <>
@@ -461,7 +503,7 @@ export default function DashboardEnhanced() {
                                 </Button>
                               </>
                             )}
-                            
+
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <Button variant="outline" size="sm">
@@ -505,13 +547,21 @@ export default function DashboardEnhanced() {
                       Yangi Taklifnoma
                     </Link>
                   </Button>
-                  <Button asChild variant="outline" className="w-full justify-start">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full justify-start"
+                  >
                     <Link to="/templates">
                       <Trash2 className="w-4 h-4 mr-2" />
                       Shablonlar
                     </Link>
                   </Button>
-                  <Button asChild variant="outline" className="w-full justify-start">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full justify-start"
+                  >
                     <Link to="/template-builder">
                       <Settings className="w-4 h-4 mr-2" />
                       Shablon Yaratish
@@ -543,7 +593,7 @@ export default function DashboardEnhanced() {
                       </div>
                     </div>
                   ))}
-                  
+
                   {invitations.length === 0 && (
                     <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">
                       Hali taklifnoma yo'q

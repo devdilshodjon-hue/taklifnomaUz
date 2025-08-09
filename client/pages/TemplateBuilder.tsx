@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase, templateOperations } from "@/lib/supabase";
-import cacheUtils from "@/lib/cache";
+import { supabase } from "@/lib/supabase";
 import {
   ArrowLeft,
   Save,
@@ -10,25 +9,21 @@ import {
   Palette,
   Type,
   Layout,
-  Upload,
   RotateCcw,
   Sparkles,
-  Download,
-  Share2,
   Loader2,
   Check,
   X,
-  Settings,
-  Layers,
   Monitor,
   Smartphone,
+  Heart,
+  Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -78,10 +73,8 @@ export default function TemplateBuilder() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState("colors");
-  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">(
-    "desktop",
-  );
+  const [activeTab, setActiveTab] = useState("info");
+  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("desktop");
 
   // Template data for real-time preview
   const [templateData, setTemplateData] = useState<InvitationData>({
@@ -92,17 +85,16 @@ export default function TemplateBuilder() {
     weddingTime: "16:00",
     venue: "Atirgul Bog'i",
     address: "Toshkent sh., Yunusobod t., Bog' ko'chasi 123",
-    customMessage:
-      "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
+    customMessage: "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
   });
 
   const [config, setConfig] = useState<TemplateConfig>({
     colors: {
-      primary: "#6366f1",
-      secondary: "#ec4899",
-      accent: "#f59e0b",
-      background: "#ffffff",
-      text: "#1f2937",
+      primary: "#be185d",
+      secondary: "#fda4af",
+      accent: "#fb7185",
+      background: "#fdf2f8",
+      text: "#881337",
     },
     fonts: {
       heading: "Playfair Display",
@@ -110,16 +102,16 @@ export default function TemplateBuilder() {
       accent: "Dancing Script",
     },
     layout: {
-      style: "modern",
-      spacing: 20,
-      borderRadius: 12,
-      shadowIntensity: 10,
+      style: "elegant",
+      spacing: 24,
+      borderRadius: 16,
+      shadowIntensity: 12,
     },
   });
 
   const colorPresets = [
     {
-      name: "Classic Rose",
+      name: "Romantik Pushti",
       colors: {
         primary: "#be185d",
         secondary: "#fda4af",
@@ -129,7 +121,7 @@ export default function TemplateBuilder() {
       },
     },
     {
-      name: "Modern Blue",
+      name: "Zamonaviy Ko'k",
       colors: {
         primary: "#2563eb",
         secondary: "#60a5fa",
@@ -139,7 +131,7 @@ export default function TemplateBuilder() {
       },
     },
     {
-      name: "Elegant Gold",
+      name: "Zarhal Oltin",
       colors: {
         primary: "#d97706",
         secondary: "#fbbf24",
@@ -149,7 +141,7 @@ export default function TemplateBuilder() {
       },
     },
     {
-      name: "Nature Green",
+      name: "Tabiat Yashil",
       colors: {
         primary: "#059669",
         secondary: "#34d399",
@@ -158,11 +150,31 @@ export default function TemplateBuilder() {
         text: "#064e3b",
       },
     },
+    {
+      name: "Hashamatli Binafsha",
+      colors: {
+        primary: "#7c3aed",
+        secondary: "#a78bfa",
+        accent: "#8b5cf6",
+        background: "#f5f3ff",
+        text: "#581c87",
+      },
+    },
+    {
+      name: "Klassik Qora",
+      colors: {
+        primary: "#1f2937",
+        secondary: "#6b7280",
+        accent: "#d97706",
+        background: "#ffffff",
+        text: "#111827",
+      },
+    },
   ];
 
   const fontOptions = [
     "Inter",
-    "Poppins",
+    "Poppins", 
     "Playfair Display",
     "Dancing Script",
     "Montserrat",
@@ -171,6 +183,8 @@ export default function TemplateBuilder() {
     "Roboto",
     "Merriweather",
     "Crimson Text",
+    "Great Vibes",
+    "Libre Baskerville",
   ];
 
   const layoutStyles = [
@@ -178,15 +192,32 @@ export default function TemplateBuilder() {
       value: "classic",
       label: "Klassik",
       description: "An'anaviy va sodda dizayn",
+      icon: "📜",
     },
     {
-      value: "modern",
+      value: "modern", 
       label: "Zamonaviy",
       description: "Minimalistik va zamonaviy",
+      icon: "✨",
     },
-    { value: "elegant", label: "Nafis", description: "Chiroyli va nafis" },
-    { value: "rustic", label: "Tabiy", description: "Tabiy va issiq" },
-    { value: "luxury", label: "Hashamatli", description: "Dabdabali va noyob" },
+    { 
+      value: "elegant", 
+      label: "Nafis", 
+      description: "Chiroyli va nafis",
+      icon: "💎",
+    },
+    { 
+      value: "rustic", 
+      label: "Tabiy", 
+      description: "Tabiy va issiq",
+      icon: "🌿",
+    },
+    { 
+      value: "luxury", 
+      label: "Hashamatli", 
+      description: "Dabdabali va noyob",
+      icon: "👑",
+    },
   ];
 
   const handleColorChange = (
@@ -260,167 +291,60 @@ export default function TemplateBuilder() {
     setError("");
     setSuccess("");
 
-    let timeoutId: NodeJS.Timeout;
-
     try {
-      console.log("Starting optimized template save...");
-
       const templateToSave = {
         user_id: user.id,
         name: templateData.templateName.trim(),
-        description: `Custom template created on ${new Date().toLocaleDateString("uz-UZ")}`,
+        description: `Maxsus shablon - ${new Date().toLocaleDateString("uz-UZ")}`,
         category: "custom",
-        config: config, // Store full config as JSONB
+        config: config,
         colors: config.colors,
         fonts: config.fonts,
         layout: config.layout,
         is_public: false,
         is_featured: false,
-        tags: [], // Add tags if needed
+        tags: [config.layout.style, "maxsus"],
       };
 
-      console.log("Template data to save:", templateToSave);
-
-      // Set a timeout to prevent infinite loading
-      timeoutId = setTimeout(() => {
-        console.log("Template save timeout - stopping");
-        setLoading(false);
-        setError(
-          "Saqlash jarayoni uzun davom etmoqda. Iltimos, qayta urinib ko'ring.",
-        );
-      }, 10000); // 10 seconds timeout
-
-      // Use optimized template operations with caching
-      const { data, error: saveError } =
-        await templateOperations.create(templateToSave);
-
-      clearTimeout(timeoutId);
+      const { data, error: saveError } = await supabase
+        .from("custom_templates")
+        .insert(templateToSave)
+        .select()
+        .single();
 
       if (saveError) {
-        console.error("Template save error:", saveError?.message || saveError);
-        setError(saveError?.message || "Shablon saqlanishda xatolik yuz berdi");
-        return;
+        throw saveError;
       }
 
-      // Test connection first
-      const { data: testData, error: testError } = await supabase
-        .from("custom_templates")
-        .select("id")
-        .limit(1);
-
-      let data: any = null;
-
-      if (testError) {
-        console.error("Database connection test failed:", testError);
-        clearTimeout(timeoutId);
-
-        // If table doesn't exist, save to localStorage
-        if (testError.message.includes("does not exist")) {
-          console.log("Using localStorage for template saving");
-
-          const localTemplate = {
-            ...templateToSave,
-            id: `local_${Date.now()}`,
-            is_local: true,
-            saved_at: new Date().toISOString(),
-          };
-
-          localStorage.setItem(
-            `custom_template_${localTemplate.id}`,
-            JSON.stringify(localTemplate),
-          );
-
-          data = localTemplate;
-          console.log("Template saved to localStorage:", data);
-        } else {
-          setError(
-            "Ma'lumotlar bazasiga ulanishda xatolik. Iltimos, internetni tekshiring.",
-          );
-          return;
-        }
-      } else {
-        console.log("Database connection test successful");
-
-        const { data: supabaseData, error: saveError } = await supabase
-          .from("custom_templates")
-          .insert(templateToSave)
-          .select()
-          .single();
-
-        clearTimeout(timeoutId);
-
-        if (saveError) {
-          console.error("Template save error:", saveError);
-
-          // Show user-friendly error message based on error type
-          if (saveError.message.includes("auth")) {
-            setError("Autentifikatsiya xatoligi. Iltimos, qayta kiring.");
-            return;
-          } else if (saveError.message.includes("duplicate")) {
-            setError("Bu nomda shablon allaqachon mavjud.");
-            return;
-          } else {
-            // Save to localStorage as fallback
-            console.log("Saving to localStorage as fallback");
-            const localTemplate = {
-              ...templateToSave,
-              id: `local_${Date.now()}`,
-              is_local: true,
-              saved_at: new Date().toISOString(),
-            };
-
-            localStorage.setItem(
-              `custom_template_${localTemplate.id}`,
-              JSON.stringify(localTemplate),
-            );
-
-            data = localTemplate;
-          }
-        } else {
-          data = supabaseData;
-        }
-      }
-
-      console.log("Template saved successfully:", data);
-      setSuccess("Shablon muvaffaqiyatli saqlandi!");
-
-      // Backup to localStorage as well
-      const backupTemplate = {
-        ...data,
-        is_backup: true,
-        saved_at: new Date().toISOString(),
-      };
-      localStorage.setItem(
-        `template_backup_${data?.id}`,
-        JSON.stringify(backupTemplate),
-      );
-
+      setSuccess("Shablon muvaffaqiyatli saqlandi! 🎉");
+      
       setTimeout(() => {
         navigate("/templates");
       }, 2000);
-    } catch (err: any) {
-      console.error("Template save general error:", err);
-      clearTimeout(timeoutId);
-      setError(
-        err.message || "Shablon saqlanishda kutilmagan xatolik yuz berdi",
-      );
 
+    } catch (err: any) {
+      console.error("Template save error:", err);
+      
       // Save to localStorage as fallback
       const fallbackTemplate = {
-        id: `backup_${Date.now()}`,
+        id: `local_${Date.now()}`,
         ...templateData,
         config: config,
         created_at: new Date().toISOString(),
-        is_backup: true,
+        is_local: true,
       };
+      
       localStorage.setItem(
-        `template_backup_${fallbackTemplate.id}`,
+        `custom_template_${fallbackTemplate.id}`,
         JSON.stringify(fallbackTemplate),
       );
 
-      setSuccess("Shablon vaqtincha saqlanadi (backup)");
+      setSuccess("Shablon vaqtincha saqlandi (mahalliy xotira)");
+      
+      setTimeout(() => {
+        navigate("/templates");
+      }, 2000);
     } finally {
-      if (timeoutId) clearTimeout(timeoutId);
       setLoading(false);
     }
   };
@@ -428,11 +352,11 @@ export default function TemplateBuilder() {
   const resetToDefaults = () => {
     setConfig({
       colors: {
-        primary: "#6366f1",
-        secondary: "#ec4899",
-        accent: "#f59e0b",
-        background: "#ffffff",
-        text: "#1f2937",
+        primary: "#be185d",
+        secondary: "#fda4af", 
+        accent: "#fb7185",
+        background: "#fdf2f8",
+        text: "#881337",
       },
       fonts: {
         heading: "Playfair Display",
@@ -440,23 +364,24 @@ export default function TemplateBuilder() {
         accent: "Dancing Script",
       },
       layout: {
-        style: "modern",
-        spacing: 20,
-        borderRadius: 12,
-        shadowIntensity: 10,
+        style: "elegant",
+        spacing: 24,
+        borderRadius: 16,
+        shadowIntensity: 12,
       },
     });
   };
 
-  // Template Preview Component
+  // Real-time Template Preview Component
   const TemplatePreview = () => {
-    const style = {
+    const containerStyle = {
       backgroundColor: config.colors.background,
       color: config.colors.text,
       fontFamily: config.fonts.body,
       padding: `${config.layout.spacing}px`,
       borderRadius: `${config.layout.borderRadius}px`,
       boxShadow: `0 ${config.layout.shadowIntensity}px ${config.layout.shadowIntensity * 2}px rgba(0,0,0,0.1)`,
+      border: `2px solid ${config.colors.accent}20`,
     };
 
     const headingStyle = {
@@ -469,37 +394,72 @@ export default function TemplateBuilder() {
       color: config.colors.accent,
     };
 
+    const getLayoutClass = () => {
+      switch (config.layout.style) {
+        case "classic": return "text-center space-y-6";
+        case "modern": return "text-center space-y-4";
+        case "elegant": return "text-center space-y-8";
+        case "rustic": return "text-left space-y-6";
+        case "luxury": return "text-center space-y-10";
+        default: return "text-center space-y-6";
+      }
+    };
+
     return (
       <div
-        className={`template-preview ${previewDevice === "mobile" ? "max-w-sm" : "max-w-md"} mx-auto`}
-        style={style}
+        className={`w-full max-w-md mx-auto transition-all duration-300 ${previewDevice === "mobile" ? "max-w-xs" : "max-w-md"}`}
+        style={containerStyle}
       >
-        <div className="text-center space-y-6">
-          {/* Header */}
+        <div className={getLayoutClass()}>
+          {/* Decorative Header */}
+          <div className="flex justify-center items-center space-x-2 mb-4">
+            <div
+              className="w-12 h-0.5"
+              style={{ backgroundColor: config.colors.accent }}
+            />
+            <Heart className="w-4 h-4" style={{ color: config.colors.accent }} />
+            <div
+              className="w-12 h-0.5"
+              style={{ backgroundColor: config.colors.accent }}
+            />
+          </div>
+
+          {/* Header Text */}
           <div className="space-y-2">
             <div
-              className="text-sm font-medium tracking-widest uppercase"
+              className="text-xs font-medium tracking-widest uppercase"
               style={{ color: config.colors.secondary }}
             >
               To'y Taklifnomasi
             </div>
-            <div
-              className="w-16 h-0.5 mx-auto"
-              style={{ backgroundColor: config.colors.accent }}
-            ></div>
           </div>
 
           {/* Names */}
-          <div className="space-y-4">
-            <h1 className="text-3xl font-bold" style={headingStyle}>
+          <div className="space-y-3">
+            <h1 className="text-2xl md:text-3xl font-bold tracking-wide" style={headingStyle}>
               {templateData.groomName}
             </h1>
-            <div className="text-2xl" style={accentStyle}>
+            <div className="text-3xl" style={accentStyle}>
               &
             </div>
-            <h1 className="text-3xl font-bold" style={headingStyle}>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-wide" style={headingStyle}>
               {templateData.brideName}
             </h1>
+          </div>
+
+          {/* Decorative Divider */}
+          <div className="flex justify-center items-center space-x-2">
+            <Star className="w-3 h-3" style={{ color: config.colors.accent }} />
+            <div
+              className="w-8 h-0.5"
+              style={{ backgroundColor: config.colors.accent }}
+            />
+            <Sparkles className="w-3 h-3" style={{ color: config.colors.accent }} />
+            <div
+              className="w-8 h-0.5"
+              style={{ backgroundColor: config.colors.accent }}
+            />
+            <Star className="w-3 h-3" style={{ color: config.colors.accent }} />
           </div>
 
           {/* Date and Time */}
@@ -516,44 +476,37 @@ export default function TemplateBuilder() {
           </div>
 
           {/* Venue */}
-          <div className="space-y-2">
-            <div
-              className="w-12 h-0.5 mx-auto"
-              style={{ backgroundColor: config.colors.accent }}
-            ></div>
+          <div className="space-y-3">
             <div
               className="text-lg font-medium"
               style={{ color: config.colors.primary }}
             >
               {templateData.venue}
             </div>
-            <div className="text-sm" style={{ color: config.colors.secondary }}>
+            <div className="text-sm leading-relaxed" style={{ color: config.colors.secondary }}>
               {templateData.address}
             </div>
           </div>
 
           {/* Message */}
           <div
-            className="text-sm leading-relaxed italic"
+            className="text-sm leading-relaxed italic px-4"
             style={{ color: config.colors.text }}
           >
             "{templateData.customMessage}"
           </div>
 
-          {/* Decorative element */}
-          <div className="flex justify-center items-center space-x-2">
+          {/* Footer Decoration */}
+          <div className="flex justify-center items-center space-x-2 mt-6">
             <div
-              className="w-8 h-0.5"
+              className="w-16 h-0.5"
               style={{ backgroundColor: config.colors.accent }}
-            ></div>
-            <Sparkles
-              className="w-4 h-4"
-              style={{ color: config.colors.accent }}
             />
+            <Heart className="w-4 h-4" style={{ color: config.colors.accent }} />
             <div
-              className="w-8 h-0.5"
+              className="w-16 h-0.5"
               style={{ backgroundColor: config.colors.accent }}
-            ></div>
+            />
           </div>
         </div>
       </div>
@@ -562,27 +515,30 @@ export default function TemplateBuilder() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-purple-50/30">
-        {/* Header */}
-        <nav className="bg-card/80 backdrop-blur-md border-b border-border p-4 sticky top-0 z-50 animate-fade-in">
+      <div className="min-h-screen bg-gradient-to-br from-rose-50 via-background to-purple-50/30">
+        {/* Elegant Header */}
+        <nav className="bg-white/80 backdrop-blur-md border-b border-rose-200/50 p-4 sticky top-0 z-50 shadow-sm">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" asChild className="hover-scale">
+              <Button variant="ghost" size="sm" asChild className="hover:bg-rose-100">
                 <Link to="/templates">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Shablonlar
                 </Link>
               </Button>
-              <h1 className="font-heading text-xl font-bold text-foreground">
-                Shablon Yaratuvchi
-              </h1>
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-rose-500" />
+                <h1 className="font-heading text-xl font-bold text-foreground">
+                  Shablon Yaratuvchi
+                </h1>
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <Button
                 onClick={resetToDefaults}
                 variant="outline"
                 size="sm"
-                className="hover-scale"
+                className="hover:bg-rose-50"
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
                 Qayta tiklash
@@ -590,7 +546,7 @@ export default function TemplateBuilder() {
               <Button
                 onClick={saveTemplate}
                 disabled={loading}
-                className="primary-gradient hover-lift"
+                className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white"
               >
                 {loading ? (
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -606,7 +562,7 @@ export default function TemplateBuilder() {
         <div className="max-w-7xl mx-auto p-6">
           {/* Success/Error Messages */}
           {success && (
-            <Alert className="mb-6 border-green-200 bg-green-50/50 animate-fade-in">
+            <Alert className="mb-6 border-green-200 bg-green-50/80">
               <Check className="h-4 w-4 text-green-600" />
               <AlertDescription className="text-green-800">
                 {success}
@@ -615,7 +571,7 @@ export default function TemplateBuilder() {
           )}
 
           {error && (
-            <Alert className="mb-6 border-red-200 bg-red-50/50 animate-shake">
+            <Alert className="mb-6 border-red-200 bg-red-50/80">
               <X className="h-4 w-4 text-red-600" />
               <AlertDescription className="text-red-800">
                 {error}
@@ -623,241 +579,198 @@ export default function TemplateBuilder() {
             </Alert>
           )}
 
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Left Panel - Controls */}
-            <div className="space-y-6">
-              {/* Template Info */}
-              <div className="card-modern p-6 animate-slide-up">
-                <h2 className="font-heading text-lg font-semibold text-foreground mb-4">
-                  Shablon Ma'lumotlari
-                </h2>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="templateName">Shablon Nomi</Label>
-                    <Input
-                      id="templateName"
-                      value={templateData.templateName}
-                      onChange={(e) =>
-                        handleTemplateDataChange("templateName", e.target.value)
-                      }
-                      placeholder="Mening yangi shablonim"
-                      className="mt-1"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="groomName">Kuyov Ismi</Label>
-                      <Input
-                        id="groomName"
-                        value={templateData.groomName}
-                        onChange={(e) =>
-                          handleTemplateDataChange("groomName", e.target.value)
-                        }
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="brideName">Kelin Ismi</Label>
-                      <Input
-                        id="brideName"
-                        value={templateData.brideName}
-                        onChange={(e) =>
-                          handleTemplateDataChange("brideName", e.target.value)
-                        }
-                        className="mt-1"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="weddingDate">To'y Sanasi</Label>
-                      <Input
-                        id="weddingDate"
-                        value={templateData.weddingDate}
-                        onChange={(e) =>
-                          handleTemplateDataChange(
-                            "weddingDate",
-                            e.target.value,
-                          )
-                        }
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="weddingTime">Vaqt</Label>
-                      <Input
-                        id="weddingTime"
-                        value={templateData.weddingTime}
-                        onChange={(e) =>
-                          handleTemplateDataChange(
-                            "weddingTime",
-                            e.target.value,
-                          )
-                        }
-                        className="mt-1"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="venue">Joy</Label>
-                    <Input
-                      id="venue"
-                      value={templateData.venue}
-                      onChange={(e) =>
-                        handleTemplateDataChange("venue", e.target.value)
-                      }
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="address">Manzil</Label>
-                    <Input
-                      id="address"
-                      value={templateData.address}
-                      onChange={(e) =>
-                        handleTemplateDataChange("address", e.target.value)
-                      }
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="customMessage">Maxsus Xabar</Label>
-                    <Textarea
-                      id="customMessage"
-                      value={templateData.customMessage}
-                      onChange={(e) =>
-                        handleTemplateDataChange(
-                          "customMessage",
-                          e.target.value,
-                        )
-                      }
-                      className="mt-1"
-                      rows={3}
-                    />
-                  </div>
-                </div>
-              </div>
+          <div className="grid lg:grid-cols-5 gap-8">
+            {/* Left Panel - Controls (3/5) */}
+            <div className="lg:col-span-3 space-y-6">
+              
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsList className="grid w-full grid-cols-4 bg-white/80 p-1">
+                  <TabsTrigger value="info" className="flex items-center gap-2">
+                    <Eye className="w-4 h-4" />
+                    Ma'lumot
+                  </TabsTrigger>
+                  <TabsTrigger value="colors" className="flex items-center gap-2">
+                    <Palette className="w-4 h-4" />
+                    Ranglar
+                  </TabsTrigger>
+                  <TabsTrigger value="fonts" className="flex items-center gap-2">
+                    <Type className="w-4 h-4" />
+                    Shriftlar
+                  </TabsTrigger>
+                  <TabsTrigger value="layout" className="flex items-center gap-2">
+                    <Layout className="w-4 h-4" />
+                    Layout
+                  </TabsTrigger>
+                </TabsList>
 
-              {/* Design Controls */}
-              <div className="card-modern p-6 animate-slide-up delay-100">
-                <Tabs value={activeTab} onValueChange={setActiveTab}>
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger
-                      value="colors"
-                      className="flex items-center gap-2"
-                    >
-                      <Palette className="w-4 h-4" />
-                      Ranglar
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="fonts"
-                      className="flex items-center gap-2"
-                    >
-                      <Type className="w-4 h-4" />
-                      Shriftlar
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="layout"
-                      className="flex items-center gap-2"
-                    >
-                      <Layout className="w-4 h-4" />
-                      Layout
-                    </TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="colors" className="space-y-6 mt-6">
-                    {/* Color Presets */}
-                    <div>
-                      <Label className="text-sm font-medium">
-                        Ranglar Presetlari
-                      </Label>
-                      <div className="grid grid-cols-2 gap-3 mt-2">
-                        {colorPresets.map((preset, index) => (
-                          <button
-                            key={index}
-                            onClick={() => applyColorPreset(preset)}
-                            className="p-3 border border-border rounded-lg hover:border-primary/50 transition-colors hover-lift"
-                          >
-                            <div className="flex items-center gap-2 mb-2">
-                              <div
-                                className="w-4 h-4 rounded-full"
-                                style={{
-                                  backgroundColor: preset.colors.primary,
-                                }}
-                              ></div>
-                              <div
-                                className="w-4 h-4 rounded-full"
-                                style={{
-                                  backgroundColor: preset.colors.secondary,
-                                }}
-                              ></div>
-                              <div
-                                className="w-4 h-4 rounded-full"
-                                style={{
-                                  backgroundColor: preset.colors.accent,
-                                }}
-                              ></div>
-                            </div>
-                            <div className="text-xs font-medium text-foreground">
-                              {preset.name}
-                            </div>
-                          </button>
-                        ))}
+                <TabsContent value="info" className="mt-6">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                    <h2 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Eye className="w-5 h-5 text-rose-500" />
+                      Shablon Ma'lumotlari
+                    </h2>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="templateName" className="text-sm font-medium">Shablon Nomi</Label>
+                        <Input
+                          id="templateName"
+                          value={templateData.templateName}
+                          onChange={(e) => handleTemplateDataChange("templateName", e.target.value)}
+                          placeholder="Mening ajoyib shablonim"
+                          className="mt-1 border-rose-200 focus:border-rose-400"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="groomName" className="text-sm font-medium">Kuyov Ismi</Label>
+                          <Input
+                            id="groomName"
+                            value={templateData.groomName}
+                            onChange={(e) => handleTemplateDataChange("groomName", e.target.value)}
+                            className="mt-1 border-rose-200 focus:border-rose-400"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="brideName" className="text-sm font-medium">Kelin Ismi</Label>
+                          <Input
+                            id="brideName"
+                            value={templateData.brideName}
+                            onChange={(e) => handleTemplateDataChange("brideName", e.target.value)}
+                            className="mt-1 border-rose-200 focus:border-rose-400"
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="weddingDate" className="text-sm font-medium">To'y Sanasi</Label>
+                          <Input
+                            id="weddingDate"
+                            value={templateData.weddingDate}
+                            onChange={(e) => handleTemplateDataChange("weddingDate", e.target.value)}
+                            className="mt-1 border-rose-200 focus:border-rose-400"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="weddingTime" className="text-sm font-medium">Vaqt</Label>
+                          <Input
+                            id="weddingTime"
+                            value={templateData.weddingTime}
+                            onChange={(e) => handleTemplateDataChange("weddingTime", e.target.value)}
+                            className="mt-1 border-rose-200 focus:border-rose-400"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <Label htmlFor="venue" className="text-sm font-medium">Joy</Label>
+                        <Input
+                          id="venue"
+                          value={templateData.venue}
+                          onChange={(e) => handleTemplateDataChange("venue", e.target.value)}
+                          className="mt-1 border-rose-200 focus:border-rose-400"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="address" className="text-sm font-medium">Manzil</Label>
+                        <Input
+                          id="address"
+                          value={templateData.address}
+                          onChange={(e) => handleTemplateDataChange("address", e.target.value)}
+                          className="mt-1 border-rose-200 focus:border-rose-400"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="customMessage" className="text-sm font-medium">Maxsus Xabar</Label>
+                        <Textarea
+                          id="customMessage"
+                          value={templateData.customMessage}
+                          onChange={(e) => handleTemplateDataChange("customMessage", e.target.value)}
+                          className="mt-1 border-rose-200 focus:border-rose-400"
+                          rows={3}
+                        />
                       </div>
                     </div>
+                  </div>
+                </TabsContent>
 
-                    {/* Individual Colors */}
-                    <div className="space-y-4">
-                      {Object.entries(config.colors).map(([key, value]) => (
-                        <div key={key}>
-                          <Label className="text-sm font-medium capitalize">
-                            {key}
-                          </Label>
-                          <div className="flex items-center gap-3 mt-1">
-                            <Input
-                              type="color"
-                              value={value}
-                              onChange={(e) =>
-                                handleColorChange(
-                                  key as keyof TemplateConfig["colors"],
-                                  e.target.value,
-                                )
-                              }
-                              className="w-12 h-10 p-1 border border-border rounded-lg"
+                <TabsContent value="colors" className="space-y-6 mt-6">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                    <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Palette className="w-5 h-5 text-rose-500" />
+                      Rang Shablonlari
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {colorPresets.map((preset, index) => (
+                        <button
+                          key={index}
+                          onClick={() => applyColorPreset(preset)}
+                          className="p-4 border border-rose-200 rounded-lg hover:border-rose-400 transition-all hover:shadow-md"
+                        >
+                          <div className="flex items-center gap-2 mb-2">
+                            <div
+                              className="w-4 h-4 rounded-full border border-white shadow-sm"
+                              style={{ backgroundColor: preset.colors.primary }}
                             />
-                            <Input
-                              type="text"
-                              value={value}
-                              onChange={(e) =>
-                                handleColorChange(
-                                  key as keyof TemplateConfig["colors"],
-                                  e.target.value,
-                                )
-                              }
-                              className="flex-1"
+                            <div
+                              className="w-4 h-4 rounded-full border border-white shadow-sm"
+                              style={{ backgroundColor: preset.colors.secondary }}
+                            />
+                            <div
+                              className="w-4 h-4 rounded-full border border-white shadow-sm"
+                              style={{ backgroundColor: preset.colors.accent }}
                             />
                           </div>
+                          <div className="text-xs font-medium text-foreground text-left">
+                            {preset.name}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="mt-6 space-y-4">
+                      <h4 className="font-medium text-foreground">Maxsus Ranglar</h4>
+                      {Object.entries(config.colors).map(([key, value]) => (
+                        <div key={key} className="flex items-center gap-3">
+                          <Label className="text-sm font-medium capitalize min-w-[80px]">
+                            {key === 'primary' ? 'Asosiy' : 
+                             key === 'secondary' ? 'Ikkinchi' :
+                             key === 'accent' ? 'Urg\'u' :
+                             key === 'background' ? 'Fon' : 'Matn'}
+                          </Label>
+                          <Input
+                            type="color"
+                            value={value}
+                            onChange={(e) => handleColorChange(key as keyof TemplateConfig["colors"], e.target.value)}
+                            className="w-12 h-10 p-1 border border-rose-200 rounded-lg cursor-pointer"
+                          />
+                          <Input
+                            type="text"
+                            value={value}
+                            onChange={(e) => handleColorChange(key as keyof TemplateConfig["colors"], e.target.value)}
+                            className="flex-1 border-rose-200 focus:border-rose-400"
+                          />
                         </div>
                       ))}
                     </div>
-                  </TabsContent>
+                  </div>
+                </TabsContent>
 
-                  <TabsContent value="fonts" className="space-y-4 mt-6">
+                <TabsContent value="fonts" className="space-y-4 mt-6">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                    <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Type className="w-5 h-5 text-rose-500" />
+                      Shrift Sozlamalari
+                    </h3>
                     {Object.entries(config.fonts).map(([key, value]) => (
-                      <div key={key}>
+                      <div key={key} className="space-y-2">
                         <Label className="text-sm font-medium capitalize">
-                          {key} Shrift
+                          {key === 'heading' ? 'Sarlavha Shrifti' : 
+                           key === 'body' ? 'Asosiy Shrift' : 'Dekorativ Shrift'}
                         </Label>
                         <Select
                           value={value}
-                          onValueChange={(val) =>
-                            handleFontChange(
-                              key as keyof TemplateConfig["fonts"],
-                              val,
-                            )
-                          }
+                          onValueChange={(val) => handleFontChange(key as keyof TemplateConfig["fonts"], val)}
                         >
-                          <SelectTrigger className="mt-1">
+                          <SelectTrigger className="border-rose-200 focus:border-rose-400">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -874,144 +787,125 @@ export default function TemplateBuilder() {
                         </Select>
                       </div>
                     ))}
-                  </TabsContent>
+                  </div>
+                </TabsContent>
 
-                  <TabsContent value="layout" className="space-y-6 mt-6">
-                    {/* Layout Style */}
-                    <div>
-                      <Label className="text-sm font-medium">
-                        Layout Uslubi
-                      </Label>
-                      <div className="grid grid-cols-1 gap-2 mt-2">
-                        {layoutStyles.map((style) => (
-                          <button
-                            key={style.value}
-                            onClick={() =>
-                              handleLayoutChange("style", style.value)
-                            }
-                            className={`p-3 border rounded-lg text-left transition-all hover-lift ${
-                              config.layout.style === style.value
-                                ? "border-primary bg-primary/5"
-                                : "border-border hover:border-primary/50"
-                            }`}
-                          >
-                            <div className="font-medium text-foreground">
-                              {style.label}
-                            </div>
-                            <div className="text-xs text-muted-foreground">
-                              {style.description}
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Layout Controls */}
+                <TabsContent value="layout" className="space-y-6 mt-6">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                    <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Layout className="w-5 h-5 text-rose-500" />
+                      Layout Sozlamalari
+                    </h3>
+                    
                     <div className="space-y-4">
                       <div>
-                        <Label className="text-sm font-medium">
-                          Spacing: {config.layout.spacing}px
-                        </Label>
-                        <Slider
-                          value={[config.layout.spacing]}
-                          onValueChange={(value) =>
-                            handleLayoutChange("spacing", value[0])
-                          }
-                          max={50}
-                          min={10}
-                          step={5}
-                          className="mt-2"
-                        />
+                        <Label className="text-sm font-medium">Layout Uslubi</Label>
+                        <div className="grid grid-cols-1 gap-2 mt-2">
+                          {layoutStyles.map((style) => (
+                            <button
+                              key={style.value}
+                              onClick={() => handleLayoutChange("style", style.value)}
+                              className={`p-3 border rounded-lg text-left transition-all ${
+                                config.layout.style === style.value
+                                  ? "border-rose-400 bg-rose-50"
+                                  : "border-rose-200 hover:border-rose-300 hover:bg-rose-25"
+                              }`}
+                            >
+                              <div className="flex items-center gap-3">
+                                <span className="text-xl">{style.icon}</span>
+                                <div>
+                                  <div className="font-medium text-foreground">{style.label}</div>
+                                  <div className="text-xs text-muted-foreground">{style.description}</div>
+                                </div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                      <div>
-                        <Label className="text-sm font-medium">
-                          Border Radius: {config.layout.borderRadius}px
-                        </Label>
-                        <Slider
-                          value={[config.layout.borderRadius]}
-                          onValueChange={(value) =>
-                            handleLayoutChange("borderRadius", value[0])
-                          }
-                          max={30}
-                          min={0}
-                          step={2}
-                          className="mt-2"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-sm font-medium">
-                          Shadow: {config.layout.shadowIntensity}
-                        </Label>
-                        <Slider
-                          value={[config.layout.shadowIntensity]}
-                          onValueChange={(value) =>
-                            handleLayoutChange("shadowIntensity", value[0])
-                          }
-                          max={20}
-                          min={0}
-                          step={1}
-                          className="mt-2"
-                        />
+
+                      <div className="space-y-4">
+                        <div>
+                          <Label className="text-sm font-medium">
+                            Ichki bo'shliq: {config.layout.spacing}px
+                          </Label>
+                          <Slider
+                            value={[config.layout.spacing]}
+                            onValueChange={(value) => handleLayoutChange("spacing", value[0])}
+                            max={50}
+                            min={10}
+                            step={2}
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-sm font-medium">
+                            Burchak radiusi: {config.layout.borderRadius}px
+                          </Label>
+                          <Slider
+                            value={[config.layout.borderRadius]}
+                            onValueChange={(value) => handleLayoutChange("borderRadius", value[0])}
+                            max={30}
+                            min={0}
+                            step={2}
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-sm font-medium">
+                            Soya kuchi: {config.layout.shadowIntensity}
+                          </Label>
+                          <Slider
+                            value={[config.layout.shadowIntensity]}
+                            onValueChange={(value) => handleLayoutChange("shadowIntensity", value[0])}
+                            max={20}
+                            min={0}
+                            step={1}
+                            className="mt-2"
+                          />
+                        </div>
                       </div>
                     </div>
-                  </TabsContent>
-                </Tabs>
-              </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
 
-            {/* Right Panel - Live Preview */}
-            <div className="sticky top-24 h-fit">
-              <div className="card-modern p-6 animate-slide-up delay-200">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="font-heading text-lg font-semibold text-foreground flex items-center gap-2">
-                    <Eye className="w-5 h-5" />
-                    Jonli Ko'rinish
-                  </h2>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant={
-                        previewDevice === "desktop" ? "default" : "outline"
-                      }
-                      size="sm"
-                      onClick={() => setPreviewDevice("desktop")}
-                      className="hover-scale"
-                    >
-                      <Monitor className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant={
-                        previewDevice === "mobile" ? "default" : "outline"
-                      }
-                      size="sm"
-                      onClick={() => setPreviewDevice("mobile")}
-                      className="hover-scale"
-                    >
-                      <Smartphone className="w-4 h-4" />
-                    </Button>
+            {/* Right Panel - Live Preview (2/5) */}
+            <div className="lg:col-span-2">
+              <div className="sticky top-24">
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="font-heading text-lg font-semibold text-foreground flex items-center gap-2">
+                      <Eye className="w-5 h-5 text-rose-500" />
+                      Jonli Ko'rinish
+                    </h2>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant={previewDevice === "desktop" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setPreviewDevice("desktop")}
+                        className="h-8 w-8 p-0"
+                      >
+                        <Monitor className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant={previewDevice === "mobile" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setPreviewDevice("mobile")}
+                        className="h-8 w-8 p-0"
+                      >
+                        <Smartphone className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
 
-                <div className="border border-border rounded-lg p-6 bg-muted/30 min-h-[600px] flex items-center justify-center">
-                  <TemplatePreview />
-                </div>
+                  <div className="border border-rose-200 rounded-lg p-6 bg-gradient-to-br from-rose-25 to-pink-25 min-h-[600px] flex items-center justify-center">
+                    <TemplatePreview />
+                  </div>
 
-                <div className="flex gap-2 mt-4">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 hover-scale"
-                  >
-                    <Download className="w-4 h-4 mr-2" />
-                    Yuklab olish
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 hover-scale"
-                  >
-                    <Share2 className="w-4 h-4 mr-2" />
-                    Ulashish
-                  </Button>
+                  <div className="text-center mt-4 text-xs text-muted-foreground">
+                    Real vaqtda yangilanadi • {previewDevice === "desktop" ? "Kompyuter" : "Mobil"} ko'rinish
+                  </div>
                 </div>
               </div>
             </div>

@@ -59,6 +59,15 @@ export default function Templates() {
     setLoading(true);
     setError("");
 
+    // Set timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      console.log("⏰ Templates loading timeout!");
+      setLoading(false);
+      setError("Shablonlar yuklash juda uzoq davom etdi. Default shablonlar ko'rsatiladi.");
+      setTemplates(defaultWeddingTemplates);
+      setFilteredTemplates(defaultWeddingTemplates);
+    }, 10000); // 10 seconds timeout
+
     try {
       console.log("🔄 Shablonlarni yuklamoqda...");
 
@@ -150,6 +159,7 @@ export default function Templates() {
       setFilteredTemplates(allTemplates);
 
       console.log("✅ Barcha shablonlar yuklandi:", allTemplates.length);
+      clearTimeout(timeoutId); // Clear timeout on success
     } catch (err) {
       console.error("❌ Shablonlarni yuklashda xatolik:", err);
       setError("Shablonlarni yuklashda xatolik yuz berdi");
@@ -157,6 +167,7 @@ export default function Templates() {
       // Fallback to default templates
       setTemplates(defaultWeddingTemplates);
       setFilteredTemplates(defaultWeddingTemplates);
+      clearTimeout(timeoutId); // Clear timeout on error
     } finally {
       setLoading(false);
     }

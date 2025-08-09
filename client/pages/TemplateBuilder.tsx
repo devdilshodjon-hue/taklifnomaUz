@@ -611,7 +611,7 @@ export default function TemplateBuilder() {
                 onClick={resetToDefaults}
                 variant="outline"
                 size="sm"
-                className="hover:bg-rose-50 border-rose-200"
+                className="hover:bg-muted"
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
                 Qayta tiklash
@@ -619,7 +619,7 @@ export default function TemplateBuilder() {
               <Button
                 onClick={saveTemplate}
                 disabled={loading}
-                className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all"
+                className="primary-gradient hover:opacity-90 text-white shadow-lg hover:shadow-xl transition-all"
               >
                 {loading ? (
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />

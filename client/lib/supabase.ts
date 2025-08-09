@@ -1,31 +1,9 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+// Re-export enhanced Supabase client
+export { supabase } from './supabaseClient'
+export type { SupabaseClient } from './supabaseClient'
+
 import cacheUtils, { cachedFetch, CACHE_TIMES, CACHE_TAGS } from "./cache";
-
-// Use environment variables or fallback to working hardcoded values
-const supabaseUrl =
-  import.meta.env.VITE_SUPABASE_URL ||
-  import.meta.env.NEXT_PUBLIC_SUPABASE_URL ||
-  "https://tcilxdkolqodtgowlgrh.supabase.co";
-
-const supabaseAnonKey =
-  import.meta.env.VITE_SUPABASE_ANON_KEY ||
-  import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjaWx4ZGtvbHFvZHRnb3dsZ3JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2NTM1NTEsImV4cCI6MjA3MDIyOTU1MX0.9LFErrgcBMKQVOrl0lndUfBXMdAWmq6206sbBzgk32A";
-
-// Simplified Supabase client configuration
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: false,
-    flowType: "pkce",
-  },
-  global: {
-    headers: {
-      "X-Client-Info": "taklifnoma-app",
-    },
-  },
-});
+import { supabase } from './supabaseClient'
 
 // Enhanced database operations with caching and performance optimizations
 // ===================================================================

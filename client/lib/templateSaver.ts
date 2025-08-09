@@ -78,7 +78,7 @@ export const saveTemplateToSupabase = async (
       category: "custom",
       colors: config.colors,
       fonts: config.fonts,
-      config: config,
+      layout_config: config, // Fixed: Use layout_config instead of config
       is_public: false,
       is_featured: false,
       usage_count: 0,
@@ -177,7 +177,7 @@ export const saveTemplateToLocalStorage = (
     category: "custom",
     colors: config.colors,
     fonts: config.fonts,
-    config: config,
+    layout_config: config, // Fixed: Use layout_config for localStorage too
     user_id: user.id,
     is_local: true,
     is_public: false,

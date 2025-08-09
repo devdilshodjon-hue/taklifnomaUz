@@ -234,6 +234,9 @@ export const checkDatabaseSetup = async (): Promise<boolean> => {
   }
 };
 
+// Global flag for demo mode
+export let isDemoMode = false;
+
 // Test database connection health
 export const testDatabaseConnection = async (): Promise<{
   connected: boolean;
@@ -248,6 +251,8 @@ export const testDatabaseConnection = async (): Promise<{
     const latency = Date.now() - startTime;
 
     if (error) {
+      console.warn("Database connection failed:", error.message);
+      isDemoMode = true; // Enable demo mode
       return {
         connected: false,
         latency,
@@ -255,11 +260,14 @@ export const testDatabaseConnection = async (): Promise<{
       };
     }
 
+    isDemoMode = false; // Disable demo mode
     return {
       connected: true,
       latency,
     };
   } catch (error: any) {
+    console.warn("Database connection error:", error?.message);
+    isDemoMode = true; // Enable demo mode
     return {
       connected: false,
       latency: Date.now() - startTime,

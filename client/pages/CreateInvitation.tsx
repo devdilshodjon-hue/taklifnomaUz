@@ -225,45 +225,48 @@ export default function CreateInvitation() {
 
       console.log("✅ Invitation created successfully:", invitation);
 
-      // Mehmonlarni qo'shish
-      if (guests.length > 0 && invitation) {
-        console.log("Adding guests...");
-        const guestData = guests.map((guest) => ({
-          invitation_id: invitation.id,
-          name: guest.name.trim(),
-          email: guest.email?.trim() || null,
-          phone: guest.phone?.trim() || null,
-          plus_one: false,
-        }));
+      // Add guests with optimized handling
+      if (guests.length > 0 && invitation?.id) {
+        console.log("👥 Adding guests...");
+        try {
+          const guestData = guests.map((guest) => ({
+            invitation_id: invitation.id,
+            name: guest.name.trim(),
+            email: guest.email?.trim() || null,
+            phone: guest.phone?.trim() || null,
+            plus_one: false,
+            metadata: {
+              added_with: "CreateInvitation v2.0"
+            }
+          }));
 
-        const { error: guestError } = await supabase
-          .from("guests")
-          .insert(guestData);
-        if (guestError) {
-          console.error("Guest insertion error:", guestError);
-        } else {
-          console.log("Guests added successfully");
+          const { error: guestError } = await supabase
+            .from("guests")
+            .insert(guestData);
+
+          if (guestError) {
+            console.warn("⚠️ Guest insertion failed, saving to localStorage:", guestError);
+            // Save guests locally as backup
+            localStorage.setItem(`guests_${invitation.id}`, JSON.stringify(guests));
+          } else {
+            console.log("✅ Guests added successfully");
+          }
+        } catch (guestErr) {
+          console.warn("⚠️ Guest handling error:", guestErr);
+          localStorage.setItem(`guests_${invitation.id}`, JSON.stringify(guests));
         }
       }
 
-      // Backup uchun localStorage ga ham saqlaymiz
-      const backupData = {
-        ...invitation,
-        is_demo: false,
-        guests: guests,
-      };
-      localStorage.setItem(
-        `invitation_${invitation.id}`,
-        JSON.stringify(backupData),
-      );
+      // Clear any cached drafts
+      cacheUtils.invalidateUser(user.id);
 
-      console.log("Navigating to invitation:", invitation.id);
+      console.log("🎯 Navigating to invitation:", invitation.id);
       setSuccess(true);
 
-      // Add a small delay to ensure state updates and show success message
+      // Navigate with optimized delay
       setTimeout(() => {
         navigate(`/invitation/${invitation.id}`);
-      }, 1500);
+      }, 1000);
     } catch (error) {
       console.error("Taklifnoma yaratishda umumiy xatolik:", error?.message || error);
       setError("Kutilmagan xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");

@@ -20,13 +20,27 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: true,
+    detectSessionInUrl: false, // Disable URL detection to avoid issues
     flowType: "pkce",
+    debug: false, // Disable debug in production
   },
   global: {
     headers: {
       "X-Client-Info": "taklifnoma-app",
-      "X-Cache-Control": "max-age=300", // 5 minutes cache
+    },
+    fetch: (url, options = {}) => {
+      // Add proper error handling and timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      return fetch(url, {
+        ...options,
+        signal: controller.signal,
+        mode: 'cors', // Explicitly set CORS mode
+        credentials: 'omit', // Don't send credentials to avoid CORS issues
+      }).finally(() => {
+        clearTimeout(timeoutId);
+      });
     },
   },
   realtime: {

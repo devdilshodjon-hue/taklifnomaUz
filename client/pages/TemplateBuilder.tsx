@@ -470,7 +470,7 @@ export default function TemplateBuilder() {
       }
     };
 
-    const deviceClass = previewDevice === "mobile" ? "max-w-xs" : "max-w-md";
+    const deviceClass = previewDevice === "mobile" ? "max-w-sm" : "max-w-lg";
 
     return (
       <div className={`w-full ${deviceClass} mx-auto transition-all duration-500`}>

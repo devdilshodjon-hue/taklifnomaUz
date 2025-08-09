@@ -369,7 +369,10 @@ export default function TemplateBuilder() {
 
     console.log("✅ Starting save with user ID:", user.id);
     console.log("🔧 Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
-    console.log("🔧 Supabase Key length:", import.meta.env.VITE_SUPABASE_ANON_KEY?.length);
+    console.log(
+      "🔧 Supabase Key length:",
+      import.meta.env.VITE_SUPABASE_ANON_KEY?.length,
+    );
 
     try {
       const templateToSave = {

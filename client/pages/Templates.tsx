@@ -277,6 +277,36 @@ export default function Templates() {
                 className="aspect-[3/4] mb-4 rounded-lg overflow-hidden border-2 border-border relative"
                 style={{ backgroundColor: template.colors.background }}
               >
+                {/* Template Type Indicators */}
+                <div className="absolute top-2 left-2 z-10 flex gap-2">
+                  {template.isCustom && (
+                    <Badge
+                      variant="secondary"
+                      className="text-xs bg-purple-100 text-purple-800 border-purple-200"
+                    >
+                      <Star className="w-3 h-3 mr-1" />
+                      Maxsus
+                    </Badge>
+                  )}
+                  {template.is_featured && (
+                    <Badge
+                      variant="secondary"
+                      className="text-xs bg-yellow-100 text-yellow-800 border-yellow-200"
+                    >
+                      ⭐ Mashhur
+                    </Badge>
+                  )}
+                  {template.usage_count && template.usage_count > 0 && (
+                    <Badge
+                      variant="outline"
+                      className="text-xs bg-white/80 backdrop-blur-sm"
+                    >
+                      <Users className="w-3 h-3 mr-1" />
+                      {template.usage_count}
+                    </Badge>
+                  )}
+                </div>
+
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <div className="text-6xl mb-2">{template.preview}</div>

@@ -196,6 +196,7 @@ export interface Database {
           is_featured?: boolean;
           usage_count?: number;
           tags?: string[];
+          is_active?: boolean;
         };
         Update: {
           id?: string;

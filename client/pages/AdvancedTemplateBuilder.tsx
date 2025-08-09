@@ -13,6 +13,7 @@ import {
   quickConnectionTest,
 } from "@/lib/supabaseTest";
 import { runDatabaseHealthCheck, setupDemoData } from "@/lib/databaseSetup";
+import { runFullTestSuite, displayTestResults } from "@/lib/testSuite";
 import {
   ArrowLeft,
   Save,

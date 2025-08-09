@@ -148,8 +148,10 @@ export const isTableNotFoundError = (error: any): boolean => {
   );
 };
 
-// Enhanced Template Operations
-// ===========================
+// Enhanced Template Operations with Default Templates Fallback
+// ===========================================================
+
+import { templateManager, defaultWeddingTemplates } from "./defaultTemplates";
 
 export const templateOperations = {
   // Create template with caching

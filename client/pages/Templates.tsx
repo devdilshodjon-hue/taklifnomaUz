@@ -58,24 +58,14 @@ export default function Templates() {
   };
 
   // Template kategoriya filter
-  const handleCategoryChange = async (categoryId: string) => {
+  const handleCategoryChange = (categoryId: string) => {
     setSelectedCategory(categoryId);
-    try {
-      if (categoryId === "all") {
-        setFilteredTemplates(templates);
-      } else {
-        const filtered = await templateManager.getTemplatesByCategory(categoryId);
-        setFilteredTemplates(filtered);
-      }
-    } catch (err) {
-      console.error("❌ Template filterlashda xatolik:", err);
-      // Fallback to client-side filtering
-      if (categoryId === "all") {
-        setFilteredTemplates(templates);
-      } else {
-        const filtered = templates.filter(t => t.category === categoryId);
-        setFilteredTemplates(filtered);
-      }
+
+    if (categoryId === "all") {
+      setFilteredTemplates(templates);
+    } else {
+      const filtered = templates.filter(t => t.category === categoryId);
+      setFilteredTemplates(filtered);
     }
   };
 

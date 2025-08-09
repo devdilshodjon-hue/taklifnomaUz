@@ -25,7 +25,21 @@ interface AuthContextType {
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: any }>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// Default context value to prevent undefined context errors
+const defaultAuthContextValue: AuthContextType = {
+  user: null,
+  profile: null,
+  session: null,
+  loading: true,
+  isInitialized: false,
+  signUp: async () => ({ error: new Error("Auth not initialized") }),
+  signIn: async () => ({ error: new Error("Auth not initialized") }),
+  signInWithGoogle: async () => ({ error: new Error("Auth not initialized") }),
+  signOut: async () => ({ error: new Error("Auth not initialized") }),
+  updateProfile: async () => ({ error: new Error("Auth not initialized") }),
+};
+
+const AuthContext = createContext<AuthContextType>(defaultAuthContextValue);
 
 export function useAuth() {
   const context = useContext(AuthContext);

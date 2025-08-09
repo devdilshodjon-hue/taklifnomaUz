@@ -13,7 +13,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
-import CreateInvitation from "./pages/CreateInvitation";
+import CreateInvitation from "./pages/CreateInvitationFixed";
 import InvitationView from "./pages/InvitationView";
 import Templates from "./pages/Templates";
 import TemplateBuilder from "./pages/AdvancedTemplateBuilder";

@@ -242,6 +242,22 @@ export default function Login() {
           </div>
         </div>
 
+        {/* Demo Mode Button */}
+        {error && error.includes('Internet ulanishi') && (
+          <div className="text-center mt-6 animate-fade-in">
+            <Button
+              onClick={handleDemoLogin}
+              variant="outline"
+              className="w-full h-12 border-2 border-orange-200 bg-orange-50 hover:bg-orange-100 text-orange-700"
+            >
+              🚀 Demo rejimda davom etish
+            </Button>
+            <p className="text-xs text-muted-foreground mt-2">
+              Internet aloqasi yo'q? Demo rejimda barcha xususiyatlarni sinab ko'ring
+            </p>
+          </div>
+        )}
+
         {/* Register Link */}
         <div className="text-center mt-8 animate-fade-in delay-300">
           <p className="text-muted-foreground">

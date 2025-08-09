@@ -16,12 +16,56 @@ import {
 
 export default function Templates() {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [filteredTemplates, setFilteredTemplates] =
-    useState<TemplateData[]>(weddingTemplates);
-  const [previewTemplate, setPreviewTemplate] = useState<TemplateData | null>(
-    null,
-  );
+  const [templates, setTemplates] = useState<DefaultTemplate[]>([]);
+  const [filteredTemplates, setFilteredTemplates] = useState<DefaultTemplate[]>([]);
+  const [previewTemplate, setPreviewTemplate] = useState<DefaultTemplate | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [dbStatus, setDbStatus] = useState<boolean | null>(null);
+
+  // Load templates on component mount
+  useEffect(() => {
+    loadTemplates();
+  }, []);
+
+  const loadTemplates = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      console.log("🔄 Shablonlarni yuklamoqda...");
+
+      // Check database status
+      const dbSetup = await checkDatabaseSetup();
+      setDbStatus(dbSetup);
+
+      if (dbSetup) {
+        console.log("✅ Ma'lumotlar bazasi mavjud, shablonlarni bazadan yuklamoqda...");
+        // TODO: Load from database when available
+        // For now, use default templates
+      } else {
+        console.log("⚠️ Ma'lumotlar bazasi mavjud emas, default shablonlarni ishlatmoqda...");
+      }
+
+      // Load default templates
+      const loadedTemplates = await templateManager.getAllTemplates();
+      setTemplates(loadedTemplates);
+      setFilteredTemplates(loadedTemplates);
+
+      console.log("✅ Shablonlar muvaffaqiyatli yuklandi:", loadedTemplates.length);
+
+    } catch (err) {
+      console.error("❌ Shablonlarni yuklashda xatolik:", err);
+      setError("Shablonlarni yuklashda xatolik yuz berdi");
+
+      // Fallback to default templates
+      setTemplates(defaultWeddingTemplates);
+      setFilteredTemplates(defaultWeddingTemplates);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Template kategoriya filter
   const handleCategoryChange = (categoryId: string) => {

@@ -81,7 +81,7 @@ interface InvitationData {
 }
 
 export default function TemplateBuilder() {
-  const { user } = useAuth();
+  const { user, session, profile } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");

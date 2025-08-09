@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { supabase } from "./supabaseClient";
 import { toast } from "sonner";
 
 export interface TemplateData {
@@ -17,37 +17,21 @@ export interface TemplateConfig {
   fonts: any;
   layout: any;
   animations: any;
+  effects?: any;
+  border?: any;
+  background?: any;
+  typography?: any;
 }
 
-// Retry function with exponential backoff
-const retryWithBackoff = async <T>(
-  fn: () => Promise<T>,
-  maxRetries: number = 3,
-  baseDelay: number = 1000,
-): Promise<T> => {
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      return await fn();
-    } catch (error) {
-      if (i === maxRetries - 1) throw error;
-
-      const delay = baseDelay * Math.pow(2, i);
-      console.log(`Retry ${i + 1}/${maxRetries} after ${delay}ms...`);
-      await new Promise((resolve) => setTimeout(resolve, delay));
-    }
-  }
-  throw new Error("Max retries exceeded");
-};
-
+// Direct Supabase save with enhanced error handling
 export const saveTemplateToSupabase = async (
   user: any,
   templateData: TemplateData,
   config: TemplateConfig,
 ): Promise<{ success: boolean; error?: string; data?: any }> => {
-  // Always dismiss any existing saving toast
-  toast.dismiss("saving-template");
+  console.log("🚀 Direct Supabase template save started...");
 
-  // Input validation
+  // Validate inputs
   if (!user?.id) {
     toast.error("❌ Xatolik", {
       description: "Tizimga kirishingiz kerak",
@@ -65,113 +49,108 @@ export const saveTemplateToSupabase = async (
   }
 
   // Show loading toast
-  toast.loading("💾 Shablon saqlanmoqda...", {
+  toast.loading("💾 Supabase ga shablon saqlanmoqda...", {
     description: "Iltimos, kuting...",
     id: "saving-template",
   });
 
   try {
+    // Prepare template data for Supabase
     const templateToSave = {
       user_id: user.id,
       name: templateData.templateName.trim(),
-      description: `Maxsus shablon - ${new Date().toLocaleDateString("uz-UZ")}`,
+      description: `Professional shablon - ${new Date().toLocaleDateString("uz-UZ")}`,
       category: "custom",
-      colors: config.colors,
-      fonts: config.fonts,
-      config: config, // Using config field as per database schema
+      colors: config.colors || {},
+      fonts: config.fonts || {},
+      config: {
+        layout: config.layout || {},
+        animations: config.animations || {},
+        effects: config.effects || {},
+        border: config.border || {},
+        background: config.background || {},
+        typography: config.typography || {}
+      },
       is_public: false,
       is_featured: false,
       usage_count: 0,
-      tags: [config.layout?.style || "modern", "maxsus", "real-time"],
-      is_active: true,
+      tags: [config.layout?.style || "modern", "custom", "professional"],
+      is_active: true
     };
 
-    console.log(
-      "📤 Saving template to Supabase with retry logic...",
-      templateToSave,
+    console.log("📤 Saving to Supabase:", templateToSave);
+
+    // Direct insert to Supabase with timeout
+    const savePromise = supabase
+      .from("custom_templates")
+      .insert(templateToSave)
+      .select()
+      .single();
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("6 soniyalik vaqt tugadi")), 6000)
     );
 
-    // Try direct save first (no timeout race condition)
-    console.log("📤 Attempting direct save to Supabase...");
-    let result;
-
-    try {
-      const { data, error } = await supabase
-        .from("custom_templates")
-        .insert(templateToSave)
-        .select()
-        .single();
-
-      result = { data, error };
-      console.log("✅ Direct save result:", result);
-    } catch (directError) {
-      console.log(
-        "❌ Direct save failed, trying with retry logic...",
-        directError,
-      );
-
-      // If direct save fails, try with retry (but no timeout race)
-      result = await retryWithBackoff(
-        async () => {
-          return await supabase
-            .from("custom_templates")
-            .insert(templateToSave)
-            .select()
-            .single();
-        },
-        2,
-        3000,
-      ); // 2 retries with 3 second delay
-    }
-
-    const { data, error } = result;
+    const { data, error } = await Promise.race([savePromise, timeoutPromise]) as any;
 
     if (error) {
-      throw error;
+      console.error("❌ Supabase save error:", error);
+      
+      // Try fallback save to localStorage
+      const fallbackResult = saveTemplateToLocalStorage(user, templateData, config);
+      
+      toast.dismiss("saving-template");
+      toast.warning("⚠️ Supabase xatosi, mahalliy saqlandi", {
+        description: `Xatolik: ${error.message}`,
+        duration: 6000,
+      });
+
+      return {
+        success: true, // Still success because saved locally
+        error: error.message,
+        data: fallbackResult.data,
+      };
     }
 
-    // Success
+    // Success!
     toast.dismiss("saving-template");
-    toast.success("🎉 Shablon muvaffaqiyatli saqlandi!", {
-      description: "Shablon Templates sahifasida ko'rish mumkin.",
+    toast.success("🎉 Shablon Supabase ga saqlandi!", {
+      description: "Templates sahifasida ko'rish mumkin",
       duration: 4000,
     });
 
-    console.log("✅ Template saved successfully:", data);
+    console.log("✅ Template successfully saved to Supabase:", data);
     return { success: true, data };
+
   } catch (err: any) {
-    console.error("Template save error after retries:", err);
+    console.error("❌ Template save process failed:", err);
+    
+    // Fallback to localStorage
+    const fallbackResult = saveTemplateToLocalStorage(user, templateData, config);
+    
     toast.dismiss("saving-template");
-
-    // Try localStorage fallback regardless of error type
-    const fallbackResult = saveTemplateToLocalStorage(
-      user,
-      templateData,
-      config,
-    );
-
-    if (err.message?.includes("timeout") || err.message?.includes("Timeout")) {
+    
+    if (err.message?.includes("6 soniyalik vaqt tugadi")) {
       toast.warning("⚠️ Vaqt tugadi", {
-        description:
-          "Shablon mahalliy xotiraga saqlandi. Keyinroq internet orqali sinxronlanadi.",
+        description: "Shablon mahalliy xotiraga saqlandi",
         duration: 6000,
       });
     } else {
-      const errorMessage = err?.message || "Noma'lum xatolik";
-      toast.warning("⚠️ Shablon mahalliy xotiraga saqlandi", {
-        description: `Bazaga ulanib bo'lmadi: ${errorMessage}`,
+      toast.warning("⚠️ Kutilmagan xatolik", {
+        description: `Xatolik: ${err.message}. Mahalliy saqlandi.`,
         duration: 6000,
       });
     }
 
     return {
-      success: true, // Return success since we saved to localStorage
-      error: err?.message,
+      success: true,
+      error: err.message,
       data: fallbackResult.data,
     };
   }
 };
 
+// Fallback localStorage save
 export const saveTemplateToLocalStorage = (
   user: any,
   templateData: TemplateData,
@@ -180,17 +159,17 @@ export const saveTemplateToLocalStorage = (
   const fallbackTemplate = {
     id: `local_${Date.now()}`,
     name: templateData.templateName,
-    description: `Maxsus shablon - ${new Date().toLocaleDateString("uz-UZ")}`,
-    category: "custom",
+    description: `Mahalliy shablon - ${new Date().toLocaleDateString("uz-UZ")}`,
+    category: "local",
     colors: config.colors,
     fonts: config.fonts,
-    config: config, // Using config field as per database schema
+    config: config,
     user_id: user.id,
     is_local: true,
     is_public: false,
     is_featured: false,
     usage_count: 0,
-    tags: [config.layout?.style || "modern", "maxsus", "local"],
+    tags: [config.layout?.style || "modern", "local", "offline"],
     created_at: new Date().toISOString(),
   };
 
@@ -203,7 +182,31 @@ export const saveTemplateToLocalStorage = (
     console.log("✅ Template saved to localStorage:", fallbackTemplate);
     return { success: true, data: fallbackTemplate };
   } catch (err) {
-    console.error("Failed to save to localStorage:", err);
+    console.error("❌ Failed to save to localStorage:", err);
     return { success: false, data: null };
+  }
+};
+
+// Test Supabase connection specifically for templates
+export const testTemplateTableAccess = async () => {
+  try {
+    console.log("🔍 Testing custom_templates table access...");
+    
+    const { data, error } = await supabase
+      .from("custom_templates")
+      .select("id, name")
+      .limit(1);
+    
+    if (error) {
+      console.error("❌ Template table access failed:", error);
+      return { accessible: false, error: error.message };
+    }
+    
+    console.log("✅ Template table accessible, found:", data?.length || 0, "templates");
+    return { accessible: true, count: data?.length || 0 };
+    
+  } catch (err: any) {
+    console.error("❌ Template table test failed:", err);
+    return { accessible: false, error: err.message };
   }
 };

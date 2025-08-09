@@ -43,26 +43,30 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-// Test connection with better error handling
+// Test connection with permission error handling
 export const testConnection = async (): Promise<boolean> => {
   try {
-    // Simple health check that doesn't require permissions
-    const response = await fetch(`${supabaseUrl}/rest/v1/`, {
-      headers: {
-        'apikey': supabaseAnonKey,
-        'Authorization': `Bearer ${supabaseAnonKey}`,
-      },
-    });
+    // Test with a simple query to detect permission issues
+    const { data, error } = await supabase.from("profiles").select("count").limit(1);
 
-    if (response.ok) {
-      console.log("✅ Supabase connection successful");
-      return true;
-    } else {
-      console.warn("⚠️ Supabase connection failed:", response.status);
-      return false;
+    if (error) {
+      if (error.message?.includes("permission denied") || error.message?.includes("schema public")) {
+        console.log("📦 Supabase offline mode (permission not configured) - using localStorage");
+        return false; // Will use localStorage fallback
+      } else {
+        console.warn("⚠️ Supabase connection failed:", error.message);
+        return false;
+      }
     }
-  } catch (error) {
-    console.warn("⚠️ Supabase connection error:", error);
+
+    console.log("✅ Supabase connection successful");
+    return true;
+  } catch (error: any) {
+    if (error.message?.includes("permission denied") || error.message?.includes("schema public")) {
+      console.log("📦 Permission denied - switching to offline mode");
+    } else {
+      console.warn("⚠️ Supabase connection error:", error);
+    }
     return false;
   }
 };

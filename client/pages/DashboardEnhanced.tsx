@@ -93,7 +93,7 @@ export default function DashboardEnhanced() {
     );
   };
 
-  // Enhanced invitation loading
+  // Enhanced invitation loading with better timeout handling
   const loadInvitations = async () => {
     if (!user) {
       setLoading(false);
@@ -104,8 +104,13 @@ export default function DashboardEnhanced() {
     setLoading(true);
     setError("");
 
+    // Always start by loading localStorage data immediately
+    const localInvitations = getLocalStorageInvitations();
+
     try {
-      // Try Supabase first with timeout
+      // Try Supabase with improved timeout handling
+      console.log("📤 Attempting Supabase connection...");
+
       const loadPromise = supabase
         .from("invitations")
         .select("*")
@@ -113,39 +118,36 @@ export default function DashboardEnhanced() {
         .eq("is_active", true)
         .order("created_at", { ascending: false });
 
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("6 soniyalik vaqt tugadi")), 6000)
+      // Use a more reasonable timeout with better handling
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Connection timeout")), 5000) // Reduced to 5 seconds
       );
 
-      const { data: supabaseInvitations, error } = await Promise.race([
-        loadPromise,
-        timeoutPromise
-      ]) as any;
+      const result = await Promise.race([loadPromise, timeoutPromise]);
+      const { data: supabaseInvitations, error } = result as any;
 
       if (error) {
-        console.warn("⚠️ Supabase error, using localStorage:", error.message);
-        const localInvitations = getLocalStorageInvitations();
+        console.warn("⚠️ Supabase error:", error.message);
+        // Show localStorage data with warning
         setInvitations(localInvitations);
-        if (localInvitations.length === 0) {
-          setError("Ma'lumotlar bazasiga ulanib bo'lmadi. Mahalliy ma'lumotlar topilmadi.");
-        }
+        setError(`Supabase xatosi: ${error.message}. Mahalliy ma'lumotlar ko'rsatilmoqda.`);
       } else {
         console.log("✅ Supabase invitations loaded:", supabaseInvitations?.length || 0);
-        
+
         // Combine Supabase and localStorage data
-        const localInvitations = getLocalStorageInvitations();
         const allInvitations = [
           ...(supabaseInvitations || []).map((inv: any) => ({
             ...inv,
             url: generateInvitationURL(inv.slug)
           })),
-          ...localInvitations.filter(local => 
+          ...localInvitations.filter(local =>
             !supabaseInvitations?.some((sb: any) => sb.slug === local.slug)
           )
         ];
-        
+
         setInvitations(allInvitations);
-        
+        setError(""); // Clear any previous errors
+
         // Load stats for each invitation (mock for now)
         const mockStats: Record<string, InvitationStats> = {};
         allInvitations.forEach(inv => {
@@ -158,16 +160,28 @@ export default function DashboardEnhanced() {
         setStats(mockStats);
       }
     } catch (err: any) {
-      console.error("❌ Loading error:", err);
-      
-      // Fallback to localStorage
-      const localInvitations = getLocalStorageInvitations();
+      console.warn("⚠️ Connection failed, using localStorage:", err.message);
+
+      // Gracefully fall back to localStorage
       setInvitations(localInvitations);
-      
-      if (err.message?.includes("6 soniyalik vaqt tugadi")) {
-        setError("Vaqt tugadi. Mahalliy ma'lumotlar ko'rsatilmoqda.");
+
+      if (err.message?.includes("timeout") || err.message?.includes("Connection timeout")) {
+        setError("Ulanish vaqti tugadi. Mahalliy ma'lumotlar ko'rsatilmoqda.");
       } else {
-        setError("Xatolik yuz berdi. Mahalliy ma'lumotlar ko'rsatilmoqda.");
+        setError("Internet ulanishi yo'q. Mahalliy ma'lumotlar ko'rsatilmoqda.");
+      }
+
+      // Generate mock stats for local invitations too
+      if (localInvitations.length > 0) {
+        const mockStats: Record<string, InvitationStats> = {};
+        localInvitations.forEach(inv => {
+          mockStats[inv.id] = {
+            views: Math.floor(Math.random() * 50), // Lower numbers for local
+            rsvps: Math.floor(Math.random() * 10),
+            guests: Math.floor(Math.random() * 25)
+          };
+        });
+        setStats(mockStats);
       }
     } finally {
       setLoading(false);

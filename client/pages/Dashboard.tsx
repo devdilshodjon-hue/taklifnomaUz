@@ -108,42 +108,29 @@ export default function Dashboard() {
       return;
     }
 
-    console.log("Loading invitations for user:", user.id);
+    console.log("🔄 Taklifnomalarni yuklamoqda...", user.id);
     setLoading(true);
+    setError("");
 
     try {
       // Set a timeout to prevent infinite loading
       const timeoutId = setTimeout(() => {
-        console.log("Dashboard loading timeout - stopping");
+        console.log("Dashboard yuklanish vaqti tugadi - to'xtatilmoqda");
         setLoading(false);
-      }, 10000); // 10 seconds timeout
+      }, 8000); // 8 seconds timeout
 
-      // Test connection first
-      const { data: testData, error: testError } = await supabase
-        .from("invitations")
-        .select("id")
-        .limit(1);
+      // Check database setup comprehensively
+      const dbSetup = await checkDatabaseSetup();
 
-      if (testError) {
-        console.error("Database connection test failed:", testError);
+      if (!dbSetup) {
+        console.log("📁 Ma'lumotlar bazasi mavjud emas, localStorage dan yuklanmoqda");
         clearTimeout(timeoutId);
-
-        // If table doesn't exist, load from localStorage
-        if (testError.message.includes("does not exist")) {
-          console.log("Using localStorage for invitations");
-          loadInvitationsFromLocalStorage();
-          setLoading(false);
-          return;
-        }
-
-        setError(
-          "Ma'lumotlar bazasiga ulanishda xatolik. Iltimos, internetni tekshiring.",
-        );
+        loadInvitationsFromLocalStorage();
         setLoading(false);
         return;
       }
 
-      console.log("Database connection test successful");
+      console.log("✅ Ma'lumotlar bazasi tekshirildi, yuklanmoqda...");
 
       const { data, error } = await supabase
         .from("invitations")

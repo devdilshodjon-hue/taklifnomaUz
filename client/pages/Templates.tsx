@@ -118,6 +118,50 @@ export default function Templates() {
         console.warn("⚠️ Custom templates yuklanmadi:", customErr);
       }
 
+      // Also load from localStorage (fallback templates)
+      try {
+        console.log("🔄 LocalStorage'dan shablonlarni yuklamoqda...");
+        const localTemplates: ExtendedTemplate[] = [];
+
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith('custom_template_')) {
+            try {
+              const templateData = localStorage.getItem(key);
+              if (templateData) {
+                const parsedTemplate = JSON.parse(templateData);
+
+                const localTemplate: ExtendedTemplate = {
+                  id: parsedTemplate.id,
+                  name: parsedTemplate.name + " (Mahalliy)",
+                  description: parsedTemplate.description || "Mahalliy saqlangan shablon",
+                  category: parsedTemplate.category || "local",
+                  colors: parsedTemplate.colors || {},
+                  fonts: parsedTemplate.fonts || {},
+                  preview: "💾", // Local storage icon
+                  isCustom: true,
+                  customData: parsedTemplate,
+                  usage_count: 0,
+                  is_featured: false,
+                };
+
+                localTemplates.push(localTemplate);
+              }
+            } catch (parseErr) {
+              console.warn("LocalStorage template parse error:", parseErr);
+            }
+          }
+        }
+
+        if (localTemplates.length > 0) {
+          console.log("✅ LocalStorage templates topildi:", localTemplates.length);
+          // Add local templates after Supabase templates
+          allTemplates = [...allTemplates.slice(0, customTemplatesData.length), ...localTemplates, ...allTemplates.slice(customTemplatesData.length)];
+        }
+      } catch (localErr) {
+        console.warn("⚠️ LocalStorage templates yuklanmadi:", localErr);
+      }
+
       // Also load popular public templates if user is logged in
       if (user) {
         try {

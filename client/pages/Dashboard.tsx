@@ -157,8 +157,10 @@ export default function Dashboard() {
           return;
         }
 
+        // Provide more descriptive error message including the actual error
+        const errorMessage = error.message || "Noma'lum xatolik";
         setError(
-          "Taklifnomalarni yuklanishda xatolik. Iltimos, qayta urinib ko'ring.",
+          `Taklifnomalarni yuklanishda xatolik: ${errorMessage}. Iltimos, qayta urinib ko'ring.`,
         );
         setInvitations([]);
         setLoading(false);
@@ -186,9 +188,10 @@ export default function Dashboard() {
 
       setStats(statsData);
       console.log("Stats loaded successfully");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error in loadInvitations:", error);
-      setError("Kutilmagan xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
+      const errorMessage = error?.message || error?.toString() || "Noma'lum xatolik";
+      setError(`Kutilmagan xatolik yuz berdi: ${errorMessage}. Iltimos, qayta urinib ko'ring.`);
       setInvitations([]);
       setStats({});
     } finally {

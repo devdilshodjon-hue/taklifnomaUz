@@ -267,45 +267,9 @@ export default function CreateInvitation() {
       setTimeout(() => {
         navigate(`/invitation/${invitation.id}`);
       }, 1000);
-    } catch (error) {
-      console.error("Taklifnoma yaratishda umumiy xatolik:", error?.message || error);
-      setError("Kutilmagan xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
-
-      console.log("Demo rejimida taklifnoma yaratilmoqda...");
-      // Demo uchun UUID formatda ID yaratamiz
-      const mockId = generateDemoInvitationId();
-
-      // Real ma'lumotlarni localStorage ga saqlaymiz
-      const realInvitationData = {
-        id: mockId,
-        groom_name: formData.groomName,
-        bride_name: formData.brideName,
-        wedding_date: formData.weddingDate,
-        wedding_time: formData.weddingTime,
-        venue: formData.venue,
-        address: formData.address,
-        city: formData.city,
-        custom_message: formData.customMessage,
-        template_id: formData.selectedTemplate,
-        created_at: new Date().toISOString(),
-        is_demo: true,
-      };
-
-      localStorage.setItem(
-        `invitation_${mockId}`,
-        JSON.stringify(realInvitationData),
-      );
-
-      // Update demo invitation count
-      const currentCount = parseInt(
-        localStorage.getItem("demo_invitation_count") || "0",
-      );
-      localStorage.setItem(
-        "demo_invitation_count",
-        (currentCount + 1).toString(),
-      );
-
-      navigate(`/invitation/${mockId}`);
+    } catch (err: any) {
+      console.error("❌ Invitation creation failed:", err?.message || err);
+      setError(err?.message || "Kutilmagan xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
     } finally {
       // Ensure loading state is always reset
       if (!success) {

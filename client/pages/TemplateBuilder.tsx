@@ -199,7 +199,7 @@ export default function TemplateBuilder() {
     },
     {
       name: "Klassik Qora",
-      emoji: "🖤",
+      emoji: "��",
       colors: {
         primary: "#1f2937",
         secondary: "#6b7280",
@@ -338,6 +338,13 @@ export default function TemplateBuilder() {
     console.log("🚀 Starting template save process...");
     console.log("👤 User:", !!user, user?.id);
     console.log("📝 Template name:", templateData.templateName);
+    console.log("🔐 User object:", user);
+
+    // Additional auth check
+    if (!user?.id) {
+      setError("User ID mavjud emas. Iltimos, qayta login qiling.");
+      return;
+    }
 
     if (!user) {
       setError("Shablon saqlash uchun tizimga kirishingiz kerak");

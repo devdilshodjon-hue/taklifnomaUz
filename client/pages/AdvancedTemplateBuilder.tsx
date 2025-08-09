@@ -904,20 +904,33 @@ export default function AdvancedTemplateBuilder() {
                 <RotateCcw className="w-4 h-4 mr-2" />
                 Reset
               </Button>
-              <Button
-                onClick={saveTemplate}
-                disabled={loading}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all"
-              >
-                {loading ? (
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                ) : (
-                  <Save className="w-4 h-4 mr-2" />
+              <div className="flex gap-2">
+                {connectionStatus === "offline" && (
+                  <Button
+                    onClick={saveToLocalStorageDirectly}
+                    variant="outline"
+                    size="sm"
+                    className="hover:bg-orange-50 border-orange-300 text-orange-700"
+                  >
+                    <Download className="w-4 h-4 mr-1" />
+                    Tez Saqlash
+                  </Button>
                 )}
-                {connectionStatus === "offline"
-                  ? "Mahalliy Saqlash"
-                  : "Saqlash"}
-              </Button>
+                <Button
+                  onClick={saveTemplate}
+                  disabled={loading}
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all"
+                >
+                  {loading ? (
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  ) : (
+                    <Save className="w-4 h-4 mr-2" />
+                  )}
+                  {connectionStatus === "offline"
+                    ? "Mahalliy Saqlash"
+                    : "Saqlash"}
+                </Button>
+              </div>
             </div>
           </div>
         </nav>

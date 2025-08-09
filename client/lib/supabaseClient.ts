@@ -11,7 +11,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
   );
 }
 
-console.log("��� Supabase client initializing with:", {
+console.log("🔧 Supabase client initializing with:", {
   url: supabaseUrl,
   hasKey: !!supabaseAnonKey,
   keyPrefix: supabaseAnonKey?.substring(0, 20) + "...",
@@ -43,18 +43,32 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-// Test connection on initialization
-supabase
-  .from("profiles")
-  .select("count")
-  .limit(1)
-  .then(({ data, error }) => {
-    if (error) {
-      console.warn("⚠️ Supabase connection test failed:", error.message);
-    } else {
+// Test connection with better error handling
+export const testConnection = async (): Promise<boolean> => {
+  try {
+    // Simple health check that doesn't require permissions
+    const response = await fetch(`${supabaseUrl}/rest/v1/`, {
+      headers: {
+        'apikey': supabaseAnonKey,
+        'Authorization': `Bearer ${supabaseAnonKey}`,
+      },
+    });
+
+    if (response.ok) {
       console.log("✅ Supabase connection successful");
+      return true;
+    } else {
+      console.warn("⚠️ Supabase connection failed:", response.status);
+      return false;
     }
-  });
+  } catch (error) {
+    console.warn("⚠️ Supabase connection error:", error);
+    return false;
+  }
+};
+
+// Test connection on initialization (non-blocking)
+testConnection();
 
 // Export types
 export type SupabaseClient = typeof supabase;

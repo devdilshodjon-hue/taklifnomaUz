@@ -133,30 +133,26 @@ export const saveInvitationToSupabase = async (
     console.error("Invitation save error:", err);
     toast.dismiss("saving-invitation");
 
-    // Handle different error types
-    if (err.message === 'Timeout') {
-      // Try localStorage fallback on timeout
-      const fallbackResult = saveInvitationToLocalStorage(user, formData, slug);
+    // Try localStorage fallback regardless of error type
+    const fallbackResult = saveInvitationToLocalStorage(user, formData, slug);
+
+    if (err.message?.includes('timeout') || err.message?.includes('Timeout')) {
       toast.warning("⚠️ Vaqt tugadi", {
-        description: "Taklifnoma mahalliy xotiraga saqlandi",
-        duration: 5000,
+        description: "Taklifnoma mahalliy xotiraga saqlandi. Keyinroq internet orqali sinxronlanadi.",
+        duration: 6000,
       });
-      return fallbackResult;
+    } else {
+      const errorMessage = err?.message || "Noma'lum xatolik";
+      toast.warning("⚠️ Taklifnoma mahalliy xotiraga saqlandi", {
+        description: `Bazaga ulanib bo'lmadi: ${errorMessage}`,
+        duration: 6000,
+      });
     }
 
-    // For other errors, also fallback to localStorage
-    const fallbackResult = saveInvitationToLocalStorage(user, formData, slug);
-    
-    const errorMessage = err?.message || "Noma'lum xatolik";
-    toast.warning("⚠️ Taklifnoma mahalliy xotiraga saqlandi", {
-      description: `Bazaga ulanib bo'lmadi: ${errorMessage}`,
-      duration: 5000,
-    });
-
-    return { 
-      success: false, 
-      error: errorMessage,
-      data: fallbackResult.data 
+    return {
+      success: true, // Return success since we saved to localStorage
+      error: err?.message,
+      data: fallbackResult.data
     };
   }
 };

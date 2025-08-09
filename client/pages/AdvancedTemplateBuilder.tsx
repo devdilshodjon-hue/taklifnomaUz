@@ -2,8 +2,16 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { saveTemplateToSupabase } from "@/lib/templateSaver";
-import { testSupabaseConnection, saveTemplateWithAuth, initializeAuth } from "@/lib/supabaseAuth";
-import { runSupabaseIntegrationTest, displayTestResults, quickConnectionTest } from "@/lib/supabaseTest";
+import {
+  testSupabaseConnection,
+  saveTemplateWithAuth,
+  initializeAuth,
+} from "@/lib/supabaseAuth";
+import {
+  runSupabaseIntegrationTest,
+  displayTestResults,
+  quickConnectionTest,
+} from "@/lib/supabaseTest";
 import { runDatabaseHealthCheck, setupDemoData } from "@/lib/databaseSetup";
 import {
   ArrowLeft,
@@ -719,9 +727,12 @@ export default function AdvancedTemplateBuilder() {
           setConnectionStatus("online");
           console.log("✅ Supabase to'liq ulanish:", {
             latency: connectionResult.latency,
-            authenticated: connectionResult.authenticated
+            authenticated: connectionResult.authenticated,
           });
-        } else if (connectionResult.isConnected && !connectionResult.authenticated) {
+        } else if (
+          connectionResult.isConnected &&
+          !connectionResult.authenticated
+        ) {
           setConnectionStatus("online"); // Connected but need auth
           console.log("⚠️ Supabase ulangan lekin autentifikatsiya kerak");
         } else {
@@ -996,7 +1007,8 @@ export default function AdvancedTemplateBuilder() {
               <div className="flex items-center">
                 <div className="w-2 h-2 bg-orange-400 rounded-full mr-3 animate-pulse"></div>
                 <p className="text-sm text-orange-800 dark:text-orange-200">
-                  <strong>Offline rejim:</strong> Shablonlar mahalliy xotiraga saqlanadi va keyinroq sinxronlanadi.
+                  <strong>Offline rejim:</strong> Shablonlar mahalliy xotiraga
+                  saqlanadi va keyinroq sinxronlanadi.
                 </p>
               </div>
             </div>
@@ -1009,7 +1021,8 @@ export default function AdvancedTemplateBuilder() {
               <div className="flex items-center">
                 <div className="w-2 h-2 bg-green-400 rounded-full mr-3 animate-pulse"></div>
                 <p className="text-sm text-green-800 dark:text-green-200">
-                  <strong>Online rejim:</strong> Supabase ma'lumotlar bazasiga ulanish muvaffaqiyatli.
+                  <strong>Online rejim:</strong> Supabase ma'lumotlar bazasiga
+                  ulanish muvaffaqiyatli.
                 </p>
               </div>
             </div>

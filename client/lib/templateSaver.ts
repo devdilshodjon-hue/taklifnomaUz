@@ -105,16 +105,23 @@ export const saveTemplateToSupabase = async (
       result = { data, error };
       console.log("✅ Direct save result:", result);
     } catch (directError) {
-      console.log("❌ Direct save failed, trying with retry logic...", directError);
+      console.log(
+        "❌ Direct save failed, trying with retry logic...",
+        directError,
+      );
 
       // If direct save fails, try with retry (but no timeout race)
-      result = await retryWithBackoff(async () => {
-        return await supabase
-          .from("custom_templates")
-          .insert(templateToSave)
-          .select()
-          .single();
-      }, 2, 3000); // 2 retries with 3 second delay
+      result = await retryWithBackoff(
+        async () => {
+          return await supabase
+            .from("custom_templates")
+            .insert(templateToSave)
+            .select()
+            .single();
+        },
+        2,
+        3000,
+      ); // 2 retries with 3 second delay
     }
 
     const { data, error } = result;

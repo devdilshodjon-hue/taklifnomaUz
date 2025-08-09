@@ -41,9 +41,9 @@ export default function Templates() {
   const { user, session, profile } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [templates, setTemplates] = useState<ExtendedTemplate[]>([]);
-  const [filteredTemplates, setFilteredTemplates] = useState<ExtendedTemplate[]>(
-    [],
-  );
+  const [filteredTemplates, setFilteredTemplates] = useState<
+    ExtendedTemplate[]
+  >([]);
   const [previewTemplate, setPreviewTemplate] =
     useState<ExtendedTemplate | null>(null);
   const [showPreview, setShowPreview] = useState(false);
@@ -63,7 +63,9 @@ export default function Templates() {
     const timeoutId = setTimeout(() => {
       console.log("⏰ Templates loading timeout!");
       setLoading(false);
-      setError("Shablonlar yuklash juda uzoq davom etdi. Default shablonlar ko'rsatiladi.");
+      setError(
+        "Shablonlar yuklash juda uzoq davom etdi. Default shablonlar ko'rsatiladi.",
+      );
       setTemplates(defaultWeddingTemplates);
       setFilteredTemplates(defaultWeddingTemplates);
     }, 5000); // 5 seconds timeout (reduced)
@@ -95,8 +97,8 @@ export default function Templates() {
           customTemplatesData = customTemplates;
 
           // Convert custom templates to ExtendedTemplate format
-          const convertedCustomTemplates: ExtendedTemplate[] = customTemplates.map(
-            (custom: CustomTemplate) => ({
+          const convertedCustomTemplates: ExtendedTemplate[] =
+            customTemplates.map((custom: CustomTemplate) => ({
               id: custom.id,
               name: custom.name,
               description: custom.description,
@@ -108,8 +110,7 @@ export default function Templates() {
               customData: custom,
               usage_count: custom.usage_count || 0,
               is_featured: custom.is_featured || false,
-            })
-          );
+            }));
 
           // Add custom templates to the beginning
           allTemplates = [...convertedCustomTemplates, ...allTemplates];
@@ -125,18 +126,30 @@ export default function Templates() {
 
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i);
-          if (key && (key.startsWith('custom_template_') || key.startsWith('demo_template_'))) {
+          if (
+            key &&
+            (key.startsWith("custom_template_") ||
+              key.startsWith("demo_template_"))
+          ) {
             try {
               const templateData = localStorage.getItem(key);
               if (templateData) {
                 const parsedTemplate = JSON.parse(templateData);
 
-                const isDemoTemplate = key.startsWith('demo_template_');
+                const isDemoTemplate = key.startsWith("demo_template_");
                 const localTemplate: ExtendedTemplate = {
                   id: parsedTemplate.id,
-                  name: parsedTemplate.name + (isDemoTemplate ? " (Demo)" : " (Mahalliy)"),
-                  description: parsedTemplate.description || (isDemoTemplate ? "Demo shablon" : "Mahalliy saqlangan shablon"),
-                  category: parsedTemplate.category || (isDemoTemplate ? "demo" : "local"),
+                  name:
+                    parsedTemplate.name +
+                    (isDemoTemplate ? " (Demo)" : " (Mahalliy)"),
+                  description:
+                    parsedTemplate.description ||
+                    (isDemoTemplate
+                      ? "Demo shablon"
+                      : "Mahalliy saqlangan shablon"),
+                  category:
+                    parsedTemplate.category ||
+                    (isDemoTemplate ? "demo" : "local"),
                   colors: parsedTemplate.colors || {},
                   fonts: parsedTemplate.fonts || {},
                   preview: isDemoTemplate ? "🎭" : "💾", // Demo vs Local storage icon
@@ -155,9 +168,16 @@ export default function Templates() {
         }
 
         if (localTemplates.length > 0) {
-          console.log("✅ LocalStorage templates topildi:", localTemplates.length);
+          console.log(
+            "✅ LocalStorage templates topildi:",
+            localTemplates.length,
+          );
           // Add local templates after Supabase templates
-          allTemplates = [...allTemplates.slice(0, customTemplatesData.length), ...localTemplates, ...allTemplates.slice(customTemplatesData.length)];
+          allTemplates = [
+            ...allTemplates.slice(0, customTemplatesData.length),
+            ...localTemplates,
+            ...allTemplates.slice(customTemplatesData.length),
+          ];
         }
       } catch (localErr) {
         console.warn("⚠️ LocalStorage templates yuklanmadi:", localErr);
@@ -177,8 +197,8 @@ export default function Templates() {
           if (!publicError && publicTemplates && publicTemplates.length > 0) {
             console.log("✅ Public templates topildi:", publicTemplates.length);
 
-            const convertedPublicTemplates: ExtendedTemplate[] = publicTemplates.map(
-              (pub: CustomTemplate) => ({
+            const convertedPublicTemplates: ExtendedTemplate[] =
+              publicTemplates.map((pub: CustomTemplate) => ({
                 id: `public_${pub.id}`,
                 name: `${pub.name} (Ommaviy)`,
                 description: pub.description,
@@ -190,15 +210,14 @@ export default function Templates() {
                 customData: pub,
                 usage_count: pub.usage_count || 0,
                 is_featured: true,
-              })
-            );
+              }));
 
             // Add popular templates after custom templates
             const customCount = customTemplatesData.length;
             allTemplates = [
               ...allTemplates.slice(0, customCount),
               ...convertedPublicTemplates,
-              ...allTemplates.slice(customCount)
+              ...allTemplates.slice(customCount),
             ];
           }
         } catch (publicErr) {

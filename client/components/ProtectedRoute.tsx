@@ -8,8 +8,21 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { user, loading } = useAuth();
   const location = useLocation();
+
+  // Safe auth hook usage with error handling
+  let user = null;
+  let loading = true;
+
+  try {
+    const auth = useAuth();
+    user = auth.user;
+    loading = auth.loading;
+  } catch (error) {
+    console.warn("Auth context not available in ProtectedRoute:", error);
+    // If auth is not available, redirect to login
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
   if (loading) {
     return (

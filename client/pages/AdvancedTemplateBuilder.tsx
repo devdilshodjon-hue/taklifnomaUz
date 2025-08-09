@@ -713,6 +713,28 @@ export default function AdvancedTemplateBuilder() {
               </div>
             </div>
             <div className="flex items-center gap-3">
+              {/* Connection Status */}
+              <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-slate-100">
+                {connectionStatus === "checking" && (
+                  <>
+                    <Loader2 className="w-3 h-3 animate-spin text-slate-500" />
+                    <span className="text-xs text-slate-600">Tekshirilmoqda</span>
+                  </>
+                )}
+                {connectionStatus === "online" && (
+                  <>
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    <span className="text-xs text-green-700">Online</span>
+                  </>
+                )}
+                {connectionStatus === "offline" && (
+                  <>
+                    <div className="w-2 h-2 bg-orange-500 rounded-full" />
+                    <span className="text-xs text-orange-700">Offline</span>
+                  </>
+                )}
+              </div>
+
               <Button
                 onClick={undo}
                 disabled={historyIndex <= 0}
@@ -759,7 +781,7 @@ export default function AdvancedTemplateBuilder() {
                 ) : (
                   <Save className="w-4 h-4 mr-2" />
                 )}
-                Saqlash
+                {connectionStatus === "offline" ? "Mahalliy Saqlash" : "Saqlash"}
               </Button>
             </div>
           </div>

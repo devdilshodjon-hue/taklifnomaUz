@@ -366,8 +366,12 @@ export default function TemplateBuilder() {
     const timeoutId = setTimeout(() => {
       console.log("⏰ Template save timeout!");
       setLoading(false);
+      toast.error("⏰ Vaqt tugadi", {
+        description: "Shablon saqlash jarayoni juda uzoq davom etdi. Qayta urinib ko'ring.",
+        duration: 5000,
+      });
       setError("Vaqt tugadi. Iltimos, qayta urinib ko'ring.");
-    }, 5000); // 5 seconds timeout for debugging
+    }, 8000); // 8 seconds timeout
 
     console.log("✅ Starting save with user ID:", user.id);
     console.log("🔧 Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
@@ -375,6 +379,12 @@ export default function TemplateBuilder() {
       "🔧 Supabase Key length:",
       import.meta.env.VITE_SUPABASE_ANON_KEY?.length,
     );
+
+    // Show progress toast
+    toast.loading("💾 Shablon saqlanmoqda...", {
+      description: "Iltimos, kuting...",
+      id: "saving-template",
+    });
 
     try {
       const templateToSave = {
@@ -394,7 +404,7 @@ export default function TemplateBuilder() {
       console.log("📋 Template data to save:", templateToSave);
 
       // Test Supabase connection first
-      console.log("🔗 Testing Supabase connection...");
+      console.log("���� Testing Supabase connection...");
       try {
         const { data: testData, error: testError } = await supabase
           .from("custom_templates")
@@ -418,7 +428,8 @@ export default function TemplateBuilder() {
         throw saveError;
       }
 
-      // Show success toast
+      // Dismiss loading toast and show success
+      toast.dismiss("saving-template");
       toast.success("🎉 Shablon muvaffaqiyatli saqlandi!", {
         description: "Shablon Templates sahifasida ko'rish mumkin.",
         duration: 4000,
@@ -451,6 +462,7 @@ export default function TemplateBuilder() {
           });
 
         if (fallbackData && !fallbackError) {
+          toast.dismiss("saving-template");
           toast.success("🎉 Shablon muvaffaqiyatli saqlandi!", {
             description: "Fallback sistemda saqlandi.",
             duration: 4000,
@@ -478,6 +490,7 @@ export default function TemplateBuilder() {
         JSON.stringify(fallbackTemplate),
       );
 
+      toast.dismiss("saving-template");
       toast.warning("⚠️ Shablon mahalliy xotiraga saqlandi", {
         description: `Bazaga ulanib bo'lmadi: ${errorMessage}`,
         duration: 5000,

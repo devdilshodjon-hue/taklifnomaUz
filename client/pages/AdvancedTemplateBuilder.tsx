@@ -989,7 +989,7 @@ export default function AdvancedTemplateBuilder() {
                 <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 bg-white/90 dark:bg-slate-800/90 p-2 shadow-md border border-slate-200 dark:border-slate-700 rounded-lg gap-1 h-auto min-h-[60px]">
                   <TabsTrigger
                     value="info"
-                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800"
+                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800 dark:data-[state=active]:bg-blue-900 dark:data-[state=active]:text-blue-200 dark:text-slate-300 dark:hover:text-slate-100"
                   >
                     <Settings className="w-4 h-4" />
                     <span className="text-xs font-medium">Ma'lumot</span>

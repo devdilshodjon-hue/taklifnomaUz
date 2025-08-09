@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { saveTemplateToSupabase } from "@/lib/templateSaver";
 import { testSupabaseConnection, saveTemplateWithAuth, initializeAuth } from "@/lib/supabaseAuth";
 import { runSupabaseIntegrationTest, displayTestResults, quickConnectionTest } from "@/lib/supabaseTest";
+import { runDatabaseHealthCheck, setupDemoData } from "@/lib/databaseSetup";
 import {
   ArrowLeft,
   Save,

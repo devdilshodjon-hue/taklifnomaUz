@@ -12,40 +12,17 @@ const supabaseAnonKey =
   import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqeXFiaHpla2Z2aGViY2d0bG16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU2NDQwMzksImV4cCI6MjA3MTIyMDAzOX0.LyEqsexGFKWiQYMYlxAhDGlJ_QsKAn0oGW2lE7V4r1I";
 
-// Enhanced Supabase client with performance optimizations
+// Simplified Supabase client configuration
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  db: {
-    schema: "public",
-  },
   auth: {
     persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: false, // Disable URL detection to avoid issues
+    detectSessionInUrl: false,
     flowType: "pkce",
-    debug: false, // Disable debug in production
   },
   global: {
     headers: {
       "X-Client-Info": "taklifnoma-app",
-    },
-    fetch: (url, options = {}) => {
-      // Add proper error handling and timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-
-      return fetch(url, {
-        ...options,
-        signal: controller.signal,
-        mode: 'cors', // Explicitly set CORS mode
-        credentials: 'omit', // Don't send credentials to avoid CORS issues
-      }).finally(() => {
-        clearTimeout(timeoutId);
-      });
-    },
-  },
-  realtime: {
-    params: {
-      eventsPerSecond: 10,
     },
   },
 });

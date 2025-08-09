@@ -90,13 +90,13 @@ export default function Templates() {
   };
 
   // Template preview
-  const handlePreviewTemplate = (template: TemplateData) => {
+  const handlePreviewTemplate = (template: DefaultTemplate) => {
     setPreviewTemplate(template);
     setShowPreview(true);
   };
 
   // Mock invitation data for preview
-  const getMockInvitationData = (template: TemplateData) => ({
+  const getMockInvitationData = (template: DefaultTemplate) => ({
     id: "preview",
     groom_name: "Jahongir",
     bride_name: "Sarvinoz",

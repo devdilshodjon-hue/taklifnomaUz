@@ -21,7 +21,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
-    flowType: 'pkce',
+    flowType: "pkce",
   },
   global: {
     headers: {
@@ -102,25 +102,34 @@ const connectionManager = ConnectionManager.getInstance();
 
 // Database setup check with caching
 export const checkDatabaseSetup = async (): Promise<boolean> => {
-  const cached = cacheUtils.getConfig('database_setup');
+  const cached = cacheUtils.getConfig("database_setup");
   if (cached !== null) {
     return cached;
   }
 
   try {
-    const result = await connectionManager.executeQuery('db_setup_check', async () => {
-      const { error } = await supabase.from("invitations").select("id").limit(1);
+    const result = await connectionManager.executeQuery(
+      "db_setup_check",
+      async () => {
+        const { error } = await supabase
+          .from("invitations")
+          .select("id")
+          .limit(1);
 
-      if (error &&
-          (error.message.includes("table") && error.message.includes("does not exist")) ||
-          error.message.includes("does not exist")) {
-        return false;
-      }
-      return true;
-    });
+        if (
+          (error &&
+            error.message.includes("table") &&
+            error.message.includes("does not exist")) ||
+          error.message.includes("does not exist")
+        ) {
+          return false;
+        }
+        return true;
+      },
+    );
 
     // Cache result for 5 minutes
-    cacheUtils.setConfig('database_setup', result);
+    cacheUtils.setConfig("database_setup", result);
     return result;
   } catch (error) {
     console.log("Database tekshiruvida xatolik:", error);
@@ -157,7 +166,7 @@ export const templateOperations = {
 
           if (error) throw error;
           return data;
-        }
+        },
       );
 
       // Invalidate user templates cache
@@ -182,7 +191,10 @@ export const templateOperations = {
         created_at: new Date().toISOString(),
       };
 
-      localStorage.setItem(`custom_template_${localTemplate.id}`, JSON.stringify(localTemplate));
+      localStorage.setItem(
+        `custom_template_${localTemplate.id}`,
+        JSON.stringify(localTemplate),
+      );
 
       return { data: localTemplate, error: null };
     }
@@ -204,14 +216,14 @@ export const templateOperations = {
         return data || [];
       },
       CACHE_TIMES.MEDIUM,
-      [CACHE_TAGS.TEMPLATE, CACHE_TAGS.USER]
+      [CACHE_TAGS.TEMPLATE, CACHE_TAGS.USER],
     );
   },
 
   // Get popular templates with caching
   getPopular: async () => {
     return cachedFetch(
-      'popular_templates',
+      "popular_templates",
       async () => {
         const { data, error } = await supabase
           .from("custom_templates")
@@ -225,7 +237,7 @@ export const templateOperations = {
         return data || [];
       },
       CACHE_TIMES.LONG,
-      [CACHE_TAGS.TEMPLATE]
+      [CACHE_TAGS.TEMPLATE],
     );
   },
 
@@ -244,7 +256,7 @@ export const templateOperations = {
         return data;
       },
       CACHE_TIMES.LONG,
-      [CACHE_TAGS.TEMPLATE]
+      [CACHE_TAGS.TEMPLATE],
     );
   },
 
@@ -312,7 +324,7 @@ export const invitationOperations = {
 
           if (error) throw error;
           return data;
-        }
+        },
       );
 
       // Invalidate user invitations cache
@@ -337,11 +349,19 @@ export const invitationOperations = {
         created_at: new Date().toISOString(),
       };
 
-      localStorage.setItem(`invitation_${localInvitation.id}`, JSON.stringify(localInvitation));
+      localStorage.setItem(
+        `invitation_${localInvitation.id}`,
+        JSON.stringify(localInvitation),
+      );
 
       // Update local count
-      const currentCount = parseInt(localStorage.getItem("demo_invitation_count") || "0");
-      localStorage.setItem("demo_invitation_count", (currentCount + 1).toString());
+      const currentCount = parseInt(
+        localStorage.getItem("demo_invitation_count") || "0",
+      );
+      localStorage.setItem(
+        "demo_invitation_count",
+        (currentCount + 1).toString(),
+      );
 
       return { data: localInvitation, error: null };
     }
@@ -362,7 +382,7 @@ export const invitationOperations = {
         return data || [];
       },
       CACHE_TIMES.MEDIUM,
-      [CACHE_TAGS.INVITATION, CACHE_TAGS.USER]
+      [CACHE_TAGS.INVITATION, CACHE_TAGS.USER],
     );
   },
 
@@ -382,7 +402,7 @@ export const invitationOperations = {
         return data;
       },
       CACHE_TIMES.LONG,
-      [CACHE_TAGS.INVITATION]
+      [CACHE_TAGS.INVITATION],
     );
   },
 
@@ -413,7 +433,7 @@ export const invitationOperations = {
         };
       },
       CACHE_TIMES.SHORT,
-      [CACHE_TAGS.ANALYTICS]
+      [CACHE_TAGS.ANALYTICS],
     );
   },
 };

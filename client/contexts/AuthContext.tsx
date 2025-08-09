@@ -340,14 +340,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log("Profile created successfully:", createdProfile);
       return createdProfile;
     } else {
-      console.error("Error creating profile:", createError?.message || createError, {
-        error: createError,
-        message: createError?.message,
-        details: createError?.details,
-        hint: createError?.hint,
-        code: createError?.code,
-        profileData: newProfile,
-      });
+      console.error(
+        "Error creating profile:",
+        createError?.message || createError,
+        {
+          error: createError,
+          message: createError?.message,
+          details: createError?.details,
+          hint: createError?.hint,
+          code: createError?.code,
+          profileData: newProfile,
+        },
+      );
 
       // Return a minimal profile object for the app to continue working
       return {
@@ -466,7 +470,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setProfile(null);
         }
       } catch (fallbackError) {
-        console.error("Fallback profile creation failed:", fallbackError?.message || fallbackError);
+        console.error(
+          "Fallback profile creation failed:",
+          fallbackError?.message || fallbackError,
+        );
         setProfile(null);
       }
     } finally {

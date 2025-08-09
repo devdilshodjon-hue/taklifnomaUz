@@ -210,17 +210,20 @@ export default function CreateInvitation() {
         metadata: {
           created_with: "CreateInvitation v2.0",
           performance_optimized: true,
-        }
+        },
       };
 
       console.log("📋 Invitation data prepared:", invitationData);
 
       // Use optimized invitation operations with automatic caching and fallback
-      const { data: invitation, error } = await invitationOperations.create(invitationData);
+      const { data: invitation, error } =
+        await invitationOperations.create(invitationData);
 
       if (error) {
         console.error("❌ Invitation creation error:", error);
-        throw new Error(error.message || "Taklifnoma yaratishda xatolik yuz berdi");
+        throw new Error(
+          error.message || "Taklifnoma yaratishda xatolik yuz berdi",
+        );
       }
 
       console.log("✅ Invitation created successfully:", invitation);
@@ -236,8 +239,8 @@ export default function CreateInvitation() {
             phone: guest.phone?.trim() || null,
             plus_one: false,
             metadata: {
-              added_with: "CreateInvitation v2.0"
-            }
+              added_with: "CreateInvitation v2.0",
+            },
           }));
 
           const { error: guestError } = await supabase
@@ -245,15 +248,24 @@ export default function CreateInvitation() {
             .insert(guestData);
 
           if (guestError) {
-            console.warn("⚠️ Guest insertion failed, saving to localStorage:", guestError);
+            console.warn(
+              "⚠️ Guest insertion failed, saving to localStorage:",
+              guestError,
+            );
             // Save guests locally as backup
-            localStorage.setItem(`guests_${invitation.id}`, JSON.stringify(guests));
+            localStorage.setItem(
+              `guests_${invitation.id}`,
+              JSON.stringify(guests),
+            );
           } else {
             console.log("✅ Guests added successfully");
           }
         } catch (guestErr) {
           console.warn("⚠️ Guest handling error:", guestErr);
-          localStorage.setItem(`guests_${invitation.id}`, JSON.stringify(guests));
+          localStorage.setItem(
+            `guests_${invitation.id}`,
+            JSON.stringify(guests),
+          );
         }
       }
 
@@ -269,7 +281,10 @@ export default function CreateInvitation() {
       }, 1000);
     } catch (err: any) {
       console.error("❌ Invitation creation failed:", err?.message || err);
-      setError(err?.message || "Kutilmagan xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
+      setError(
+        err?.message ||
+          "Kutilmagan xatolik yuz berdi. Iltimos, qayta urinib ko'ring.",
+      );
     } finally {
       // Ensure loading state is always reset
       if (!success) {

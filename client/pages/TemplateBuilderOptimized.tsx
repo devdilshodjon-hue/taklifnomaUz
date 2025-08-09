@@ -81,26 +81,50 @@ const defaultConfig: TemplateConfig = {
 const colorPresets = [
   {
     name: "Klassik Ko'k",
-    colors: { primary: "#3B82F6", secondary: "#1E40AF", accent: "#60A5FA", background: "#F8FAFC", text: "#1F2937" }
+    colors: {
+      primary: "#3B82F6",
+      secondary: "#1E40AF",
+      accent: "#60A5FA",
+      background: "#F8FAFC",
+      text: "#1F2937",
+    },
   },
   {
-    name: "Romantik Pushti", 
-    colors: { primary: "#EC4899", secondary: "#BE185D", accent: "#F9A8D4", background: "#FDF2F8", text: "#831843" }
+    name: "Romantik Pushti",
+    colors: {
+      primary: "#EC4899",
+      secondary: "#BE185D",
+      accent: "#F9A8D4",
+      background: "#FDF2F8",
+      text: "#831843",
+    },
   },
   {
     name: "Elegant Qora",
-    colors: { primary: "#1F2937", secondary: "#374151", accent: "#D1D5DB", background: "#F9FAFB", text: "#111827" }
+    colors: {
+      primary: "#1F2937",
+      secondary: "#374151",
+      accent: "#D1D5DB",
+      background: "#F9FAFB",
+      text: "#111827",
+    },
   },
   {
     name: "Tabiat Yashil",
-    colors: { primary: "#10B981", secondary: "#047857", accent: "#6EE7B7", background: "#F0FDF4", text: "#064E3B" }
+    colors: {
+      primary: "#10B981",
+      secondary: "#047857",
+      accent: "#6EE7B7",
+      background: "#F0FDF4",
+      text: "#064E3B",
+    },
   },
 ];
 
 export default function TemplateBuilderOptimized() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  
+
   // State management
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -134,32 +158,41 @@ export default function TemplateBuilderOptimized() {
   }, [config, templateData, user?.id]);
 
   // Color preset application
-  const applyColorPreset = (preset: typeof colorPresets[0]) => {
-    setConfig(prev => ({
+  const applyColorPreset = (preset: (typeof colorPresets)[0]) => {
+    setConfig((prev) => ({
       ...prev,
       colors: preset.colors,
     }));
   };
 
   // Configuration updaters
-  const updateColors = (colorKey: keyof TemplateConfig['colors'], value: string) => {
-    setConfig(prev => ({
+  const updateColors = (
+    colorKey: keyof TemplateConfig["colors"],
+    value: string,
+  ) => {
+    setConfig((prev) => ({
       ...prev,
-      colors: { ...prev.colors, [colorKey]: value }
+      colors: { ...prev.colors, [colorKey]: value },
     }));
   };
 
-  const updateFonts = (fontKey: keyof TemplateConfig['fonts'], value: string) => {
-    setConfig(prev => ({
+  const updateFonts = (
+    fontKey: keyof TemplateConfig["fonts"],
+    value: string,
+  ) => {
+    setConfig((prev) => ({
       ...prev,
-      fonts: { ...prev.fonts, [fontKey]: value }
+      fonts: { ...prev.fonts, [fontKey]: value },
     }));
   };
 
-  const updateLayout = (layoutKey: keyof TemplateConfig['layout'], value: string) => {
-    setConfig(prev => ({
+  const updateLayout = (
+    layoutKey: keyof TemplateConfig["layout"],
+    value: string,
+  ) => {
+    setConfig((prev) => ({
       ...prev,
-      layout: { ...prev.layout, [layoutKey]: value }
+      layout: { ...prev.layout, [layoutKey]: value },
     }));
   };
 
@@ -202,21 +235,26 @@ export default function TemplateBuilderOptimized() {
         metadata: {
           created_with: "TemplateBuilder v2.0",
           performance_optimized: true,
-        }
+        },
       };
 
       console.log("📋 Template data prepared:", templateToSave);
 
       // Use optimized template operations with automatic caching and fallback
-      const { data, error: saveError } = await templateOperations.create(templateToSave);
+      const { data, error: saveError } =
+        await templateOperations.create(templateToSave);
 
       if (saveError) {
         console.error("❌ Template save error:", saveError);
-        throw new Error(saveError.message || "Shablon saqlanishda xatolik yuz berdi");
+        throw new Error(
+          saveError.message || "Shablon saqlanishda xatolik yuz berdi",
+        );
       }
 
       console.log("✅ Template saved successfully:", data);
-      setSuccess("Shablon muvaffaqiyatli saqlandi! Shablonlar sahifasiga o'tilmoqda...");
+      setSuccess(
+        "Shablon muvaffaqiyatli saqlandi! Shablonlar sahifasiga o'tilmoqda...",
+      );
 
       // Clear draft cache
       if (user?.id) {
@@ -227,7 +265,6 @@ export default function TemplateBuilderOptimized() {
       setTimeout(() => {
         navigate("/templates");
       }, 2000);
-
     } catch (err: any) {
       console.error("❌ Template save failed:", err);
       setError(err.message || "Kutilmagan xatolik yuz berdi");
@@ -240,20 +277,21 @@ export default function TemplateBuilderOptimized() {
   const getMockInvitationData = () => ({
     id: "preview",
     groom_name: "Jahongir",
-    bride_name: "Sarvinoz", 
+    bride_name: "Sarvinoz",
     wedding_date: "2024-06-15",
     wedding_time: "16:00",
     venue: "Atirgul Bog'i",
     address: "Toshkent sh., Yunusobod t., Bog' ko'chasi 123",
     city: "Toshkent",
-    custom_message: "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
+    custom_message:
+      "Bizning sevgi va baxt to'la kunimizni birga nishonlash uchun sizni taklif qilamiz.",
     template_id: "custom",
   });
 
   return (
     <div className="min-h-screen bg-background">
       <Navigation showBackButton />
-      
+
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <div className="mb-8">
@@ -270,15 +308,18 @@ export default function TemplateBuilderOptimized() {
               </p>
             </div>
           </div>
-          
+
           {/* Action buttons */}
           <div className="flex gap-3">
-            <Button variant="outline" onClick={() => setShowPreview(!showPreview)}>
+            <Button
+              variant="outline"
+              onClick={() => setShowPreview(!showPreview)}
+            >
               <Eye className="w-4 h-4 mr-2" />
               {showPreview ? "Tahrirlash" : "Oldindan ko'rish"}
             </Button>
-            <Button 
-              onClick={saveTemplate} 
+            <Button
+              onClick={saveTemplate}
               disabled={loading}
               className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700"
             >
@@ -301,14 +342,18 @@ export default function TemplateBuilderOptimized() {
         {error && (
           <Alert className="mb-6 border-red-200 bg-red-50">
             <AlertCircle className="h-4 w-4 text-red-600" />
-            <AlertDescription className="text-red-800">{error}</AlertDescription>
+            <AlertDescription className="text-red-800">
+              {error}
+            </AlertDescription>
           </Alert>
         )}
 
         {success && (
           <Alert className="mb-6 border-green-200 bg-green-50">
             <CheckCircle className="h-4 w-4 text-green-600" />
-            <AlertDescription className="text-green-800">{success}</AlertDescription>
+            <AlertDescription className="text-green-800">
+              {success}
+            </AlertDescription>
           </Alert>
         )}
 
@@ -355,37 +400,60 @@ export default function TemplateBuilderOptimized() {
                   {/* Basic Settings */}
                   <TabsContent value="basic" className="space-y-6">
                     <div>
-                      <Label htmlFor="templateName" className="text-base font-medium">
+                      <Label
+                        htmlFor="templateName"
+                        className="text-base font-medium"
+                      >
                         Shablon Nomi
                       </Label>
                       <Input
                         id="templateName"
                         placeholder="Masalan: Klassik To'y Taklifnomasi"
                         value={templateData.name}
-                        onChange={(e) => setTemplateData(prev => ({ ...prev, name: e.target.value }))}
+                        onChange={(e) =>
+                          setTemplateData((prev) => ({
+                            ...prev,
+                            name: e.target.value,
+                          }))
+                        }
                         className="mt-2"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="description" className="text-base font-medium">
+                      <Label
+                        htmlFor="description"
+                        className="text-base font-medium"
+                      >
                         Tavsif
                       </Label>
                       <Textarea
                         id="description"
                         placeholder="Shablon haqida qisqacha ma'lumot..."
                         value={templateData.description}
-                        onChange={(e) => setTemplateData(prev => ({ ...prev, description: e.target.value }))}
+                        onChange={(e) =>
+                          setTemplateData((prev) => ({
+                            ...prev,
+                            description: e.target.value,
+                          }))
+                        }
                         className="mt-2"
                         rows={3}
                       />
                     </div>
 
                     <div>
-                      <Label className="text-base font-medium">Kategoriya</Label>
+                      <Label className="text-base font-medium">
+                        Kategoriya
+                      </Label>
                       <select
                         value={templateData.category}
-                        onChange={(e) => setTemplateData(prev => ({ ...prev, category: e.target.value }))}
+                        onChange={(e) =>
+                          setTemplateData((prev) => ({
+                            ...prev,
+                            category: e.target.value,
+                          }))
+                        }
                         className="mt-2 w-full p-2 border border-border rounded-lg bg-background"
                       >
                         <option value="custom">Maxsus</option>
@@ -401,7 +469,12 @@ export default function TemplateBuilderOptimized() {
                         type="checkbox"
                         id="isPublic"
                         checked={templateData.isPublic}
-                        onChange={(e) => setTemplateData(prev => ({ ...prev, isPublic: e.target.checked }))}
+                        onChange={(e) =>
+                          setTemplateData((prev) => ({
+                            ...prev,
+                            isPublic: e.target.checked,
+                          }))
+                        }
                         className="rounded border-border"
                       />
                       <Label htmlFor="isPublic" className="text-sm">
@@ -426,15 +499,21 @@ export default function TemplateBuilderOptimized() {
                             <div className="flex items-center gap-2 mb-2">
                               <div
                                 className="w-4 h-4 rounded-full"
-                                style={{ backgroundColor: preset.colors.primary }}
+                                style={{
+                                  backgroundColor: preset.colors.primary,
+                                }}
                               />
                               <div
                                 className="w-4 h-4 rounded-full"
-                                style={{ backgroundColor: preset.colors.secondary }}
+                                style={{
+                                  backgroundColor: preset.colors.secondary,
+                                }}
                               />
                               <div
                                 className="w-4 h-4 rounded-full"
-                                style={{ backgroundColor: preset.colors.accent }}
+                                style={{
+                                  backgroundColor: preset.colors.accent,
+                                }}
                               />
                             </div>
                             <p className="text-sm font-medium">{preset.name}</p>
@@ -447,21 +526,36 @@ export default function TemplateBuilderOptimized() {
                       {Object.entries(config.colors).map(([key, value]) => (
                         <div key={key}>
                           <Label className="text-sm font-medium capitalize">
-                            {key === 'primary' ? 'Asosiy' : 
-                             key === 'secondary' ? 'Ikkinchi' :
-                             key === 'accent' ? 'Urg\'u' :
-                             key === 'background' ? 'Fon' : 'Matn'}
+                            {key === "primary"
+                              ? "Asosiy"
+                              : key === "secondary"
+                                ? "Ikkinchi"
+                                : key === "accent"
+                                  ? "Urg'u"
+                                  : key === "background"
+                                    ? "Fon"
+                                    : "Matn"}
                           </Label>
                           <div className="flex gap-2 mt-1">
                             <input
                               type="color"
                               value={value}
-                              onChange={(e) => updateColors(key as keyof TemplateConfig['colors'], e.target.value)}
+                              onChange={(e) =>
+                                updateColors(
+                                  key as keyof TemplateConfig["colors"],
+                                  e.target.value,
+                                )
+                              }
                               className="w-12 h-10 rounded border border-border"
                             />
                             <Input
                               value={value}
-                              onChange={(e) => updateColors(key as keyof TemplateConfig['colors'], e.target.value)}
+                              onChange={(e) =>
+                                updateColors(
+                                  key as keyof TemplateConfig["colors"],
+                                  e.target.value,
+                                )
+                              }
                               className="flex-1"
                             />
                           </div>
@@ -475,17 +569,27 @@ export default function TemplateBuilderOptimized() {
                     {Object.entries(config.fonts).map(([key, value]) => (
                       <div key={key}>
                         <Label className="text-base font-medium capitalize">
-                          {key === 'heading' ? 'Sarlavha Shrifti' : 
-                           key === 'body' ? 'Matn Shrifti' : 'Urg\'u Shrifti'}
+                          {key === "heading"
+                            ? "Sarlavha Shrifti"
+                            : key === "body"
+                              ? "Matn Shrifti"
+                              : "Urg'u Shrifti"}
                         </Label>
                         <select
                           value={value}
-                          onChange={(e) => updateFonts(key as keyof TemplateConfig['fonts'], e.target.value)}
+                          onChange={(e) =>
+                            updateFonts(
+                              key as keyof TemplateConfig["fonts"],
+                              e.target.value,
+                            )
+                          }
                           className="mt-2 w-full p-2 border border-border rounded-lg bg-background"
                         >
                           <option value="Inter">Inter</option>
                           <option value="Poppins">Poppins</option>
-                          <option value="Playfair Display">Playfair Display</option>
+                          <option value="Playfair Display">
+                            Playfair Display
+                          </option>
                           <option value="Roboto">Roboto</option>
                           <option value="Open Sans">Open Sans</option>
                           <option value="Lato">Lato</option>
@@ -499,15 +603,23 @@ export default function TemplateBuilderOptimized() {
                     {Object.entries(config.layout).map(([key, value]) => (
                       <div key={key}>
                         <Label className="text-base font-medium capitalize">
-                          {key === 'style' ? 'Uslub' : 
-                           key === 'spacing' ? 'Oraliq' : 'Hizalash'}
+                          {key === "style"
+                            ? "Uslub"
+                            : key === "spacing"
+                              ? "Oraliq"
+                              : "Hizalash"}
                         </Label>
                         <select
                           value={value}
-                          onChange={(e) => updateLayout(key as keyof TemplateConfig['layout'], e.target.value)}
+                          onChange={(e) =>
+                            updateLayout(
+                              key as keyof TemplateConfig["layout"],
+                              e.target.value,
+                            )
+                          }
                           className="mt-2 w-full p-2 border border-border rounded-lg bg-background"
                         >
-                          {key === 'style' && (
+                          {key === "style" && (
                             <>
                               <option value="modern">Zamonaviy</option>
                               <option value="classic">Klassik</option>
@@ -515,14 +627,14 @@ export default function TemplateBuilderOptimized() {
                               <option value="minimalist">Minimalist</option>
                             </>
                           )}
-                          {key === 'spacing' && (
+                          {key === "spacing" && (
                             <>
                               <option value="compact">Ixcham</option>
                               <option value="comfortable">Qulay</option>
                               <option value="spacious">Keng</option>
                             </>
                           )}
-                          {key === 'alignment' && (
+                          {key === "alignment" && (
                             <>
                               <option value="left">Chapga</option>
                               <option value="center">Markazga</option>

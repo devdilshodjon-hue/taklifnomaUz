@@ -291,7 +291,8 @@ export default function TemplateBuilder() {
       }, 10000); // 10 seconds timeout
 
       // Use optimized template operations with caching
-      const { data, error: saveError } = await templateOperations.create(templateToSave);
+      const { data, error: saveError } =
+        await templateOperations.create(templateToSave);
 
       clearTimeout(timeoutId);
 

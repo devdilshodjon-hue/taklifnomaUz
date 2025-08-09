@@ -117,13 +117,12 @@ export default function AdminDashboard() {
     try {
       // Load statistics with timeout protection
       await Promise.race([
-        Promise.all([
-          loadStats(),
-          loadPurchaseRequests(),
-          loadSubscriptions(),
-        ]),
+        Promise.all([loadStats(), loadPurchaseRequests(), loadSubscriptions()]),
         new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Dashboard loading timeout")), 7000)
+          setTimeout(
+            () => reject(new Error("Dashboard loading timeout")),
+            7000,
+          ),
         ),
       ]);
 
@@ -168,9 +167,7 @@ export default function AdminDashboard() {
         { count: pendingCount },
         { count: activeCount },
       ] = await Promise.all([
-        supabase
-          .from("profiles")
-          .select("*", { count: "exact", head: true }),
+        supabase.from("profiles").select("*", { count: "exact", head: true }),
         supabase
           .from("invitations")
           .select("*", { count: "exact", head: true }),

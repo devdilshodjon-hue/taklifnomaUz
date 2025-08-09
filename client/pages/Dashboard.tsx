@@ -100,7 +100,11 @@ export default function Dashboard() {
       return dateB - dateA; // Newest first
     });
 
-    console.log("Found", localInvitations.length, "invitations in localStorage");
+    console.log(
+      "Found",
+      localInvitations.length,
+      "invitations in localStorage",
+    );
     setInvitations(localInvitations);
     setError("");
   };
@@ -160,7 +164,10 @@ export default function Dashboard() {
         console.error("Error loading invitations:", error);
 
         // If there's an error, try loading from localStorage as fallback
-        if (error.message.includes("does not exist") || error.code === "PGRST116") {
+        if (
+          error.message.includes("does not exist") ||
+          error.code === "PGRST116"
+        ) {
           console.log("Table error, falling back to localStorage");
           loadInvitationsFromLocalStorage();
           setLoading(false);

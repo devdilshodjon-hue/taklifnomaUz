@@ -1009,7 +1009,7 @@ export default function AdvancedTemplateBuilder() {
                 </TabsList>
 
                 {/* Template Information Tab */}
-                <TabsContent value="info" className="mt-4">
+                <TabsContent value="info" className="mt-6 space-y-4">
                   <Card>
                     <CardHeader>
                       <CardTitle className="text-lg flex items-center gap-2">

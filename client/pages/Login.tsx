@@ -125,6 +125,28 @@ export default function Login() {
 
         {/* Login Form */}
         <div className="card-modern p-8 shadow-2xl backdrop-blur-sm border-primary/10 animate-slide-up">
+          {/* Network Status Indicator */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2 text-xs">
+              {isOnline ? (
+                <>
+                  <Wifi className="w-3 h-3 text-green-500" />
+                  <span className="text-green-600">Online</span>
+                </>
+              ) : (
+                <>
+                  <WifiOff className="w-3 h-3 text-red-500" />
+                  <span className="text-red-600">Offline</span>
+                </>
+              )}
+            </div>
+            {hasNetworkError && (
+              <span className="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded">
+                Ulanish muammosi
+              </span>
+            )}
+          </div>
+
           {error && (
             <Alert className="mb-6 border-red-200 bg-red-50/50 animate-shake">
               <AlertDescription className="text-red-800">

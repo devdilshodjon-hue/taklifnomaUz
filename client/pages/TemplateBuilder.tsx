@@ -32,6 +32,7 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -417,11 +418,15 @@ export default function TemplateBuilder() {
         throw saveError;
       }
 
-      setSuccess("🎉 Shablon muvaffaqiyatli saqlandi!");
+      // Show success toast
+      toast.success("🎉 Shablon muvaffaqiyatli saqlandi!", {
+        description: "Shablon Templates sahifasida ko'rish mumkin.",
+        duration: 4000,
+      });
 
       setTimeout(() => {
         navigate("/templates");
-      }, 2000);
+      }, 1500);
     } catch (err: any) {
       console.error("Template save error:", err);
       const errorMessage =
@@ -446,10 +451,13 @@ export default function TemplateBuilder() {
           });
 
         if (fallbackData && !fallbackError) {
-          setSuccess("🎉 Shablon muvaffaqiyatli saqlandi!");
+          toast.success("🎉 Shablon muvaffaqiyatli saqlandi!", {
+            description: "Fallback sistemda saqlandi.",
+            duration: 4000,
+          });
           setTimeout(() => {
             navigate("/templates");
-          }, 2000);
+          }, 1500);
           return;
         }
       } catch (fallbackErr) {
@@ -469,6 +477,11 @@ export default function TemplateBuilder() {
         `custom_template_${fallbackTemplate.id}`,
         JSON.stringify(fallbackTemplate),
       );
+
+      toast.warning("⚠️ Shablon mahalliy xotiraga saqlandi", {
+        description: `Bazaga ulanib bo'lmadi: ${errorMessage}`,
+        duration: 5000,
+      });
 
       setError(
         `Shablon bazaga saqlanmadi: ${errorMessage}. Vaqtincha mahalliy xotiraga saqlandi.`,

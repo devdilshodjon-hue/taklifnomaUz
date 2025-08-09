@@ -606,9 +606,29 @@ export default function AdvancedTemplateBuilder() {
     toast.success("Standart sozlamalar qayta tiklandi!");
   };
 
+  // Check connection status
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        setConnectionStatus("checking");
+        const response = await fetch('https://tcilxdkolqodtgowlgrh.supabase.co/rest/v1/', {
+          method: 'HEAD',
+          signal: AbortSignal.timeout(5000), // 5 second timeout for status check
+        });
+        setConnectionStatus(response.ok ? "online" : "offline");
+      } catch {
+        setConnectionStatus("offline");
+      }
+    };
+
+    checkConnection();
+    const interval = setInterval(checkConnection, 30000); // Check every 30 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   const saveTemplate = async () => {
     console.log("🚀 Starting advanced template save process...");
-    
+
     setError("");
     setSuccess("");
     setLoading(true);

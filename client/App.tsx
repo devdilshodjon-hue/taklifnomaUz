@@ -10,7 +10,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/DashboardEnhanced";
+import Dashboard from "./pages/DashboardEnhancedFixed";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import CreateInvitation from "./pages/CreateInvitationFixed";

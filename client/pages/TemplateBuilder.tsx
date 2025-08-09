@@ -470,7 +470,7 @@ export default function TemplateBuilder() {
       }
     };
 
-    const deviceClass = previewDevice === "mobile" ? "max-w-sm" : "max-w-lg";
+    const deviceClass = previewDevice === "mobile" ? "max-w-sm" : "max-w-xl";
 
     return (
       <div className={`w-full ${deviceClass} mx-auto transition-all duration-500`}>
@@ -664,8 +664,8 @@ export default function TemplateBuilder() {
           )}
 
           <div className="grid lg:grid-cols-7 gap-8">
-            {/* Left Panel - Controls (4/7) */}
-            <div className="lg:col-span-4 space-y-6">
+            {/* Left Panel - Controls (3/7) */}
+            <div className="lg:col-span-3 space-y-6">
               
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-5 bg-card/80 p-1 shadow-sm border border-border">
@@ -1030,8 +1030,8 @@ export default function TemplateBuilder() {
               </Tabs>
             </div>
 
-            {/* Right Panel - Live Preview (3/7) */}
-            <div className="lg:col-span-3">
+            {/* Right Panel - Live Preview (4/7) */}
+            <div className="lg:col-span-4">
               <div className="sticky top-24">
                 <div className="bg-card/90 backdrop-blur-sm rounded-xl p-6 border border-border shadow-lg">
                   <div className="flex items-center justify-between mb-6">
@@ -1059,8 +1059,8 @@ export default function TemplateBuilder() {
                     </div>
                   </div>
 
-                  <div className="border border-border rounded-lg p-8 bg-gradient-to-br from-muted/30 to-card min-h-[700px] flex items-center justify-center">
-                    <div className="w-full max-w-lg">
+                  <div className="border border-border rounded-lg p-6 bg-gradient-to-br from-muted/30 to-card min-h-[500px] flex items-center justify-center">
+                    <div className="w-full max-w-2xl">
                       <TemplatePreview />
                     </div>
                   </div>

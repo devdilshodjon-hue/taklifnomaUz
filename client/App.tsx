@@ -62,7 +62,7 @@ function App() {
                     <Route path="/help" element={<Help />} />
                     <Route path="/purchase" element={<Purchase />} />
                     <Route
-                      path="/invitation/:id"
+                      path="/invitation/:slug"
                       element={<InvitationView />}
                     />
                     {/* Admin Routes */}

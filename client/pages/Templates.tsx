@@ -38,7 +38,7 @@ interface ExtendedTemplate extends DefaultTemplate {
 }
 
 export default function Templates() {
-  const { user } = useAuth();
+  const { user, session, profile } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [templates, setTemplates] = useState<ExtendedTemplate[]>([]);
   const [filteredTemplates, setFilteredTemplates] = useState<ExtendedTemplate[]>(
@@ -151,7 +151,7 @@ export default function Templates() {
             ];
           }
         } catch (publicErr) {
-          console.warn("⚠️ Public templates yuklanmadi:", publicErr);
+          console.warn("⚠��� Public templates yuklanmadi:", publicErr);
         }
       }
 

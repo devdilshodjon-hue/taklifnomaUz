@@ -139,6 +139,285 @@ export const isTableNotFoundError = (error: any): boolean => {
   );
 };
 
+// Enhanced Template Operations
+// ===========================
+
+export const templateOperations = {
+  // Create template with caching
+  create: async (templateData: any) => {
+    try {
+      const result = await connectionManager.executeQuery(
+        `create_template_${Date.now()}`,
+        async () => {
+          const { data, error } = await supabase
+            .from("custom_templates")
+            .insert(templateData)
+            .select()
+            .single();
+
+          if (error) throw error;
+          return data;
+        }
+      );
+
+      // Invalidate user templates cache
+      if (templateData.user_id) {
+        cacheUtils.invalidateUser(templateData.user_id);
+      }
+
+      // Cache the new template
+      if (result?.id) {
+        cacheUtils.setTemplate(result.id, result);
+      }
+
+      return { data: result, error: null };
+    } catch (error) {
+      console.error("Template creation error:", error);
+
+      // Fallback to localStorage
+      const localTemplate = {
+        ...templateData,
+        id: `local_${Date.now()}`,
+        is_local: true,
+        created_at: new Date().toISOString(),
+      };
+
+      localStorage.setItem(`custom_template_${localTemplate.id}`, JSON.stringify(localTemplate));
+
+      return { data: localTemplate, error: null };
+    }
+  },
+
+  // Get templates with caching
+  getByUser: async (userId: string) => {
+    return cachedFetch(
+      `user_templates_${userId}`,
+      async () => {
+        const { data, error } = await supabase
+          .from("custom_templates")
+          .select("*")
+          .eq("user_id", userId)
+          .eq("is_active", true)
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        return data || [];
+      },
+      CACHE_TIMES.MEDIUM,
+      [CACHE_TAGS.TEMPLATE, CACHE_TAGS.USER]
+    );
+  },
+
+  // Get popular templates with caching
+  getPopular: async () => {
+    return cachedFetch(
+      'popular_templates',
+      async () => {
+        const { data, error } = await supabase
+          .from("custom_templates")
+          .select("*")
+          .eq("is_public", true)
+          .eq("is_active", true)
+          .order("usage_count", { ascending: false })
+          .limit(20);
+
+        if (error) throw error;
+        return data || [];
+      },
+      CACHE_TIMES.LONG,
+      [CACHE_TAGS.TEMPLATE]
+    );
+  },
+
+  // Get single template with caching
+  getById: async (id: string) => {
+    return cachedFetch(
+      `template_${id}`,
+      async () => {
+        const { data, error } = await supabase
+          .from("custom_templates")
+          .select("*")
+          .eq("id", id)
+          .single();
+
+        if (error) throw error;
+        return data;
+      },
+      CACHE_TIMES.LONG,
+      [CACHE_TAGS.TEMPLATE]
+    );
+  },
+
+  // Update template
+  update: async (id: string, updates: any) => {
+    try {
+      const { data, error } = await supabase
+        .from("custom_templates")
+        .update(updates)
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Update cache
+      cacheUtils.setTemplate(id, data);
+
+      // Invalidate related caches
+      if (data?.user_id) {
+        cacheUtils.invalidateUser(data.user_id);
+      }
+
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error };
+    }
+  },
+
+  // Delete template
+  delete: async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("custom_templates")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+
+      // Remove from cache
+      cacheUtils.invalidateTemplate(id);
+
+      return { error: null };
+    } catch (error) {
+      return { error };
+    }
+  },
+};
+
+// Enhanced Invitation Operations
+// ==============================
+
+export const invitationOperations = {
+  // Create invitation with caching
+  create: async (invitationData: any) => {
+    try {
+      const result = await connectionManager.executeQuery(
+        `create_invitation_${Date.now()}`,
+        async () => {
+          const { data, error } = await supabase
+            .from("invitations")
+            .insert(invitationData)
+            .select()
+            .single();
+
+          if (error) throw error;
+          return data;
+        }
+      );
+
+      // Invalidate user invitations cache
+      if (invitationData.user_id) {
+        cacheUtils.invalidateUser(invitationData.user_id);
+      }
+
+      // Cache the new invitation
+      if (result?.id) {
+        cacheUtils.setInvitation(result.id, result);
+      }
+
+      return { data: result, error: null };
+    } catch (error) {
+      console.error("Invitation creation error:", error);
+
+      // Fallback to localStorage
+      const localInvitation = {
+        ...invitationData,
+        id: `local_${Date.now()}`,
+        is_local: true,
+        created_at: new Date().toISOString(),
+      };
+
+      localStorage.setItem(`invitation_${localInvitation.id}`, JSON.stringify(localInvitation));
+
+      // Update local count
+      const currentCount = parseInt(localStorage.getItem("demo_invitation_count") || "0");
+      localStorage.setItem("demo_invitation_count", (currentCount + 1).toString());
+
+      return { data: localInvitation, error: null };
+    }
+  },
+
+  // Get user invitations with caching
+  getByUser: async (userId: string) => {
+    return cachedFetch(
+      `user_invitations_${userId}`,
+      async () => {
+        const { data, error } = await supabase
+          .from("invitations")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        return data || [];
+      },
+      CACHE_TIMES.MEDIUM,
+      [CACHE_TAGS.INVITATION, CACHE_TAGS.USER]
+    );
+  },
+
+  // Get invitation by slug with caching
+  getBySlug: async (slug: string) => {
+    return cachedFetch(
+      `invitation_slug_${slug}`,
+      async () => {
+        const { data, error } = await supabase
+          .from("invitations")
+          .select("*")
+          .eq("slug", slug)
+          .eq("is_active", true)
+          .single();
+
+        if (error) throw error;
+        return data;
+      },
+      CACHE_TIMES.LONG,
+      [CACHE_TAGS.INVITATION]
+    );
+  },
+
+  // Get invitation analytics with caching
+  getAnalytics: async (invitationId: string) => {
+    return cachedFetch(
+      `analytics_${invitationId}`,
+      async () => {
+        const [views, rsvps, guests] = await Promise.all([
+          supabase
+            .from("invitation_views")
+            .select("*", { count: "exact", head: true })
+            .eq("invitation_id", invitationId),
+          supabase
+            .from("rsvps")
+            .select("*", { count: "exact", head: true })
+            .eq("invitation_id", invitationId),
+          supabase
+            .from("guests")
+            .select("*", { count: "exact", head: true })
+            .eq("invitation_id", invitationId),
+        ]);
+
+        return {
+          views: views.count || 0,
+          rsvps: rsvps.count || 0,
+          guests: guests.count || 0,
+        };
+      },
+      CACHE_TIMES.SHORT,
+      [CACHE_TAGS.ANALYTICS]
+    );
+  },
+};
+
 // Database types
 export type Database = {
   public: {

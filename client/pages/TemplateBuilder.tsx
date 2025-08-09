@@ -102,11 +102,11 @@ export default function TemplateBuilder() {
 
   const [config, setConfig] = useState<TemplateConfig>({
     colors: {
-      primary: "#be185d",
-      secondary: "#fda4af",
-      accent: "#fb7185",
-      background: "#fdf2f8",
-      text: "#881337",
+      primary: "hsl(220, 91%, 56%)",
+      secondary: "hsl(220, 14%, 96%)",
+      accent: "hsl(220, 91%, 66%)",
+      background: "hsl(0, 0%, 100%)",
+      text: "hsl(224, 71%, 4%)",
     },
     fonts: {
       heading: "Playfair Display",

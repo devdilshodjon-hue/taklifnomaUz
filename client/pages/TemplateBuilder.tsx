@@ -335,6 +335,10 @@ export default function TemplateBuilder() {
   };
 
   const saveTemplate = async () => {
+    console.log("🚀 Starting template save process...");
+    console.log("👤 User:", !!user, user?.id);
+    console.log("📝 Template name:", templateData.templateName);
+
     if (!user) {
       setError("Shablon saqlash uchun tizimga kirishingiz kerak");
       return;
@@ -348,6 +352,8 @@ export default function TemplateBuilder() {
     setLoading(true);
     setError("");
     setSuccess("");
+
+    console.log("✅ Starting save with user ID:", user.id);
 
     try {
       const templateToSave = {

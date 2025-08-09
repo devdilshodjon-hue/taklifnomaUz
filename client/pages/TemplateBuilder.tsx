@@ -341,6 +341,8 @@ export default function TemplateBuilder() {
     console.log("👤 User:", !!user, user?.id);
     console.log("📝 Template name:", templateData.templateName);
     console.log("🔐 User object:", user);
+    console.log("📋 Session:", !!session, session?.user?.id);
+    console.log("📋 Profile:", !!profile, profile?.id);
 
     // Additional auth check
     if (!user?.id) {
@@ -356,6 +358,12 @@ export default function TemplateBuilder() {
     if (!templateData.templateName.trim()) {
       setError("Iltimos, shablon nomini kiriting");
       return;
+    }
+
+    // Check profile exists for RLS
+    if (!profile) {
+      console.warn("⚠️ Profile mavjud emas, yaratishga harakat qilamiz...");
+      // Profile yaratishni harakat qilamiz
     }
 
     setLoading(true);

@@ -30,7 +30,18 @@ export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
     console.error("useAuth called outside of AuthProvider");
-    throw new Error("useAuth must be used within an AuthProvider");
+    // Return a safe default instead of throwing to prevent app crashes
+    return {
+      user: null,
+      profile: null,
+      session: null,
+      loading: false,
+      signUp: async () => ({ error: new Error("Auth not available") }),
+      signIn: async () => ({ error: new Error("Auth not available") }),
+      signInWithGoogle: async () => ({ error: new Error("Auth not available") }),
+      signOut: async () => ({ error: new Error("Auth not available") }),
+      updateProfile: async () => ({ error: new Error("Auth not available") }),
+    };
   }
   return context;
 }

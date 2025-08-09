@@ -16,7 +16,8 @@ import {
   Settings,
   Loader2,
   ExternalLink,
-  Copy
+  Copy,
+  RefreshCw
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";

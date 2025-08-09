@@ -125,7 +125,7 @@ export default function Templates() {
 
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i);
-          if (key && key.startsWith('custom_template_')) {
+          if (key && (key.startsWith('custom_template_') || key.startsWith('demo_template_'))) {
             try {
               const templateData = localStorage.getItem(key);
               if (templateData) {

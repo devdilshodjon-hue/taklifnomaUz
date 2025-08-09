@@ -37,6 +37,7 @@ export function useAuth() {
       profile: null,
       session: null,
       loading: false,
+      isInitialized: false,
       signUp: async () => ({ error: new Error("Auth not available") }),
       signIn: async () => ({ error: new Error("Auth not available") }),
       signInWithGoogle: async () => ({ error: new Error("Auth not available") }),

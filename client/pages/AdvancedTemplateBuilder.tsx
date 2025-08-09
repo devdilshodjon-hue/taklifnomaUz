@@ -970,6 +970,18 @@ export default function AdvancedTemplateBuilder() {
                 <Heart className="w-4 h-4 mr-2" />
                 Health
               </Button>
+              <Button
+                onClick={async () => {
+                  const results = await runFullTestSuite();
+                  displayTestResults(results);
+                }}
+                variant="outline"
+                size="sm"
+                className="hover:bg-purple-50 dark:hover:bg-purple-900 border-purple-300 dark:border-purple-700 text-purple-700 dark:text-purple-300"
+              >
+                <Zap className="w-4 h-4 mr-2" />
+                Full Test
+              </Button>
               <div className="flex gap-2">
                 {connectionStatus === "offline" && (
                   <Button

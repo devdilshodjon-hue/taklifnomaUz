@@ -668,26 +668,26 @@ export default function TemplateBuilder() {
             <div className="lg:col-span-5 xl:col-span-4 order-2 lg:order-1">
               
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-card/80 p-1 shadow-sm border border-border">
-                  <TabsTrigger value="info" className="flex items-center gap-1 md:gap-2 text-xs p-2 md:p-3">
-                    <Settings className="w-3 h-3 md:w-4 md:h-4" />
+                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 bg-card/80 p-1.5 lg:p-2 shadow-sm border border-border">
+                  <TabsTrigger value="info" className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm p-2 lg:p-3">
+                    <Settings className="w-3 h-3 lg:w-4 lg:h-4" />
                     <span className="hidden sm:inline">Ma'lumot</span>
                   </TabsTrigger>
-                  <TabsTrigger value="colors" className="flex items-center gap-1 md:gap-2 text-xs p-2 md:p-3">
-                    <Palette className="w-3 h-3 md:w-4 md:h-4" />
+                  <TabsTrigger value="colors" className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm p-2 lg:p-3">
+                    <Palette className="w-3 h-3 lg:w-4 lg:h-4" />
                     <span className="hidden sm:inline">Ranglar</span>
                   </TabsTrigger>
-                  <TabsTrigger value="fonts" className="flex items-center gap-1 md:gap-2 text-xs p-2 md:p-3">
-                    <Type className="w-3 h-3 md:w-4 md:h-4" />
-                    <span className="hidden md:inline">Shriftlar</span>
+                  <TabsTrigger value="fonts" className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm p-2 lg:p-3">
+                    <Type className="w-3 h-3 lg:w-4 lg:h-4" />
+                    <span className="hidden lg:inline">Shriftlar</span>
                   </TabsTrigger>
-                  <TabsTrigger value="layout" className="flex items-center gap-1 md:gap-2 text-xs p-2 md:p-3">
-                    <Layout className="w-3 h-3 md:w-4 md:h-4" />
-                    <span className="hidden md:inline">Layout</span>
+                  <TabsTrigger value="layout" className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm p-2 lg:p-3">
+                    <Layout className="w-3 h-3 lg:w-4 lg:h-4" />
+                    <span className="hidden lg:inline">Layout</span>
                   </TabsTrigger>
-                  <TabsTrigger value="effects" className="flex items-center gap-1 md:gap-2 text-xs p-2 md:p-3">
-                    <Layers className="w-3 h-3 md:w-4 md:h-4" />
-                    <span className="hidden md:inline">Effektlar</span>
+                  <TabsTrigger value="effects" className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm p-2 lg:p-3">
+                    <Layers className="w-3 h-3 lg:w-4 lg:h-4" />
+                    <span className="hidden lg:inline">Effektlar</span>
                   </TabsTrigger>
                 </TabsList>
 

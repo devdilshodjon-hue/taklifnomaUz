@@ -131,14 +131,15 @@ export default function Templates() {
               if (templateData) {
                 const parsedTemplate = JSON.parse(templateData);
 
+                const isDemoTemplate = key.startsWith('demo_template_');
                 const localTemplate: ExtendedTemplate = {
                   id: parsedTemplate.id,
-                  name: parsedTemplate.name + " (Mahalliy)",
-                  description: parsedTemplate.description || "Mahalliy saqlangan shablon",
-                  category: parsedTemplate.category || "local",
+                  name: parsedTemplate.name + (isDemoTemplate ? " (Demo)" : " (Mahalliy)"),
+                  description: parsedTemplate.description || (isDemoTemplate ? "Demo shablon" : "Mahalliy saqlangan shablon"),
+                  category: parsedTemplate.category || (isDemoTemplate ? "demo" : "local"),
                   colors: parsedTemplate.colors || {},
                   fonts: parsedTemplate.fonts || {},
-                  preview: "💾", // Local storage icon
+                  preview: isDemoTemplate ? "🎭" : "💾", // Demo vs Local storage icon
                   isCustom: true,
                   customData: parsedTemplate,
                   usage_count: 0,

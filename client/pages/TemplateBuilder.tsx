@@ -1034,17 +1034,17 @@ export default function TemplateBuilder() {
             <div className="lg:col-span-7 xl:col-span-8 order-1 lg:order-2">
               <div className="lg:sticky lg:top-24">
                 <div className="bg-card/90 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-border shadow-lg">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="font-heading text-lg font-semibold text-foreground flex items-center gap-2">
-                      <Eye className="w-5 h-5 text-primary" />
+                  <div className="flex items-center justify-between mb-8">
+                    <h2 className="font-heading text-lg xl:text-xl font-semibold text-foreground flex items-center gap-3">
+                      <Eye className="w-5 h-5 xl:w-6 xl:h-6 text-primary" />
                       Jonli Oldindan Ko'rish
                     </h2>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <Button
                         variant={previewDevice === "desktop" ? "default" : "outline"}
                         size="sm"
                         onClick={() => setPreviewDevice("desktop")}
-                        className="h-8 w-8 p-0"
+                        className="h-9 w-9 lg:h-10 lg:w-10 p-0"
                       >
                         <Monitor className="w-4 h-4" />
                       </Button>
@@ -1052,7 +1052,7 @@ export default function TemplateBuilder() {
                         variant={previewDevice === "mobile" ? "default" : "outline"}
                         size="sm"
                         onClick={() => setPreviewDevice("mobile")}
-                        className="h-8 w-8 p-0"
+                        className="h-9 w-9 lg:h-10 lg:w-10 p-0"
                       >
                         <Smartphone className="w-4 h-4" />
                       </Button>
@@ -1065,11 +1065,11 @@ export default function TemplateBuilder() {
                     </div>
                   </div>
 
-                  <div className="flex gap-2 mt-4">
+                  <div className="flex gap-3 mt-6">
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1 hover:bg-muted border-border text-xs"
+                      className="flex-1 hover:bg-muted border-border text-xs lg:text-sm lg:py-2"
                     >
                       <Download className="w-4 h-4 mr-1" />
                       Yuklab olish
@@ -1077,14 +1077,14 @@ export default function TemplateBuilder() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1 hover:bg-muted border-border text-xs"
+                      className="flex-1 hover:bg-muted border-border text-xs lg:text-sm lg:py-2"
                     >
                       <Share2 className="w-4 h-4 mr-1" />
                       Ulashish
                     </Button>
                   </div>
 
-                  <div className="text-center mt-4 text-xs text-muted-foreground flex items-center justify-center gap-1">
+                  <div className="text-center mt-6 text-sm text-muted-foreground flex items-center justify-center gap-2">
                     <Zap className="w-3 h-3 text-green-500 animate-pulse" />
                     Real vaqtda yangilanadi • {previewDevice === "desktop" ? "Kompyuter" : "Mobil"} ko'rinish
                   </div>

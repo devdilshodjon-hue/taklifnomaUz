@@ -51,7 +51,7 @@ export const testConnection = async (): Promise<boolean> => {
 
     if (error) {
       if (error.message?.includes("permission denied") || error.message?.includes("schema public")) {
-        console.log("📦 Supabase offline mode (permission not configured) - using localStorage");
+        // Suppress permission errors - this is expected for non-configured databases
         return false; // Will use localStorage fallback
       } else {
         console.warn("⚠️ Supabase connection failed:", error.message);

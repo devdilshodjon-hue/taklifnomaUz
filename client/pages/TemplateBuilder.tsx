@@ -691,13 +691,13 @@ export default function TemplateBuilder() {
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="info" className="mt-4 md:mt-6">
-                  <div className="card-modern p-4 md:p-6 shadow-sm">
-                    <h2 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <Settings className="w-5 h-5 text-primary" />
+                <TabsContent value="info" className="mt-4 lg:mt-6">
+                  <div className="card-modern p-4 lg:p-6 xl:p-8 shadow-sm">
+                    <h2 className="font-heading text-lg xl:text-xl font-semibold text-foreground mb-6 flex items-center gap-3">
+                      <Settings className="w-5 h-5 xl:w-6 xl:h-6 text-primary" />
                       Shablon Ma'lumotlari
                     </h2>
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                       <div>
                         <Label htmlFor="templateName" className="text-sm font-medium">Shablon Nomi</Label>
                         <Input
@@ -780,13 +780,13 @@ export default function TemplateBuilder() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="colors" className="space-y-4 md:space-y-6 mt-4 md:mt-6">
-                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 md:p-6 border border-border shadow-sm">
-                    <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <Palette className="w-5 h-5 text-primary" />
+                <TabsContent value="colors" className="space-y-6 mt-4 lg:mt-6">
+                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 lg:p-6 xl:p-8 border border-border shadow-sm">
+                    <h3 className="font-heading text-lg xl:text-xl font-semibold text-foreground mb-6 flex items-center gap-3">
+                      <Palette className="w-5 h-5 xl:w-6 xl:h-6 text-primary" />
                       Rang Shablonlari
                     </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                       {colorPresets.map((preset, index) => (
                         <button
                           key={index}
@@ -817,7 +817,7 @@ export default function TemplateBuilder() {
                       ))}
                     </div>
 
-                    <div className="mt-6 space-y-4">
+                    <div className="mt-8 space-y-6">
                       <h4 className="font-medium text-foreground">Maxsus Ranglar</h4>
                       {Object.entries(config.colors).map(([key, value]) => (
                         <div key={key} className="flex items-center gap-3">
@@ -845,10 +845,10 @@ export default function TemplateBuilder() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="fonts" className="space-y-4 mt-4 md:mt-6">
-                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 md:p-6 border border-border shadow-sm">
-                    <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <Type className="w-5 h-5 text-primary" />
+                <TabsContent value="fonts" className="space-y-6 mt-4 lg:mt-6">
+                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 lg:p-6 xl:p-8 border border-border shadow-sm">
+                    <h3 className="font-heading text-lg xl:text-xl font-semibold text-foreground mb-6 flex items-center gap-3">
+                      <Type className="w-5 h-5 xl:w-6 xl:h-6 text-primary" />
                       Shrift Sozlamalari
                     </h3>
                     {Object.entries(config.fonts).map(([key, value]) => (
@@ -881,10 +881,10 @@ export default function TemplateBuilder() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="layout" className="space-y-4 md:space-y-6 mt-4 md:mt-6">
-                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 md:p-6 border border-border shadow-sm">
-                    <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <Layout className="w-5 h-5 text-primary" />
+                <TabsContent value="layout" className="space-y-6 mt-4 lg:mt-6">
+                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 lg:p-6 xl:p-8 border border-border shadow-sm">
+                    <h3 className="font-heading text-lg xl:text-xl font-semibold text-foreground mb-6 flex items-center gap-3">
+                      <Layout className="w-5 h-5 xl:w-6 xl:h-6 text-primary" />
                       Layout Sozlamalari
                     </h3>
                     
@@ -972,10 +972,10 @@ export default function TemplateBuilder() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="effects" className="space-y-4 md:space-y-6 mt-4 md:mt-6">
-                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 md:p-6 border border-border shadow-sm">
-                    <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <Layers className="w-5 h-5 text-primary" />
+                <TabsContent value="effects" className="space-y-6 mt-4 lg:mt-6">
+                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 lg:p-6 xl:p-8 border border-border shadow-sm">
+                    <h3 className="font-heading text-lg xl:text-xl font-semibold text-foreground mb-6 flex items-center gap-3">
+                      <Layers className="w-5 h-5 xl:w-6 xl:h-6 text-primary" />
                       Animatsiya va Effektlar
                     </h3>
                     

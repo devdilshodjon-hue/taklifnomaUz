@@ -704,25 +704,38 @@ export default function AdvancedTemplateBuilder() {
     toast.success("Standart sozlamalar qayta tiklandi!");
   };
 
-  // Check connection status
+  // Check connection status with enhanced testing
   useEffect(() => {
     const checkConnection = async () => {
       try {
         setConnectionStatus("checking");
-        const response = await fetch(
-          "https://tcilxdkolqodtgowlgrh.supabase.co/rest/v1/",
-          {
-            method: "HEAD",
-            signal: AbortSignal.timeout(5000), // 5 second timeout for status check
-          },
-        );
-        setConnectionStatus(response.ok ? "online" : "offline");
-      } catch {
+
+        // Use enhanced connection testing
+        const connectionResult = await testSupabaseConnection();
+
+        if (connectionResult.isConnected && connectionResult.authenticated) {
+          setConnectionStatus("online");
+          console.log("✅ Supabase to'liq ulanish:", {
+            latency: connectionResult.latency,
+            authenticated: connectionResult.authenticated
+          });
+        } else if (connectionResult.isConnected && !connectionResult.authenticated) {
+          setConnectionStatus("online"); // Connected but need auth
+          console.log("⚠️ Supabase ulangan lekin autentifikatsiya kerak");
+        } else {
+          setConnectionStatus("offline");
+          console.log("❌ Supabase ulanmagan:", connectionResult.error);
+        }
+      } catch (error) {
+        console.error("❌ Connection check error:", error);
         setConnectionStatus("offline");
       }
     };
 
+    // Initialize auth on mount
+    initializeAuth();
     checkConnection();
+
     const interval = setInterval(checkConnection, 30000); // Check every 30 seconds
     return () => clearInterval(interval);
   }, []);

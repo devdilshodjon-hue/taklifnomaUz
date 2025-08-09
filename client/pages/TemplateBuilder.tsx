@@ -470,7 +470,7 @@ export default function TemplateBuilder() {
       }
     };
 
-    const deviceClass = previewDevice === "mobile" ? "max-w-xs sm:max-w-sm" : "max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl";
+    const deviceClass = previewDevice === "mobile" ? "max-w-xs" : "max-w-sm md:max-w-md lg:max-w-lg";
 
     return (
       <div className={`w-full ${deviceClass} mx-auto transition-all duration-500`}>
@@ -1059,8 +1059,8 @@ export default function TemplateBuilder() {
                     </div>
                   </div>
 
-                  <div className="border border-border rounded-lg p-4 md:p-6 lg:p-8 bg-gradient-to-br from-muted/30 to-card min-h-[320px] md:min-h-[400px] lg:min-h-[450px] xl:min-h-[500px] flex items-center justify-center">
-                    <div className="w-full max-w-lg lg:max-w-xl xl:max-w-2xl">
+                  <div className="border border-border rounded-lg p-4 md:p-6 bg-gradient-to-br from-muted/30 to-card min-h-[250px] md:min-h-[280px] lg:min-h-[300px] xl:min-h-[320px] flex items-center justify-center">
+                    <div className="w-full max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
                       <TemplatePreview />
                     </div>
                   </div>

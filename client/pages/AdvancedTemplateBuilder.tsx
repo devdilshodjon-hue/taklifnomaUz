@@ -963,48 +963,48 @@ export default function AdvancedTemplateBuilder() {
                 onValueChange={setActiveTab}
                 className="w-full"
               >
-                <TabsList className="grid w-full grid-cols-3 lg:grid-cols-2 xl:grid-cols-4 bg-white/80 p-1.5 shadow-sm border border-slate-200">
+                <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 bg-white/90 p-2 shadow-md border border-slate-200 rounded-lg gap-1 h-auto min-h-[60px]">
                   <TabsTrigger
                     value="info"
-                    className="flex items-center gap-1 text-xs p-2"
+                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800"
                   >
-                    <Settings className="w-3 h-3" />
-                    <span className="hidden sm:inline">Ma'lumot</span>
+                    <Settings className="w-4 h-4" />
+                    <span className="text-xs font-medium">Ma'lumot</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="colors"
-                    className="flex items-center gap-1 text-xs p-2"
+                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-green-100 data-[state=active]:text-green-800"
                   >
-                    <Palette className="w-3 h-3" />
-                    <span className="hidden sm:inline">Ranglar</span>
+                    <Palette className="w-4 h-4" />
+                    <span className="text-xs font-medium">Ranglar</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="fonts"
-                    className="flex items-center gap-1 text-xs p-2"
+                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-purple-100 data-[state=active]:text-purple-800"
                   >
-                    <Type className="w-3 h-3" />
-                    <span className="hidden sm:inline">Shrift</span>
+                    <Type className="w-4 h-4" />
+                    <span className="text-xs font-medium">Shrift</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="layout"
-                    className="flex items-center gap-1 text-xs p-2"
+                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-indigo-100 data-[state=active]:text-indigo-800"
                   >
-                    <Layout className="w-3 h-3" />
-                    <span className="hidden sm:inline">Layout</span>
+                    <Layout className="w-4 h-4" />
+                    <span className="text-xs font-medium">Layout</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="effects"
-                    className="flex items-center gap-1 text-xs p-2"
+                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-orange-100 data-[state=active]:text-orange-800"
                   >
-                    <Layers className="w-3 h-3" />
-                    <span className="hidden sm:inline">Effekt</span>
+                    <Layers className="w-4 h-4" />
+                    <span className="text-xs font-medium">Effekt</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="animation"
-                    className="flex items-center gap-1 text-xs p-2"
+                    className="flex flex-col items-center gap-1 text-xs p-3 h-auto min-h-[50px] data-[state=active]:bg-pink-100 data-[state=active]:text-pink-800"
                   >
-                    <Sparkles className="w-3 h-3" />
-                    <span className="hidden sm:inline">Animatsiya</span>
+                    <Sparkles className="w-4 h-4" />
+                    <span className="text-xs font-medium">Animatsiya</span>
                   </TabsTrigger>
                 </TabsList>
 

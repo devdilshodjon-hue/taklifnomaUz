@@ -751,6 +751,27 @@ export default function AdvancedTemplateBuilder() {
     setLoading(false);
   };
 
+  const saveToLocalStorageDirectly = async () => {
+    console.log("💾 Saving directly to localStorage...");
+
+    const { saveTemplateToLocalStorage } = await import("@/lib/templateSaver");
+    const result = saveTemplateToLocalStorage(user, templateData, config);
+
+    if (result.success) {
+      toast.success("💾 Shablon mahalliy xotiraga saqlandi!", {
+        description: "Keyinroq internet orqali sinxronlanadi",
+        duration: 4000,
+      });
+      setSuccess("Shablon mahalliy xotiraga saqlandi");
+      setTimeout(() => {
+        navigate("/templates");
+      }, 1500);
+    } else {
+      toast.error("❌ Mahalliy saqlashda xatolik");
+      setError("Mahalliy saqlashda xatolik");
+    }
+  };
+
   // Generate CSS for preview
   const getPreviewStyle = () => {
     const backgroundStyle =

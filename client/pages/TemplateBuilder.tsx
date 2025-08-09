@@ -652,9 +652,9 @@ export default function TemplateBuilder() {
             </Alert>
           )}
 
-          <div className="grid lg:grid-cols-5 gap-8">
-            {/* Left Panel - Controls (3/5) */}
-            <div className="lg:col-span-3 space-y-6">
+          <div className="grid lg:grid-cols-7 gap-8">
+            {/* Left Panel - Controls (4/7) */}
+            <div className="lg:col-span-4 space-y-6">
               
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-5 bg-white/80 p-1 shadow-sm">

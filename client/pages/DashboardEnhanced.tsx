@@ -135,14 +135,14 @@ export default function DashboardEnhanced() {
 
       if (error) {
         console.warn("⚠️ Supabase error:", error.message);
-        // Show localStorage data with warning
+        // Show localStorage data with appropriate message
         setInvitations(localInvitations);
 
-        // Handle specific permission errors
-        if (error.message.includes("permission denied") || error.message.includes("schema public")) {
-          setError("Ma'lumotlar ombori sozlanmoqda. Mahalliy ma'lumotlar ko'rsatilmoqda.");
+        // Handle permission errors with positive messaging
+        if (isPermissionError) {
+          setError("Mahalliy rejimda ishlamoqda. Ma'lumotlar xavfsiz.");
         } else {
-          setError(`Ulanish xatosi: ${error.message}. Mahalliy ma'lumotlar ko'rsatilmoqda.`);
+          setError("Offline rejimda. Ma'lumotlar mahalliy xotiradan yuklanmoqda.");
         }
       } else {
         console.log(

@@ -741,25 +741,34 @@ export default function AdvancedTemplateBuilder() {
   }, []);
 
   const saveTemplate = async () => {
-    console.log("🚀 Starting advanced template save process...");
+    console.log("🚀 Enhanced template save process started...");
 
     setError("");
     setSuccess("");
     setLoading(true);
 
-    const result = await saveTemplateToSupabase(user, templateData, config);
+    try {
+      // Use enhanced auth-aware save
+      const result = await saveTemplateWithAuth(templateData, config);
 
-    if (result.success) {
-      setSuccess("Professional shablon muvaffaqiyatli saqlandi!");
-      setTimeout(() => {
-        navigate("/templates");
-      }, 1500);
-    } else {
-      if (result.data) {
-        setSuccess("Shablon mahalliy xotiraga saqlandi");
+      if (result.success) {
+        if (result.isSupabase) {
+          setSuccess("Professional shablon Supabase ga saqlandi!");
+        } else if (result.isDemo) {
+          setSuccess("Demo shablon muvaffaqiyatli saqlandi!");
+        } else if (result.isLocal) {
+          setSuccess("Shablon mahalliy xotiraga saqlandi");
+        }
+
+        setTimeout(() => {
+          navigate("/templates");
+        }, 1500);
       } else {
         setError(result.error || "Shablon saqlashda xatolik");
       }
+    } catch (error: any) {
+      console.error("❌ Template save error:", error);
+      setError(error.message || "Kutilmagan xatolik yuz berdi");
     }
 
     setLoading(false);

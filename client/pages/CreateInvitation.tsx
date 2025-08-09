@@ -21,7 +21,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { supabase } from "@/lib/supabase";
+import { supabase, invitationOperations } from "@/lib/supabase";
+import cacheUtils from "@/lib/cache";
 import { generateDemoUUID, generateUUIDFromSlug } from "@/lib/utils";
 import {
   weddingTemplates,

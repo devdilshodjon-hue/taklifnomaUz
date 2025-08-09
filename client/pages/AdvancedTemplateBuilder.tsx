@@ -857,10 +857,10 @@ export default function AdvancedTemplateBuilder() {
                   <Wand2 className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h1 className="font-heading text-xl font-bold text-slate-900">
+                  <h1 className="font-heading text-xl font-bold text-slate-900 dark:text-slate-100">
                     Professional Shablon Yaratuvchi
                   </h1>
-                  <p className="text-xs text-slate-600">
+                  <p className="text-xs text-slate-600 dark:text-slate-400">
                     Advanced customization tools
                   </p>
                 </div>

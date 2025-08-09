@@ -63,7 +63,7 @@ export const testConnection = async (): Promise<boolean> => {
     return true;
   } catch (error: any) {
     if (error.message?.includes("permission denied") || error.message?.includes("schema public")) {
-      console.log("📦 Permission denied - switching to offline mode");
+      // Suppress permission errors - use localStorage
     } else {
       console.warn("⚠️ Supabase connection error:", error);
     }

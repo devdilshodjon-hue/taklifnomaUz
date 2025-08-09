@@ -24,6 +24,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { supabase, invitationOperations } from "@/lib/supabase";
 import cacheUtils from "@/lib/cache";
 import { generateDemoUUID, generateUUIDFromSlug } from "@/lib/utils";
+import { saveInvitationToSupabase } from "@/lib/invitationSaver";
 import {
   templateManager,
   defaultWeddingTemplates,
@@ -204,7 +205,7 @@ export default function CreateInvitation() {
     setIsLoading(true);
     setError("");
     console.log("📋 Starting high-performance invitation creation...");
-    console.log("👤 User authenticated:", !!user, "User ID:", user?.id);
+    console.log("���� User authenticated:", !!user, "User ID:", user?.id);
 
     try {
       const slug = generateSlug();

@@ -273,7 +273,7 @@ export default function Login() {
         </div>
 
         {/* Demo Mode Button */}
-        {error && error.includes('Internet ulanishi') && (
+        {(hasNetworkError || !isOnline || (error && (error.includes('Internet ulanishi') || error.includes('ulanish') || error.includes('Timeout')))) && (
           <div className="text-center mt-6 animate-fade-in">
             <Button
               onClick={handleDemoLogin}

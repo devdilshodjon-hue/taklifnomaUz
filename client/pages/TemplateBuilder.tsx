@@ -585,17 +585,17 @@ export default function TemplateBuilder() {
     <ProtectedRoute>
       <div className="min-h-screen hero-gradient">
         {/* Beautiful Header */}
-        <nav className="bg-white/90 backdrop-blur-md border-b border-rose-200/50 p-4 sticky top-0 z-50 shadow-lg">
+        <nav className="bg-background/90 backdrop-blur-md border-b border-border p-4 sticky top-0 z-50 shadow-lg">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" asChild className="hover:bg-rose-100 transition-colors">
+              <Button variant="ghost" size="sm" asChild className="hover:bg-muted transition-colors">
                 <Link to="/templates">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Shablonlar
                 </Link>
               </Button>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-rose-500 to-pink-500 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                   <Sparkles className="w-4 h-4 text-white" />
                 </div>
                 <div>

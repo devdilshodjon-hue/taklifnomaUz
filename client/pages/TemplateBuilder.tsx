@@ -365,7 +365,7 @@ export default function TemplateBuilder() {
       console.log("⏰ Template save timeout!");
       setLoading(false);
       setError("Vaqt tugadi. Iltimos, qayta urinib ko'ring.");
-    }, 10000); // 10 seconds timeout
+    }, 5000); // 5 seconds timeout for debugging
 
     console.log("✅ Starting save with user ID:", user.id);
 

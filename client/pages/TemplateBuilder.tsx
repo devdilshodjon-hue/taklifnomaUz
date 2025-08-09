@@ -657,7 +657,7 @@ export default function TemplateBuilder() {
             <div className="lg:col-span-4 space-y-6">
               
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-5 bg-white/80 p-1 shadow-sm">
+                <TabsList className="grid w-full grid-cols-5 bg-card/80 p-1 shadow-sm border border-border">
                   <TabsTrigger value="info" className="flex items-center gap-2 text-xs">
                     <Settings className="w-4 h-4" />
                     Ma'lumot

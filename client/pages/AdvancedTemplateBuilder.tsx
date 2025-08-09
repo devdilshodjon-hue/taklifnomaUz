@@ -923,10 +923,22 @@ export default function AdvancedTemplateBuilder() {
                 onClick={resetToDefaults}
                 variant="outline"
                 size="sm"
-                className="hover:bg-slate-50"
+                className="hover:bg-slate-50 dark:hover:bg-slate-800"
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
                 Reset
+              </Button>
+              <Button
+                onClick={async () => {
+                  const results = await runSupabaseIntegrationTest();
+                  displayTestResults(results);
+                }}
+                variant="outline"
+                size="sm"
+                className="hover:bg-blue-50 dark:hover:bg-blue-900 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-300"
+              >
+                <Target className="w-4 h-4 mr-2" />
+                Test DB
               </Button>
               <div className="flex gap-2">
                 {connectionStatus === "offline" && (

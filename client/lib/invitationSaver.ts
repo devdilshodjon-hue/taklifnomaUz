@@ -109,12 +109,18 @@ export const saveInvitationToSupabase = async (
     let result;
 
     try {
-      const { data, error } = await supabase
+      // Add 6-second timeout as requested
+      const savePromise = supabase
         .from("invitations")
         .insert(invitationToSave)
         .select()
         .single();
 
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("6 soniyalik vaqt tugadi")), 6000)
+      );
+
+      const { data, error } = await Promise.race([savePromise, timeoutPromise]) as any;
       result = { data, error };
       console.log("✅ Direct invitation save result:", result);
     } catch (directError) {

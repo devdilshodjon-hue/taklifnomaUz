@@ -339,33 +339,10 @@ export default function TemplateBuilder() {
 
   const saveTemplate = async () => {
     console.log("🚀 Starting template save process...");
-    console.log("👤 User:", !!user, user?.id);
-    console.log("📝 Template name:", templateData.templateName);
-    console.log("🔐 User object:", user);
-    console.log("📋 Session:", !!session, session?.user?.id);
-    console.log("📋 Profile:", !!profile, profile?.id);
 
-    // Additional auth check
-    if (!user?.id) {
-      setError("User ID mavjud emas. Iltimos, qayta login qiling.");
-      return;
-    }
-
-    if (!user) {
-      setError("Shablon saqlash uchun tizimga kirishingiz kerak");
-      return;
-    }
-
-    if (!templateData.templateName.trim()) {
-      setError("Iltimos, shablon nomini kiriting");
-      return;
-    }
-
-    // Check profile exists for RLS
-    if (!profile) {
-      console.warn("⚠️ Profile mavjud emas, yaratishga harakat qilamiz...");
-      // Profile yaratishni harakat qilamiz
-    }
+    // Clear any existing errors
+    setError("");
+    setSuccess("");
 
     setLoading(true);
     setError("");

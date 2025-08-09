@@ -187,14 +187,15 @@ export default function CreateInvitation() {
       return;
     }
 
-    if (
-      !formData.groomName ||
-      !formData.brideName ||
-      !formData.weddingDate ||
-      !formData.venue ||
-      !formData.address
-    ) {
-      setError("Iltimos, barcha majburiy maydonlarni to'ldiring");
+    const missingFields = [];
+    if (!formData.groomName?.trim()) missingFields.push("Kuyov ismi");
+    if (!formData.brideName?.trim()) missingFields.push("Kelin ismi");
+    if (!formData.weddingDate) missingFields.push("To'y sanasi");
+    if (!formData.venue?.trim()) missingFields.push("Joy nomi");
+    if (!formData.address?.trim()) missingFields.push("Manzil");
+
+    if (missingFields.length > 0) {
+      setError(`Iltimos, quyidagi maydonlarni to'ldiring: ${missingFields.join(", ")}`);
       return;
     }
 

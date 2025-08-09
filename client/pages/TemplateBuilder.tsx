@@ -681,9 +681,9 @@ export default function TemplateBuilder() {
                 </TabsList>
 
                 <TabsContent value="info" className="mt-6">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-sm">
+                  <div className="card-modern p-6 shadow-sm">
                     <h2 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <Settings className="w-5 h-5 text-rose-500" />
+                      <Settings className="w-5 h-5 text-primary" />
                       Shablon Ma'lumotlari
                     </h2>
                     <div className="space-y-4">

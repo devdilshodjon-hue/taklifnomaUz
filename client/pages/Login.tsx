@@ -39,12 +39,29 @@ export default function Login() {
     const { error } = await signIn(email, password);
 
     if (error) {
-      setError(error.message);
+      // Check if it's a network error
+      if (error.message?.includes('Internet ulanishi') || error.message?.includes('Failed to fetch')) {
+        setError(`${error.message} Demo rejimda davom etishingiz mumkin.`);
+      } else {
+        setError(error.message);
+      }
     } else {
       navigate("/dashboard");
     }
 
     setLoading(false);
+  };
+
+  // Demo mode login
+  const handleDemoLogin = () => {
+    console.log("Demo rejimda kirish...");
+    // Create a demo user session
+    localStorage.setItem('demo_user', JSON.stringify({
+      id: 'demo_user_123',
+      email: 'demo@taklifnoma.uz',
+      created_at: new Date().toISOString()
+    }));
+    navigate("/dashboard");
   };
 
   const handleGoogleLogin = async () => {

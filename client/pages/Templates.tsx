@@ -110,9 +110,44 @@ export default function Templates() {
     template_id: template.id,
   });
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation showBackButton />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
+            <p className="text-muted-foreground">Shablonlar yuklanmoqda...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background animate-fade-in">
       <Navigation showBackButton className="animate-slide-up" />
+
+      <div className="max-w-6xl mx-auto p-6">
+        {/* Database Status Alert */}
+        {dbStatus === false && (
+          <Alert className="mb-6 border-orange-200 bg-orange-50">
+            <AlertCircle className="h-4 w-4 text-orange-600" />
+            <AlertDescription className="text-orange-800">
+              Ma'lumotlar bazasi ulangan emas. Default shablonlar ishlatilmoqda.
+              To'liq funksionallik uchun ma'lumotlar bazasini sozlang.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Error Alert */}
+        {error && (
+          <Alert className="mb-6 border-red-200 bg-red-50">
+            <AlertCircle className="h-4 w-4 text-red-600" />
+            <AlertDescription className="text-red-800">{error}</AlertDescription>
+          </Alert>
+        )}
+      </div>
 
       <div className="max-w-6xl mx-auto p-6">
         {/* Header */}

@@ -223,10 +223,6 @@ export default function CreateInvitation() {
         rsvp_deadline: formData.rsvpDeadline || null,
         slug: slug,
         is_active: true,
-        metadata: {
-          created_with: "CreateInvitation v2.0",
-          performance_optimized: true,
-        },
       };
 
       console.log("📋 Invitation data prepared:", invitationData);

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { saveTemplateToSupabase } from "@/lib/templateSaver";
 import { testSupabaseConnection, saveTemplateWithAuth, initializeAuth } from "@/lib/supabaseAuth";
+import { runSupabaseIntegrationTest, displayTestResults, quickConnectionTest } from "@/lib/supabaseTest";
 import {
   ArrowLeft,
   Save,

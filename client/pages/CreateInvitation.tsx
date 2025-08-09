@@ -68,7 +68,7 @@ export default function CreateInvitation() {
       setCurrentStep(3); // Template selection step ga o'tish
     }
   }, [location.state]);
-  const [previewTemplate, setPreviewTemplate] = useState<TemplateData | null>(
+  const [previewTemplate, setPreviewTemplate] = useState<DefaultTemplate | null>(
     null,
   );
   const [showPreview, setShowPreview] = useState(false);

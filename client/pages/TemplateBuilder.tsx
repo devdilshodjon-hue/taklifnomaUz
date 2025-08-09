@@ -353,6 +353,13 @@ export default function TemplateBuilder() {
     setError("");
     setSuccess("");
 
+    // Set timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      console.log("⏰ Template save timeout!");
+      setLoading(false);
+      setError("Vaqt tugadi. Iltimos, qayta urinib ko'ring.");
+    }, 10000); // 10 seconds timeout
+
     console.log("✅ Starting save with user ID:", user.id);
 
     try {

@@ -379,7 +379,7 @@ export default function TemplateBuilder() {
         duration: 5000,
       });
       setError("Vaqt tugadi. Iltimos, qayta urinib ko'ring.");
-    }, 8000); // 8 seconds timeout
+    }, 5000); // 5 seconds timeout (reduced)
 
     console.log("✅ Starting save with user ID:", user.id);
     console.log("🔧 Supabase URL:", import.meta.env.VITE_SUPABASE_URL);

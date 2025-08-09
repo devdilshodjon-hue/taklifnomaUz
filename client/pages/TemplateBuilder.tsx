@@ -470,7 +470,7 @@ export default function TemplateBuilder() {
       }
     };
 
-    const deviceClass = previewDevice === "mobile" ? "max-w-sm" : "max-w-xl";
+    const deviceClass = previewDevice === "mobile" ? "max-w-xs sm:max-w-sm" : "max-w-md md:max-w-lg xl:max-w-xl";
 
     return (
       <div className={`w-full ${deviceClass} mx-auto transition-all duration-500`}>
@@ -504,13 +504,13 @@ export default function TemplateBuilder() {
 
             {/* Names with real-time updates */}
             <div className="space-y-3">
-              <h1 className={`${previewDevice === 'mobile' ? 'text-2xl' : 'text-3xl md:text-4xl'} font-bold tracking-wide transition-all duration-300`} style={headingStyle}>
+              <h1 className={`${previewDevice === 'mobile' ? 'text-lg sm:text-xl' : 'text-2xl md:text-3xl xl:text-4xl'} font-bold tracking-wide transition-all duration-300`} style={headingStyle}>
                 {templateData.groomName}
               </h1>
-              <div className={`${previewDevice === 'mobile' ? 'text-3xl' : 'text-4xl'}`} style={accentStyle}>
+              <div className={`${previewDevice === 'mobile' ? 'text-2xl sm:text-3xl' : 'text-3xl xl:text-4xl'}`} style={accentStyle}>
                 &
               </div>
-              <h1 className={`${previewDevice === 'mobile' ? 'text-2xl' : 'text-3xl md:text-4xl'} font-bold tracking-wide transition-all duration-300`} style={headingStyle}>
+              <h1 className={`${previewDevice === 'mobile' ? 'text-lg sm:text-xl' : 'text-2xl md:text-3xl xl:text-4xl'} font-bold tracking-wide transition-all duration-300`} style={headingStyle}>
                 {templateData.brideName}
               </h1>
             </div>
@@ -533,12 +533,12 @@ export default function TemplateBuilder() {
             {/* Date and Time with real-time updates */}
             <div className="space-y-2">
               <div
-                className={`${previewDevice === 'mobile' ? 'text-lg' : 'text-xl'} font-semibold transition-all duration-300`}
+                className={`${previewDevice === 'mobile' ? 'text-base sm:text-lg' : 'text-lg xl:text-xl'} font-semibold transition-all duration-300`}
                 style={{ color: config.colors.primary }}
               >
                 {templateData.weddingDate}
               </div>
-              <div className={`${previewDevice === 'mobile' ? 'text-base' : 'text-lg'} transition-all duration-300`} style={{ color: config.colors.secondary }}>
+              <div className={`${previewDevice === 'mobile' ? 'text-sm sm:text-base' : 'text-base xl:text-lg'} transition-all duration-300`} style={{ color: config.colors.secondary }}>
                 {templateData.weddingTime}
               </div>
             </div>
@@ -550,19 +550,19 @@ export default function TemplateBuilder() {
                 style={{ backgroundColor: config.colors.accent }}
               />
               <div
-                className={`${previewDevice === 'mobile' ? 'text-lg' : 'text-xl'} font-medium transition-all duration-300`}
+                className={`${previewDevice === 'mobile' ? 'text-base sm:text-lg' : 'text-lg xl:text-xl'} font-medium transition-all duration-300`}
                 style={{ color: config.colors.primary }}
               >
                 {templateData.venue}
               </div>
-              <div className={`${previewDevice === 'mobile' ? 'text-sm' : 'text-base'} leading-relaxed transition-all duration-300`} style={{ color: config.colors.secondary }}>
+              <div className={`${previewDevice === 'mobile' ? 'text-xs sm:text-sm' : 'text-sm xl:text-base'} leading-relaxed transition-all duration-300`} style={{ color: config.colors.secondary }}>
                 {templateData.address}
               </div>
             </div>
 
             {/* Message with real-time updates */}
             <div
-              className={`${previewDevice === 'mobile' ? 'text-sm px-3' : 'text-base px-6'} leading-relaxed italic transition-all duration-300`}
+              className={`${previewDevice === 'mobile' ? 'text-xs sm:text-sm px-2 sm:px-3' : 'text-sm xl:text-base px-4 xl:px-6'} leading-relaxed italic transition-all duration-300`}
               style={{ color: config.colors.text }}
             >
               "{templateData.customMessage}"
@@ -643,7 +643,7 @@ export default function TemplateBuilder() {
           </div>
         </nav>
 
-        <div className="max-w-7xl mx-auto p-6">
+        <div className="max-w-7xl mx-auto p-3 sm:p-4 md:p-6">
           {/* Success/Error Messages */}
           {success && (
             <Alert className="mb-6 border-green-200 bg-green-50/80 shadow-sm">
@@ -663,36 +663,36 @@ export default function TemplateBuilder() {
             </Alert>
           )}
 
-          <div className="grid lg:grid-cols-7 gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-7 gap-4 md:gap-6 lg:gap-8">
             {/* Left Panel - Controls (3/7) */}
-            <div className="lg:col-span-3 space-y-6">
+            <div className="xl:col-span-3 order-2 xl:order-1">
               
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-5 bg-card/80 p-1 shadow-sm border border-border">
-                  <TabsTrigger value="info" className="flex items-center gap-2 text-xs">
-                    <Settings className="w-4 h-4" />
-                    Ma'lumot
+                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-card/80 p-1 shadow-sm border border-border">
+                  <TabsTrigger value="info" className="flex items-center gap-1 md:gap-2 text-xs p-2 md:p-3">
+                    <Settings className="w-3 h-3 md:w-4 md:h-4" />
+                    <span className="hidden sm:inline">Ma'lumot</span>
                   </TabsTrigger>
-                  <TabsTrigger value="colors" className="flex items-center gap-2 text-xs">
-                    <Palette className="w-4 h-4" />
-                    Ranglar
+                  <TabsTrigger value="colors" className="flex items-center gap-1 md:gap-2 text-xs p-2 md:p-3">
+                    <Palette className="w-3 h-3 md:w-4 md:h-4" />
+                    <span className="hidden sm:inline">Ranglar</span>
                   </TabsTrigger>
-                  <TabsTrigger value="fonts" className="flex items-center gap-2 text-xs">
-                    <Type className="w-4 h-4" />
-                    Shriftlar
+                  <TabsTrigger value="fonts" className="flex items-center gap-1 md:gap-2 text-xs p-2 md:p-3">
+                    <Type className="w-3 h-3 md:w-4 md:h-4" />
+                    <span className="hidden md:inline">Shriftlar</span>
                   </TabsTrigger>
-                  <TabsTrigger value="layout" className="flex items-center gap-2 text-xs">
-                    <Layout className="w-4 h-4" />
-                    Layout
+                  <TabsTrigger value="layout" className="flex items-center gap-1 md:gap-2 text-xs p-2 md:p-3">
+                    <Layout className="w-3 h-3 md:w-4 md:h-4" />
+                    <span className="hidden md:inline">Layout</span>
                   </TabsTrigger>
-                  <TabsTrigger value="effects" className="flex items-center gap-2 text-xs">
-                    <Layers className="w-4 h-4" />
-                    Effektlar
+                  <TabsTrigger value="effects" className="flex items-center gap-1 md:gap-2 text-xs p-2 md:p-3">
+                    <Layers className="w-3 h-3 md:w-4 md:h-4" />
+                    <span className="hidden md:inline">Effektlar</span>
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="info" className="mt-6">
-                  <div className="card-modern p-6 shadow-sm">
+                <TabsContent value="info" className="mt-4 md:mt-6">
+                  <div className="card-modern p-4 md:p-6 shadow-sm">
                     <h2 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                       <Settings className="w-5 h-5 text-primary" />
                       Shablon Ma'lumotlari
@@ -708,7 +708,7 @@ export default function TemplateBuilder() {
                           className="mt-1 border-border focus:border-primary"
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <Label htmlFor="groomName" className="text-sm font-medium">Kuyov Ismi</Label>
                           <Input
@@ -728,7 +728,7 @@ export default function TemplateBuilder() {
                           />
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <Label htmlFor="weddingDate" className="text-sm font-medium">To'y Sanasi</Label>
                           <Input
@@ -780,13 +780,13 @@ export default function TemplateBuilder() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="colors" className="space-y-6 mt-6">
-                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-6 border border-border shadow-sm">
+                <TabsContent value="colors" className="space-y-4 md:space-y-6 mt-4 md:mt-6">
+                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 md:p-6 border border-border shadow-sm">
                     <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                       <Palette className="w-5 h-5 text-primary" />
                       Rang Shablonlari
                     </h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {colorPresets.map((preset, index) => (
                         <button
                           key={index}
@@ -845,8 +845,8 @@ export default function TemplateBuilder() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="fonts" className="space-y-4 mt-6">
-                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-6 border border-border shadow-sm">
+                <TabsContent value="fonts" className="space-y-4 mt-4 md:mt-6">
+                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 md:p-6 border border-border shadow-sm">
                     <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                       <Type className="w-5 h-5 text-primary" />
                       Shrift Sozlamalari
@@ -881,8 +881,8 @@ export default function TemplateBuilder() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="layout" className="space-y-6 mt-6">
-                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-6 border border-border shadow-sm">
+                <TabsContent value="layout" className="space-y-4 md:space-y-6 mt-4 md:mt-6">
+                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 md:p-6 border border-border shadow-sm">
                     <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                       <Layout className="w-5 h-5 text-primary" />
                       Layout Sozlamalari
@@ -972,8 +972,8 @@ export default function TemplateBuilder() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="effects" className="space-y-6 mt-6">
-                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-6 border border-border shadow-sm">
+                <TabsContent value="effects" className="space-y-4 md:space-y-6 mt-4 md:mt-6">
+                  <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 md:p-6 border border-border shadow-sm">
                     <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                       <Layers className="w-5 h-5 text-primary" />
                       Animatsiya va Effektlar
@@ -1031,9 +1031,9 @@ export default function TemplateBuilder() {
             </div>
 
             {/* Right Panel - Live Preview (4/7) */}
-            <div className="lg:col-span-4">
-              <div className="sticky top-24">
-                <div className="bg-card/90 backdrop-blur-sm rounded-xl p-6 border border-border shadow-lg">
+            <div className="xl:col-span-4 order-1 xl:order-2">
+              <div className="xl:sticky xl:top-24">
+                <div className="bg-card/90 backdrop-blur-sm rounded-xl p-4 md:p-6 border border-border shadow-lg">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="font-heading text-lg font-semibold text-foreground flex items-center gap-2">
                       <Eye className="w-5 h-5 text-primary" />
@@ -1059,7 +1059,7 @@ export default function TemplateBuilder() {
                     </div>
                   </div>
 
-                  <div className="border border-border rounded-lg p-6 bg-gradient-to-br from-muted/30 to-card min-h-[350px] flex items-center justify-center">
+                  <div className="border border-border rounded-lg p-3 md:p-6 bg-gradient-to-br from-muted/30 to-card min-h-[280px] md:min-h-[300px] flex items-center justify-center">
                     <div className="w-full max-w-2xl">
                       <TemplatePreview />
                     </div>

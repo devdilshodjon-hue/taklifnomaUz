@@ -178,6 +178,43 @@ export const checkDatabaseSetup = async (): Promise<boolean> => {
   }
 };
 
+// Test database connection health
+export const testDatabaseConnection = async (): Promise<{
+  connected: boolean;
+  latency: number;
+  error?: string
+}> => {
+  const startTime = Date.now();
+
+  try {
+    const { error } = await supabase
+      .from("profiles")
+      .select("id")
+      .limit(1);
+
+    const latency = Date.now() - startTime;
+
+    if (error) {
+      return {
+        connected: false,
+        latency,
+        error: error.message
+      };
+    }
+
+    return {
+      connected: true,
+      latency
+    };
+  } catch (error: any) {
+    return {
+      connected: false,
+      latency: Date.now() - startTime,
+      error: error?.message || "Noma'lum ulanish xatosi"
+    };
+  }
+};
+
 // Error xabaridan jadval mavjud emasligini aniqlash
 export const isTableNotFoundError = (error: any): boolean => {
   if (!error) return false;

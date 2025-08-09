@@ -164,7 +164,7 @@ export default function CreateInvitation() {
   };
 
   const handleSave = async () => {
-    console.log("handleSave started");
+    console.log("🚀 Starting optimized invitation creation...");
 
     if (!user) {
       setError("Taklifnoma yaratish uchun tizimga kirishingiz kerak");
@@ -184,8 +184,8 @@ export default function CreateInvitation() {
 
     setIsLoading(true);
     setError("");
-    console.log("Starting invitation creation...");
-    console.log("User authenticated:", !!user, "User ID:", user?.id);
+    console.log("📋 Starting high-performance invitation creation...");
+    console.log("👤 User authenticated:", !!user, "User ID:", user?.id);
 
     try {
       // Check authentication session first

@@ -78,6 +78,7 @@ export default function Templates() {
       let allTemplates: ExtendedTemplate[] = [...defaultWeddingTemplates];
 
       // Try to load custom templates from Supabase
+      let customTemplatesData: CustomTemplate[] = [];
       try {
         console.log("🔄 Custom shablonlarni Supabase dan yuklamoqda...");
 
@@ -91,6 +92,7 @@ export default function Templates() {
           console.warn("⚠️ Custom templates yuklashda xatolik:", customError);
         } else if (customTemplates && customTemplates.length > 0) {
           console.log("✅ Custom templates topildi:", customTemplates.length);
+          customTemplatesData = customTemplates;
 
           // Convert custom templates to ExtendedTemplate format
           const convertedCustomTemplates: ExtendedTemplate[] = customTemplates.map(

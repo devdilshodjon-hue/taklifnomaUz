@@ -87,8 +87,8 @@ export const saveTemplateToSupabase = async (
       .select()
       .single();
 
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("6 soniyalik vaqt tugadi")), 6000)
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("Connection timeout")), 5000) // Reduced to 5 seconds
     );
 
     const { data, error } = await Promise.race([savePromise, timeoutPromise]) as any;

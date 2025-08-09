@@ -1,15 +1,18 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { Eye, ArrowRight, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Eye, ArrowRight, Sparkles, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  weddingTemplates,
-  templateCategories,
-  getTemplatesByCategory,
-  type TemplateData,
-} from "@/lib/templates";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import TemplateRenderer from "@/components/TemplateRenderer";
 import Navigation from "@/components/Navigation";
+import { checkDatabaseSetup } from "@/lib/supabase";
+import {
+  templateManager,
+  defaultWeddingTemplates,
+  templateCategories,
+  getTemplatesByCategory,
+  type DefaultTemplate
+} from "@/lib/defaultTemplates";
 
 export default function Templates() {
   const [selectedCategory, setSelectedCategory] = useState("all");

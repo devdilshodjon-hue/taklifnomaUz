@@ -941,6 +941,18 @@ export default function AdvancedTemplateBuilder() {
                 <Target className="w-4 h-4 mr-2" />
                 Test DB
               </Button>
+              <Button
+                onClick={async () => {
+                  await runDatabaseHealthCheck();
+                  await setupDemoData();
+                }}
+                variant="outline"
+                size="sm"
+                className="hover:bg-green-50 dark:hover:bg-green-900 border-green-300 dark:border-green-700 text-green-700 dark:text-green-300"
+              >
+                <Heart className="w-4 h-4 mr-2" />
+                Health
+              </Button>
               <div className="flex gap-2">
                 {connectionStatus === "offline" && (
                   <Button

@@ -391,24 +391,26 @@ export default function TemplateBuilder() {
       }, 2000);
     } catch (err: any) {
       console.error("Template save error:", err);
-      const errorMessage = err?.message || err?.toString() || "Noma'lum xatolik";
+      const errorMessage =
+        err?.message || err?.toString() || "Noma'lum xatolik";
 
       // Try using templateOperations as fallback
       try {
         console.log("🔄 Trying template operations fallback...");
-        const { data: fallbackData, error: fallbackError } = await templateOperations.create({
-          user_id: user.id,
-          name: templateData.templateName.trim(),
-          description: `Maxsus shablon - ${new Date().toLocaleDateString("uz-UZ")}`,
-          category: "custom",
-          colors: config.colors,
-          fonts: config.fonts,
-          config: config,
-          is_public: false,
-          is_featured: false,
-          usage_count: 0,
-          tags: [config.layout.style, "maxsus", "real-time"],
-        });
+        const { data: fallbackData, error: fallbackError } =
+          await templateOperations.create({
+            user_id: user.id,
+            name: templateData.templateName.trim(),
+            description: `Maxsus shablon - ${new Date().toLocaleDateString("uz-UZ")}`,
+            category: "custom",
+            colors: config.colors,
+            fonts: config.fonts,
+            config: config,
+            is_public: false,
+            is_featured: false,
+            usage_count: 0,
+            tags: [config.layout.style, "maxsus", "real-time"],
+          });
 
         if (fallbackData && !fallbackError) {
           setSuccess("🎉 Shablon muvaffaqiyatli saqlandi!");
@@ -435,7 +437,9 @@ export default function TemplateBuilder() {
         JSON.stringify(fallbackTemplate),
       );
 
-      setError(`Shablon bazaga saqlanmadi: ${errorMessage}. Vaqtincha mahalliy xotiraga saqlandi.`);
+      setError(
+        `Shablon bazaga saqlanmadi: ${errorMessage}. Vaqtincha mahalliy xotiraga saqlandi.`,
+      );
     } finally {
       setLoading(false);
     }

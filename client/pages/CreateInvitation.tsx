@@ -195,7 +195,9 @@ export default function CreateInvitation() {
     if (!formData.address?.trim()) missingFields.push("Manzil");
 
     if (missingFields.length > 0) {
-      setError(`Iltimos, quyidagi maydonlarni to'ldiring: ${missingFields.join(", ")}`);
+      setError(
+        `Iltimos, quyidagi maydonlarni to'ldiring: ${missingFields.join(", ")}`,
+      );
       return;
     }
 
@@ -258,7 +260,9 @@ export default function CreateInvitation() {
         } catch (directErr: any) {
           console.error("❌ All creation methods failed:", directErr);
           throw new Error(
-            directErr?.message || error?.message || "Taklifnoma yaratishda xatolik yuz berdi",
+            directErr?.message ||
+              error?.message ||
+              "Taklifnoma yaratishda xatolik yuz berdi",
           );
         }
       }

@@ -190,8 +190,11 @@ export default function Dashboard() {
       console.log("Stats loaded successfully");
     } catch (error: any) {
       console.error("Error in loadInvitations:", error);
-      const errorMessage = error?.message || error?.toString() || "Noma'lum xatolik";
-      setError(`Kutilmagan xatolik yuz berdi: ${errorMessage}. Iltimos, qayta urinib ko'ring.`);
+      const errorMessage =
+        error?.message || error?.toString() || "Noma'lum xatolik";
+      setError(
+        `Kutilmagan xatolik yuz berdi: ${errorMessage}. Iltimos, qayta urinib ko'ring.`,
+      );
       setInvitations([]);
       setStats({});
     } finally {

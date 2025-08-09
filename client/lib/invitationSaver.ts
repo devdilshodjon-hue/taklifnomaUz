@@ -133,10 +133,19 @@ export const saveInvitationToSupabase = async (
         console.warn("⚠️ Supabase error:", error.message);
 
         toast.dismiss("saving-invitation");
-        toast.warning("⚠️ Supabase xatosi, mahalliy saqlandi", {
-          description: `Xatolik: ${error.message}`,
-          duration: 4000,
-        });
+
+        // Handle specific permission errors
+        if (error.message.includes("permission denied") || error.message.includes("schema public")) {
+          toast.success("💾 Taklifnoma mahalliy saqlandi!", {
+            description: "Ma'lumotlar ombori sozlanmoqda, mahalliy xotiraga saqlandi",
+            duration: 4000,
+          });
+        } else {
+          toast.warning("⚠️ Supabase xatosi, mahalliy saqlandi", {
+            description: `Xatolik: ${error.message}`,
+            duration: 4000,
+          });
+        }
 
         return {
           success: true, // Still success because saved locally

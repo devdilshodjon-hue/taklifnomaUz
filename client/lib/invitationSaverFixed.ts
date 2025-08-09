@@ -4,23 +4,28 @@ import { Database } from "./database.types";
 type InvitationData = Database["public"]["Tables"]["invitations"]["Insert"];
 
 // Generate invitation slug from names
-const generateInvitationSlug = (groomName: string, brideName: string): string => {
+const generateInvitationSlug = (
+  groomName: string,
+  brideName: string,
+): string => {
   const timestamp = Date.now();
-  const cleanName = (name: string) => 
+  const cleanName = (name: string) =>
     name
       .toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/[\s_-]+/g, '-')
-      .replace(/^-+|-+$/g, '');
-  
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_-]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
   const groomSlug = cleanName(groomName);
   const brideSlug = cleanName(brideName);
-  
+
   return `${groomSlug}-${brideSlug}-${timestamp}`;
 };
 
 // Save invitation with anonymous user support
-export const saveInvitation = async (invitationData: Omit<InvitationData, 'user_id' | 'slug'>): Promise<{
+export const saveInvitation = async (
+  invitationData: Omit<InvitationData, "user_id" | "slug">,
+): Promise<{
   success: boolean;
   invitation?: any;
   url?: string;
@@ -34,7 +39,10 @@ export const saveInvitation = async (invitationData: Omit<InvitationData, 'user_
     console.log("👤 Using user ID:", userId);
 
     // Generate unique slug
-    const slug = generateInvitationSlug(invitationData.groom_name, invitationData.bride_name);
+    const slug = generateInvitationSlug(
+      invitationData.groom_name,
+      invitationData.bride_name,
+    );
     console.log("🔗 Generated slug:", slug);
 
     // Prepare invitation data
@@ -47,9 +55,9 @@ export const saveInvitation = async (invitationData: Omit<InvitationData, 'user_
     };
 
     // Save to localStorage first (immediate backup)
-    const localStorageKey = 'taklifnoma_invitations';
+    const localStorageKey = "taklifnoma_invitations";
     let localInvitations = [];
-    
+
     try {
       const stored = localStorage.getItem(localStorageKey);
       localInvitations = stored ? JSON.parse(stored) : [];
@@ -64,9 +72,9 @@ export const saveInvitation = async (invitationData: Omit<InvitationData, 'user_
       id: `local_${Date.now()}`,
       is_local: true,
     };
-    
+
     localInvitations.unshift(localInvitation);
-    
+
     try {
       localStorage.setItem(localStorageKey, JSON.stringify(localInvitations));
       console.log("💾 Invitation saved locally as backup");
@@ -76,9 +84,9 @@ export const saveInvitation = async (invitationData: Omit<InvitationData, 'user_
 
     // Attempt Supabase save with timeout
     console.log("📤 Attempting to save to Supabase...");
-    
+
     const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("Connection timeout")), 4000)
+      setTimeout(() => reject(new Error("Connection timeout")), 4000),
     );
 
     const savePromise = supabase
@@ -92,7 +100,7 @@ export const saveInvitation = async (invitationData: Omit<InvitationData, 'user_
 
       if (result.error) {
         console.warn("⚠️ Supabase save failed:", result.error.message);
-        
+
         // Return success with local data
         return {
           success: true,
@@ -103,13 +111,13 @@ export const saveInvitation = async (invitationData: Omit<InvitationData, 'user_
       }
 
       console.log("✅ Invitation saved to Supabase successfully");
-      
+
       // Update local storage with Supabase ID
       localInvitations[0] = {
         ...result.data,
         is_local: false,
       };
-      
+
       try {
         localStorage.setItem(localStorageKey, JSON.stringify(localInvitations));
       } catch (e) {
@@ -122,10 +130,9 @@ export const saveInvitation = async (invitationData: Omit<InvitationData, 'user_
         url: `/invitation/${slug}`,
         error: undefined,
       };
-
     } catch (timeoutError) {
       console.warn("⏰ Supabase save timeout, using local storage");
-      
+
       // Return success with local data (offline mode)
       return {
         success: true,
@@ -134,16 +141,15 @@ export const saveInvitation = async (invitationData: Omit<InvitationData, 'user_
         error: undefined, // Don't show error for timeout
       };
     }
-
   } catch (error) {
     console.error("❌ Critical error in invitation save:", error);
-    
+
     // Even in critical error, try to return local data if available
-    const localStorageKey = 'taklifnoma_invitations';
+    const localStorageKey = "taklifnoma_invitations";
     try {
       const stored = localStorage.getItem(localStorageKey);
       const localInvitations = stored ? JSON.parse(stored) : [];
-      
+
       if (localInvitations.length > 0) {
         const latestInvitation = localInvitations[0];
         return {
@@ -178,9 +184,9 @@ export const getUserInvitations = async (): Promise<{
     console.log("👤 Loading invitations for user:", userId);
 
     // Load from localStorage first
-    const localStorageKey = 'taklifnoma_invitations';
+    const localStorageKey = "taklifnoma_invitations";
     let localInvitations = [];
-    
+
     try {
       const stored = localStorage.getItem(localStorageKey);
       localInvitations = stored ? JSON.parse(stored) : [];
@@ -192,7 +198,7 @@ export const getUserInvitations = async (): Promise<{
 
     // Try to load from Supabase with timeout
     const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("Connection timeout")), 3000)
+      setTimeout(() => reject(new Error("Connection timeout")), 3000),
     );
 
     const loadPromise = supabase
@@ -207,7 +213,7 @@ export const getUserInvitations = async (): Promise<{
 
       if (result.error) {
         console.warn("⚠️ Supabase load failed:", result.error.message);
-        
+
         // Return local data
         return {
           success: true,
@@ -217,13 +223,15 @@ export const getUserInvitations = async (): Promise<{
       }
 
       console.log(`✅ Loaded ${result.data.length} invitations from Supabase`);
-      
+
       // Combine Supabase and local data, avoiding duplicates
       const allInvitations = [...result.data];
-      
+
       // Add local invitations that don't exist in Supabase
-      localInvitations.forEach(localInv => {
-        const existsInSupabase = allInvitations.some(inv => inv.slug === localInv.slug);
+      localInvitations.forEach((localInv) => {
+        const existsInSupabase = allInvitations.some(
+          (inv) => inv.slug === localInv.slug,
+        );
         if (!existsInSupabase) {
           allInvitations.push(localInv);
         }
@@ -234,26 +242,24 @@ export const getUserInvitations = async (): Promise<{
         invitations: allInvitations,
         error: undefined,
       };
-
     } catch (timeoutError) {
       console.warn("⏰ Supabase load timeout, using local storage");
-      
+
       return {
         success: true,
         invitations: localInvitations,
         error: undefined, // Don't show error for timeout
       };
     }
-
   } catch (error) {
     console.error("❌ Critical error loading invitations:", error);
-    
+
     // Try to return local data even in critical error
-    const localStorageKey = 'taklifnoma_invitations';
+    const localStorageKey = "taklifnoma_invitations";
     try {
       const stored = localStorage.getItem(localStorageKey);
       const localInvitations = stored ? JSON.parse(stored) : [];
-      
+
       return {
         success: true,
         invitations: localInvitations,
@@ -270,7 +276,9 @@ export const getUserInvitations = async (): Promise<{
 };
 
 // Get invitation by slug (for public viewing)
-export const getInvitationBySlug = async (slug: string): Promise<{
+export const getInvitationBySlug = async (
+  slug: string,
+): Promise<{
   success: boolean;
   invitation?: any;
   error?: string;
@@ -279,12 +287,12 @@ export const getInvitationBySlug = async (slug: string): Promise<{
 
   try {
     // Check localStorage first
-    const localStorageKey = 'taklifnoma_invitations';
+    const localStorageKey = "taklifnoma_invitations";
     try {
       const stored = localStorage.getItem(localStorageKey);
       const localInvitations = stored ? JSON.parse(stored) : [];
-      const localInvitation = localInvitations.find(inv => inv.slug === slug);
-      
+      const localInvitation = localInvitations.find((inv) => inv.slug === slug);
+
       if (localInvitation) {
         console.log("💾 Found invitation in local storage");
         return {
@@ -298,7 +306,7 @@ export const getInvitationBySlug = async (slug: string): Promise<{
 
     // Try Supabase with timeout
     const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("Connection timeout")), 3000)
+      setTimeout(() => reject(new Error("Connection timeout")), 3000),
     );
 
     const loadPromise = supabase
@@ -312,7 +320,10 @@ export const getInvitationBySlug = async (slug: string): Promise<{
       const result = await Promise.race([loadPromise, timeoutPromise]);
 
       if (result.error) {
-        console.warn("⚠️ Invitation not found in Supabase:", result.error.message);
+        console.warn(
+          "⚠️ Invitation not found in Supabase:",
+          result.error.message,
+        );
         return {
           success: false,
           error: "Invitation not found",
@@ -324,7 +335,6 @@ export const getInvitationBySlug = async (slug: string): Promise<{
         success: true,
         invitation: result.data,
       };
-
     } catch (timeoutError) {
       console.warn("⏰ Supabase timeout, invitation not found");
       return {
@@ -332,7 +342,6 @@ export const getInvitationBySlug = async (slug: string): Promise<{
         error: "Invitation not found",
       };
     }
-
   } catch (error) {
     console.error("❌ Error loading invitation:", error);
     return {

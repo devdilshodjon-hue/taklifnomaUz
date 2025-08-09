@@ -115,15 +115,11 @@ export const saveInvitationToSupabase = async (
 
     try {
       // Try Supabase with safe wrapper and timeout handling
-      const saveOperation = () => supabase
-        .from("invitations")
-        .insert(invitationToSave)
-        .select()
-        .single();
+      const saveOperation = () =>
+        supabase.from("invitations").insert(invitationToSave).select().single();
 
-      const timeoutPromise = new Promise<never>(
-        (_, reject) =>
-          setTimeout(() => reject(new Error("Connection timeout")), 5000)
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Connection timeout")), 5000),
       );
 
       const safePromise = safeSupabaseOperation(saveOperation);
@@ -138,7 +134,8 @@ export const saveInvitationToSupabase = async (
         // Handle permission errors with positive messaging
         if (isPermissionError) {
           toast.success("💾 Taklifnoma xavfsiz saqlandi!", {
-            description: "Ma'lumotlar mahalliy xotiraga saqlandi (normal rejim)",
+            description:
+              "Ma'lumotlar mahalliy xotiraga saqlandi (normal rejim)",
             duration: 4000,
           });
         } else {

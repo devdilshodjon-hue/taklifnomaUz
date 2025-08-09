@@ -45,6 +45,7 @@ SELECT public.test_connection();
 ```
 
 Natija:
+
 ```json
 {
   "status": "success",
@@ -57,6 +58,7 @@ Natija:
 ## 📋 Yaratilgan Tablelar
 
 ### 1. **profiles** - Foydalanuvchi Profillari
+
 - `id` - UUID (auth.users ga bog'langan)
 - `first_name`, `last_name`, `full_name` - Ism sharif
 - `email`, `phone` - Aloqa ma'lumotlari
@@ -64,6 +66,7 @@ Natija:
 - `settings`, `metadata` - Qo'shimcha ma'lumotlar
 
 ### 2. **invitations** - Taklifnomalar
+
 - `id` - UUID
 - `user_id` - Yaratuvchi
 - `groom_name`, `bride_name` - Kuyov va kelin ismlari
@@ -73,6 +76,7 @@ Natija:
 - `view_count`, `rsvp_count` - Statistika
 
 ### 3. **custom_templates** - Shablonlar
+
 - `id` - UUID
 - `name`, `description` - Nom va tavsif
 - `category` - Kategoriya (classic, modern, elegant, etc.)
@@ -81,22 +85,26 @@ Natija:
 - `usage_count` - Foydalanish soni
 
 ### 4. **guests** - Mehmonlar
+
 - `invitation_id` - Taklifnoma ID
 - `name`, `email`, `phone` - Mehmon ma'lumotlari
 - `plus_one` - Qo'shimcha mehmon
 
 ### 5. **rsvps** - Javoblar
+
 - `invitation_id` - Taklifnoma ID
 - `guest_name` - Mehmon ismi
 - `will_attend` - Keladi/kelmaydi
 - `message` - Xabar
 
 ### 6. **invitation_views** - Ko'rishlar (Analitika)
+
 - `invitation_id` - Taklifnoma ID
 - `visitor_ip`, `user_agent` - Tashrif ma'lumotlari
 - `device_type`, `browser` - Qurilma ma'lumotlari
 
 ### 7. **template_categories** - Shablon Kategoriyalari
+
 - `name` - Nom (classic, modern, elegant, floral, vintage, minimalist)
 - `display_name` - Ko'rsatiladigan nom
 - `icon`, `color` - Interfeys uchun
@@ -129,20 +137,23 @@ Natija:
 ## 📊 Avtomatik Kiritilgan Ma'lumotlar
 
 ### Template Categories:
+
 - **classic** - Klassik shablonlar
-- **modern** - Zamonaviy shablonlar  
+- **modern** - Zamonaviy shablonlar
 - **elegant** - Nafis shablonlar
 - **floral** - Gullar naqshli shablonlar
 - **vintage** - Retro shablonlar
 - **minimalist** - Minimal shablonlar
 
 ### Sample Templates:
+
 - **Klassik Oq Shablon** - Traditional white design
 - **Zamonaviy Ko'k Shablon** - Modern blue design
 - **Gullar Shablon** - Floral design
 - **Oltin Nafis Shablon** - Elegant gold design
 
 ### Test Profiles:
+
 - **test@example.com** - Test User
 - **demo@taklifnoma.uz** - Demo User
 
@@ -170,28 +181,31 @@ const templates = await getTemplatesFromDatabase();
 ## ✅ To'liq Tekshirish
 
 1. **Connection Test:**
+
    ```sql
    SELECT public.test_connection();
    ```
 
 2. **Tables Check:**
+
    ```sql
-   SELECT table_name FROM information_schema.tables 
-   WHERE table_schema = 'public' 
+   SELECT table_name FROM information_schema.tables
+   WHERE table_schema = 'public'
    ORDER BY table_name;
    ```
 
 3. **Functions Check:**
+
    ```sql
-   SELECT routine_name FROM information_schema.routines 
-   WHERE routine_schema = 'public' 
+   SELECT routine_name FROM information_schema.routines
+   WHERE routine_schema = 'public'
    ORDER BY routine_name;
    ```
 
 4. **Triggers Check:**
    ```sql
-   SELECT trigger_name, event_object_table 
-   FROM information_schema.triggers 
+   SELECT trigger_name, event_object_table
+   FROM information_schema.triggers
    WHERE trigger_schema = 'public';
    ```
 
@@ -200,7 +214,7 @@ const templates = await getTemplatesFromDatabase();
 Ma'lumotlar ombori to'liq tiklandi va CRUD operatsiyalar uchun tayyor!
 
 - ✅ Barcha tablelar yaratildi
-- ✅ Funksiyalar va triggerlar ishlaydi  
+- ✅ Funksiyalar va triggerlar ishlaydi
 - ✅ Sample ma'lumotlar kiritildi
 - ✅ Cheklovlar o'chirildi
 - ✅ To'liq ruxsatlar berildi

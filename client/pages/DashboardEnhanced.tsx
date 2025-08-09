@@ -116,22 +116,26 @@ export default function DashboardEnhanced() {
       // Try Supabase with improved timeout handling
       console.log("📤 Attempting Supabase connection...");
 
-      const loadOperation = () => supabase
-        .from("invitations")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("is_active", true)
-        .order("created_at", { ascending: false });
+      const loadOperation = () =>
+        supabase
+          .from("invitations")
+          .select("*")
+          .eq("user_id", user.id)
+          .eq("is_active", true)
+          .order("created_at", { ascending: false });
 
       // Use timeout with safe wrapper
-      const timeoutPromise = new Promise<never>(
-        (_, reject) =>
-          setTimeout(() => reject(new Error("Connection timeout")), 5000)
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Connection timeout")), 5000),
       );
 
       const safePromise = safeSupabaseOperation(loadOperation);
       const result = await Promise.race([safePromise, timeoutPromise]);
-      const { data: supabaseInvitations, error, isPermissionError } = result as any;
+      const {
+        data: supabaseInvitations,
+        error,
+        isPermissionError,
+      } = result as any;
 
       if (error) {
         console.warn("⚠️ Supabase error:", error.message);
@@ -142,7 +146,9 @@ export default function DashboardEnhanced() {
         if (isPermissionError) {
           setError("Mahalliy rejimda ishlamoqda. Ma'lumotlar xavfsiz.");
         } else {
-          setError("Offline rejimda. Ma'lumotlar mahalliy xotiradan yuklanmoqda.");
+          setError(
+            "Offline rejimda. Ma'lumotlar mahalliy xotiradan yuklanmoqda.",
+          );
         }
       } else {
         console.log(

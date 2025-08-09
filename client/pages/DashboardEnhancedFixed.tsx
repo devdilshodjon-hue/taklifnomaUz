@@ -65,7 +65,9 @@ export default function DashboardEnhancedFixed() {
   const [stats, setStats] = useState<Record<string, InvitationStats>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [connectionStatus, setConnectionStatus] = useState<'testing' | 'online' | 'offline'>('testing');
+  const [connectionStatus, setConnectionStatus] = useState<
+    "testing" | "online" | "offline"
+  >("testing");
 
   useEffect(() => {
     checkConnection();
@@ -74,9 +76,9 @@ export default function DashboardEnhancedFixed() {
 
   // Test Supabase connection
   const checkConnection = async () => {
-    setConnectionStatus('testing');
+    setConnectionStatus("testing");
     const isConnected = await testSupabaseConnection();
-    setConnectionStatus(isConnected ? 'online' : 'offline');
+    setConnectionStatus(isConnected ? "online" : "offline");
   };
 
   // Load invitations using the new system
@@ -87,14 +89,16 @@ export default function DashboardEnhancedFixed() {
 
     try {
       const result = await getUserInvitations();
-      
+
       if (result.success) {
         console.log(`✅ Loaded ${result.invitations.length} invitations`);
-        setInvitations(result.invitations.map(inv => ({
-          ...inv,
-          url: `${window.location.origin}/invitation/${inv.slug}`,
-        })));
-        
+        setInvitations(
+          result.invitations.map((inv) => ({
+            ...inv,
+            url: `${window.location.origin}/invitation/${inv.slug}`,
+          })),
+        );
+
         // Generate mock stats
         const mockStats: Record<string, InvitationStats> = {};
         result.invitations.forEach((inv: any) => {
@@ -105,7 +109,7 @@ export default function DashboardEnhancedFixed() {
           };
         });
         setStats(mockStats);
-        
+
         // Clear any previous errors
         setError(null);
       } else {
@@ -125,7 +129,9 @@ export default function DashboardEnhancedFixed() {
   // Copy invitation URL to clipboard
   const copyInvitationURL = async (invitation: Invitation) => {
     try {
-      const url = invitation.url || `${window.location.origin}/invitation/${invitation.slug}`;
+      const url =
+        invitation.url ||
+        `${window.location.origin}/invitation/${invitation.slug}`;
       await navigator.clipboard.writeText(url);
       toast.success("Havola nusxalandi!", {
         description: "Taklifnoma havolasi clipboard ga nusxalandi",
@@ -137,7 +143,9 @@ export default function DashboardEnhancedFixed() {
 
   // Open invitation in new tab
   const openInvitation = (invitation: Invitation) => {
-    const url = invitation.url || `${window.location.origin}/invitation/${invitation.slug}`;
+    const url =
+      invitation.url ||
+      `${window.location.origin}/invitation/${invitation.slug}`;
     window.open(url, "_blank");
   };
 
@@ -161,12 +169,20 @@ export default function DashboardEnhancedFixed() {
   const ConnectionStatus = () => {
     const getStatusInfo = () => {
       switch (connectionStatus) {
-        case 'testing':
-          return { icon: Database, color: 'text-yellow-500', text: 'Tekshirilmoqda...' };
-        case 'online':
-          return { icon: Wifi, color: 'text-green-500', text: 'Onlayn' };
-        case 'offline':
-          return { icon: WifiOff, color: 'text-orange-500', text: 'Offline rejim' };
+        case "testing":
+          return {
+            icon: Database,
+            color: "text-yellow-500",
+            text: "Tekshirilmoqda...",
+          };
+        case "online":
+          return { icon: Wifi, color: "text-green-500", text: "Onlayn" };
+        case "offline":
+          return {
+            icon: WifiOff,
+            color: "text-orange-500",
+            text: "Offline rejim",
+          };
       }
     };
 
@@ -211,7 +227,7 @@ export default function DashboardEnhancedFixed() {
                 <RefreshCw className="w-4 h-4 mr-1" />
                 Yangilash
               </Button>
-              
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button

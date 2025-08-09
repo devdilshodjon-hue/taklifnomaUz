@@ -32,8 +32,8 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     headers: {
       "x-client-info": "taklifnoma-app@1.0.0",
       "x-application-name": "TaklifNoma.uz",
-      "apikey": supabaseAnonKey,
-      "Authorization": `Bearer ${supabaseAnonKey}`,
+      apikey: supabaseAnonKey,
+      Authorization: `Bearer ${supabaseAnonKey}`,
     },
   },
   realtime: {
@@ -47,10 +47,16 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
 export const testConnection = async (): Promise<boolean> => {
   try {
     // Test with a simple query to detect permission issues
-    const { data, error } = await supabase.from("profiles").select("count").limit(1);
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("count")
+      .limit(1);
 
     if (error) {
-      if (error.message?.includes("permission denied") || error.message?.includes("schema public")) {
+      if (
+        error.message?.includes("permission denied") ||
+        error.message?.includes("schema public")
+      ) {
         // Suppress permission errors - this is expected for non-configured databases
         return false; // Will use localStorage fallback
       } else {
@@ -62,7 +68,10 @@ export const testConnection = async (): Promise<boolean> => {
     console.log("✅ Supabase connection successful");
     return true;
   } catch (error: any) {
-    if (error.message?.includes("permission denied") || error.message?.includes("schema public")) {
+    if (
+      error.message?.includes("permission denied") ||
+      error.message?.includes("schema public")
+    ) {
       // Suppress permission errors - use localStorage
     } else {
       console.warn("⚠️ Supabase connection error:", error);
@@ -73,7 +82,7 @@ export const testConnection = async (): Promise<boolean> => {
 
 // Wrapper function to handle permission errors gracefully
 export const safeSupabaseOperation = async <T>(
-  operation: () => Promise<{ data: T; error: any }>
+  operation: () => Promise<{ data: T; error: any }>,
 ): Promise<{ data: T | null; error: any; isPermissionError: boolean }> => {
   try {
     const result = await operation();
@@ -89,14 +98,14 @@ export const safeSupabaseOperation = async <T>(
       return {
         data: null,
         error: result.error,
-        isPermissionError
+        isPermissionError,
       };
     }
 
     return {
       data: result.data,
       error: null,
-      isPermissionError: false
+      isPermissionError: false,
     };
   } catch (error: any) {
     const isPermissionError =
@@ -108,7 +117,7 @@ export const safeSupabaseOperation = async <T>(
     return {
       data: null,
       error: error,
-      isPermissionError
+      isPermissionError,
     };
   }
 };

@@ -704,8 +704,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    return { error };
+    // Clear demo user if exists
+    localStorage.removeItem('demo_user');
+
+    try {
+      const { error } = await supabase.auth.signOut();
+      return { error };
+    } catch (networkError: any) {
+      console.warn("Network error during sign out:", networkError);
+      // Even if network fails, clear local state
+      setUser(null);
+      setProfile(null);
+      setSession(null);
+      return { error: null };
+    }
   };
 
   const updateProfile = async (updates: Partial<Profile>) => {

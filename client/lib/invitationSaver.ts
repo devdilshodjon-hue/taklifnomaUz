@@ -126,13 +126,19 @@ export const saveInvitationToSupabase = async (
     } catch (directError) {
       console.log("❌ Direct invitation save failed, trying with retry logic...", directError);
 
-      // If direct save fails, try with retry (but no timeout race)
+      // If direct save fails, try with retry (with 6-second timeout)
       result = await retryWithBackoff(async () => {
-        return await supabase
+        const retryPromise = supabase
           .from("invitations")
           .insert(invitationToSave)
           .select()
           .single();
+
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("6 soniyalik vaqt tugadi")), 6000)
+        );
+
+        return await Promise.race([retryPromise, timeoutPromise]) as any;
       }, 2, 3000); // 2 retries with 3 second delay
     }
 

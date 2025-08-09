@@ -494,6 +494,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       if (timeoutId) clearTimeout(timeoutId);
       setLoading(false);
+      setIsInitialized(true);
     }
   };
 

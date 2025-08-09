@@ -90,18 +90,30 @@ export default function CreateInvitation() {
   });
 
   // Template kategoriya filter
-  const handleCategoryChange = (categoryId: string) => {
+  const handleCategoryChange = async (categoryId: string) => {
     setSelectedCategory(categoryId);
-    if (categoryId === "all") {
-      setFilteredTemplates(weddingTemplates);
-    } else {
-      const filtered = getTemplatesByCategory(categoryId);
-      setFilteredTemplates(filtered);
+    try {
+      if (categoryId === "all") {
+        const templates = await templateManager.getAllTemplates();
+        setFilteredTemplates(templates);
+      } else {
+        const filtered = await templateManager.getTemplatesByCategory(categoryId);
+        setFilteredTemplates(filtered);
+      }
+    } catch (error) {
+      console.warn("Template filterlashda xatolik:", error);
+      // Fallback to default templates
+      if (categoryId === "all") {
+        setFilteredTemplates(defaultWeddingTemplates);
+      } else {
+        const filtered = defaultWeddingTemplates.filter(t => t.category === categoryId);
+        setFilteredTemplates(filtered);
+      }
     }
   };
 
   // Template preview
-  const handlePreviewTemplate = (template: TemplateData) => {
+  const handlePreviewTemplate = (template: DefaultTemplate) => {
     setPreviewTemplate(template);
     setShowPreview(true);
   };

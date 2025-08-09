@@ -1019,8 +1019,8 @@ export default function TemplateBuilder() {
               </Tabs>
             </div>
 
-            {/* Right Panel - Live Preview (2/5) */}
-            <div className="lg:col-span-2">
+            {/* Right Panel - Live Preview (3/7) */}
+            <div className="lg:col-span-3">
               <div className="sticky top-24">
                 <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-rose-200/50 shadow-lg">
                   <div className="flex items-center justify-between mb-6">
